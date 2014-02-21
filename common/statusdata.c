@@ -423,17 +423,17 @@ int add_service_status(servicestatus *new_svcstatus){
 			my_free(new_svcstatus->plugin_output);
 			if(new_svcstatus->should_be_scheduled==TRUE){
 				get_time_string(&new_svcstatus->next_check,date_string,sizeof(date_string),LONG_DATE_TIME);
-				asprintf(&new_svcstatus->plugin_output,"Service check scheduled for %s",date_string);
+				asprintf(&new_svcstatus->plugin_output,"服务检测计划应包含%s",date_string);
 			        }
 			else{
 				/* passive-only services that have just been scheduled for a forced check */
 				if(new_svcstatus->checks_enabled==FALSE && new_svcstatus->next_check!=(time_t)0L && (new_svcstatus->check_options & CHECK_OPTION_FORCE_EXECUTION)){
 					get_time_string(&new_svcstatus->next_check,date_string,sizeof(date_string),LONG_DATE_TIME);
-					asprintf(&new_svcstatus->plugin_output,"Forced service check scheduled for %s",date_string);
+					asprintf(&new_svcstatus->plugin_output,"对%s的服务检测计划被强制修改",date_string);
 					}
 				/* passive-only services not scheduled to be checked */
 				else
-					new_svcstatus->plugin_output=(char *)strdup("Service is not scheduled to be checked...");
+					new_svcstatus->plugin_output=(char *)strdup("服务检测未被加入到计划检测之中...");
 				}
 		        }
 	        }

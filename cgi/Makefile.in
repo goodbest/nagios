@@ -203,7 +203,9 @@ install-basic:
 	for file in *.cgi; do \
 		$(INSTALL) -m 775 $(INSTALL_OPTS) $$file $(DESTDIR)$(CGIDIR); \
 	done
-
+	$(INSTALL) -m 664 $(INSTALL_OPTS) map $(DESTDIR)$(CGIDIR) 
+	$(INSTALL) -m 664 $(INSTALL_OPTS) simhei.ttf $(DESTDIR)$(CGIDIR) 
+	
 strip-post-install:
 	for file in *.cgi; do \
 		$(STRIP) $(DESTDIR)$(CGIDIR)/$$file; \

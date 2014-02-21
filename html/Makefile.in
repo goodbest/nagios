@@ -44,6 +44,7 @@ install:
 	$(INSTALL) -m 775 $(INSTALL_OPTS) -d $(DESTDIR)$(HTMLDIR)/includes
 	$(INSTALL) -m 775 $(INSTALL_OPTS) -d $(DESTDIR)$(HTMLDIR)/ssi
 	$(INSTALL) -m 664 $(INSTALL_OPTS) robots.txt $(DESTDIR)$(HTMLDIR)
+	$(INSTALL) -m 664 $(INSTALL_OPTS) Nagios-cn.html $(DESTDIR)$(HTMLDIR)
 	$(INSTALL) -m 664 $(INSTALL_OPTS) docs/robots.txt $(DESTDIR)$(HTMLDIR)/docs
 # Remove old HTML files (PHP files are used now)
 	rm -f $(DESTDIR)$(HTMLDIR)/index.html
@@ -51,10 +52,15 @@ install:
 	rm -f $(DESTDIR)$(HTMLDIR)/side.html
 	for file in *.php; \
 	do $(INSTALL) -m 664 $(INSTALL_OPTS) $$file $(DESTDIR)$(HTMLDIR); done
+	for file in *.html; \
+	do $(INSTALL) -m 664 $(INSTALL_OPTS) $$file $(DESTDIR)$(HTMLDIR); done
 #	for file in media/*.wav; \
 #	do $(INSTALL) -m 664 $(INSTALL_OPTS) $$file $(DESTDIR)$(HTMLDIR)/media; done
+	for file in ssi/*.ssi; \
+	do $(INSTALL) -m 664 $(INSTALL_OPTS) $$file $(DESTDIR)$(HTMLDIR)/ssi; done
 	for file in stylesheets/*.css; \
 	do $(INSTALL) -m 664 $(INSTALL_OPTS) $$file $(DESTDIR)$(HTMLDIR)/stylesheets; done
+
 	for file in contexthelp/*.html; \
 	do $(INSTALL) -m 664 $(INSTALL_OPTS) $$file $(DESTDIR)$(HTMLDIR)/contexthelp; done
 	for file in docs/*.html; \

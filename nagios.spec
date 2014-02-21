@@ -1,4 +1,4 @@
-%define name nagios
+%define name nagios-cn
 %define version 3.2.3
 %define release 1
 %define nsusr nagios
@@ -23,7 +23,7 @@
 # Macro that print mesages to syslog at package (un)install time
 %define nnmmsg logger -t %{name}/rpm
 
-Summary: Host/service/network monitoring program
+Summary: 主机/服务/网络的监控服务程序。
 Name: %{name}
 Version: %{version}
 Release: %{release}
@@ -36,9 +36,9 @@ Prefix: /etc/init.d
 Prefix: /etc/nagios
 Prefix: /var/log/nagios
 Prefix: /var/spool/nagios
-Requires: gd > 1.8, zlib, libpng, libjpeg, bash, grep
-PreReq: /usr/bin/logger, chkconfig, sh-utils, shadow-utils, sed, initscripts, fileutils, mktemp
-BuildRequires: gd-devel > 1.8, zlib-devel, libpng-devel, libjpeg-devel
+Requires: gd > 2.0, zlib, libpng, libjpeg, bash, grep, rrdtool > 1.3.2, rrdtool-devel > 1.3.2
+PreReq: sh-utils, shadow-utils, sed, fileutils, mktemp
+BuildRequires: gd-devel > 1.8, zlib-devel > 1.2.2, libpng-devel > 1.2.30, libjpeg-devel > 6.1.9
 
 %description
 Nagios is a program that will monitor hosts and services on your
@@ -54,13 +54,15 @@ available at http://sourceforge.net/projects/nagiosplug
 
 This package provide core programs for nagios. The web interface,
 documentation, and development files are built as separate packages
-
+这个是nagios-cn工程，即nagios中文化后的版本。
+项目主页：http://nagios-cn.sourceforge.net
+源程序页：http://sourceforge.net/projects/nagios-cn
 
 %package www
 Group: Application/System
-Summary: Provides the HTML and CGI files for the Nagios web interface.
+Summary: 提供Nagios的Web接口，包括HTML文件和CGI文件，还包括NagiosGraph包。
 Requires: %{name} = %{version}
-Requires: webserver
+Requires: httpd
 
 
 %description www
@@ -76,6 +78,9 @@ to view the current service status, problem history, notification
 history, and log file via the web. This package provides the HTML and
 CGI files for the Nagios web interface. In addition, HTML
 documentation is included in this package
+这个是nagios-cn工程，即nagios中文化后的版本。
+项目主页：http://nagios-cn.sourceforge.net
+源程序页：http://sourceforge.net/projects/nagios-cn
 
 
 %package devel
@@ -167,7 +172,13 @@ else
 	/usr/sbin/usermod -G $sgrps $wwwusr >/dev/null 2>&1
 	%nnmmsg "User $wwwusr added to group %{cmdgrp} so sending commands to Nagios from the command CGI is possible."
 fi
-
+#add SELinux control for centOS
+if test -f /usr/sbin/selinuxenabled; then
+	/usr/sbin/getenforce
+	/usr/sbin/setenforce 0
+	/usr/bin/chcon -R -t httpd_sys_content_t ${RPM_BUILD_ROOT}%{_prefix}/lib/nagios/cgi/ 
+	/usr/bin/chcon -R -t httpd_sys_content_t ${RPM_BUILD_ROOT}%{_prefix}/share/nagios/
+fi
 
 %preun www
 if [ $1 = 0 ]; then
@@ -200,6 +211,7 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" \
 	--libexecdir=%{_prefix}/lib/nagios/plugins \
 	--datadir=%{_prefix}/share/nagios \
 	--sysconfdir=/etc/nagios \
+	--with-checkresult-dir=/var/spool/nagios \
 	--localstatedir=/var/log/nagios \
 %if ! %{PERF_EXTERNAL}
 	--with-file-perfdata \
@@ -210,7 +222,8 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" \
 	--with-gd-lib=/usr/lib \
 	--with-gd-inc=/usr/include \
 	--with-template-objects \
-	--with-template-extinfo
+	--with-template-extinfo \
+	CFLAGS=" -O2"
 
 make all
 
@@ -237,6 +250,10 @@ cd ../..
 
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+install -d -m 0775 ${RPM_BUILD_ROOT}/var/log/nagios
+install -d -m 0775 ${RPM_BUILD_ROOT}/var/log/nagios/archives
+install -d -m 0775 ${RPM_BUILD_ROOT}/var/log/nagios/rw
+install -d -m 0775 ${RPM_BUILD_ROOT}/var/log/nagios/rrd
 install -d -m 0775 ${RPM_BUILD_ROOT}/var/spool/nagios
 install -d -m 0755 ${RPM_BUILD_ROOT}%{_prefix}/include/nagios
 install -d -m 0755 ${RPM_BUILD_ROOT}/etc/init.d
@@ -250,15 +267,18 @@ make DESTDIR=${RPM_BUILD_ROOT} INSTALL_OPTS="" COMMAND_OPTS="" INIT_OPTS="" inst
 
 # install templated configuration files
 cd sample-config
-for f in {nagios,cgi}.cfg ; do
+for f in {nagios,cgi,nagiosgraph}.cfg ; do
   [ -f $f ] && install -c -m 664 $f ${RPM_BUILD_ROOT}/etc/nagios/${f}
 done
 ###mkdir -p ${RPM_BUILD_ROOT}/etc/nagios/private
 for f in resource.cfg ; do
   [ -f $f ] && install -c -m 664 $f ${RPM_BUILD_ROOT}/etc/nagios/${f}
 done
+for f in htpasswd.users ; do
+  [ -f $f ] && install -c -m 664 $f ${RPM_BUILD_ROOT}/etc/nagios/${f}
+done
 cd template-object
-for f in {commands,contacts,localhost,switch,templates,timeperiods}.cfg
+for f in {commands,contacts,localhost,switch,templates,timeperiods,hosts,hostgroups,services,contactgroups,dependencies,escalations,checkcommands,misccommands,minimal}.cfg
 do
   [ -f $f ] && install -c -m 664 $f ${RPM_BUILD_ROOT}/etc/nagios/objects/${f}
 done
@@ -306,19 +326,27 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/convertcfg
 %dir /etc/nagios
 %dir /etc/nagios/objects
-%defattr(644,root,root)
+%defattr(644,%{nsusr},%{nsgrp})
 %config(noreplace) /etc/nagios/*.cfg
+%defattr(750,%{nsusr},%{nsgrp})
+%config(noreplace) /etc/nagios/htpasswd.users
+%defattr(750,%{nsusr},%{nsgrp})
 %config(noreplace) /etc/nagios/objects/*.cfg
-%defattr(750,root,%{nsgrp})
-###%dir /etc/nagios/private
-%defattr(640,root,%{nsgrp})
-### %config(noreplace) /etc/nagios/private/resource.cfg
 %defattr(755,%{nsusr},%{nsgrp})
+###%dir /etc/nagios/private
+#%defattr(640,root,%{nsgrp})
+### %config(noreplace) /etc/nagios/private/resource.cfg
 %dir /var/log/nagios
+%defattr(775,%{nsusr},%{nsgrp})
+%dir /var/log/nagios/rw
+%defattr(775,%{nsusr},%{nsgrp})
+%dir /var/log/nagios/rrd
+%defattr(775,%{nsusr},%{nsgrp})
 %dir /var/log/nagios/archives
-%defattr(2775,%{nsusr},%{nsgrp})
+%defattr(775,%{nsusr},%{nsgrp})
 %dir /var/spool/nagios
-%doc Changelog INSTALLING LICENSE README UPGRADING
+%defattr(775,%{nsusr},%{nsgrp})
+%doc Changelog INSTALLING LICENSE README UPGRADING README.zh_CN.UTF8 INSTALLING.zh_CN.UTF8
 
 
 %files www
@@ -338,6 +366,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct 14 2008 田朝阳 <zytian {at} gmail.com>
+- 修订为支持CentOS 5.2的包设置
+- 安装NagiosGraph包、默认的配置文件和中文字体
+- 发现有几个目录在卸载时清理不干净的问题，先不管它了。
 * Tue Nov 22 2005 Andreas Kasenides <ank {at} cs.ucy.ac.cy>
 - packaged %{_prefix}/sbin/new_mini_epn
 - moved resource.cfg in /etc/nagios

@@ -270,9 +270,9 @@ int register_downtime(int type, unsigned long downtime_id){
 	else
 		type_string="service";
 	if(temp_downtime->fixed==TRUE)
-		asprintf(&temp_buffer,"This %s has been scheduled for fixed downtime from %s to %s.  Notifications for the %s will not be sent out during that time period.",type_string,start_time_string,end_time_string,type_string);
+		asprintf(&temp_buffer,"本%s类型故障已经被一个自%s到%s的固定宕机时间计划所抑制。在此时间计划内不会送出对这个%s的故障通告。",type_string,start_time_string,end_time_string,type_string);
 	else
-		asprintf(&temp_buffer,"This %s has been scheduled for flexible downtime starting between %s and %s and lasting for a period of %d hours and %d minutes.  Notifications for the %s will not be sent out during that time period.",type_string,start_time_string,end_time_string,hours,minutes,type_string);
+		asprintf(&temp_buffer,"本%s类型故障已被一个自%s到%s持续时间为%d小时%d分钟的宕机时间计划所抑制。在此时间计划内不会送出对这个%s的故障通告。",type_string,start_time_string,end_time_string,hours,minutes,type_string);
 
 
 	log_debug_info(DEBUGL_DOWNTIME,0,"Scheduled Downtime Details:\n");

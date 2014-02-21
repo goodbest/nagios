@@ -1,0 +1,81 @@
+    给新手写的简单安装手册        zytian@gmail.com 2008-06-28
+提醒：
+    请尽可能阅读在线帮助以获取最新的文档，该文档仅供参考。
+
+介绍
+以下文档内容都是在openSuse 10.3环境里为条件进行安装和测试的，保证读者在20分钟
+的时间内自源码安装通过；
+
+安装
+准备工作
+  所需支持包
+1）C/C++编译支持环境；
+2）apache2；
+3）rrdtool 1.2.23；
+4）perl 5.8.8；
+5）gd-devel 2.0.35-20； //这个软件包在一般安装盘里没有，需要专门下载并安装。
+6）libjpeg-devel 6.2.0-78；
+7）ttf-founder-simplified 0.20040419-1
+如果缺少软件，则需要事先安装好再继续下一步。
+
+切换用户
+  su - root
+
+创建帐号
+    创建专用用户和用户组，逐条地执行如下命令即可：
+  /usr/sbin/useradd -m nagios -d /home/nagios
+  mkdir -p /home/nagios
+  passwd nagios
+  /usr/sbin/groupadd nagios
+  chown nagios:nagios /home/nagios
+  /usr/sbin/usermod -G nagios nagios
+  /usr/sbin/groupadd nagcmd
+  /usr/sbin/usermod -G nagcmd nagios
+  /usr/sbin/usermod -G nagcmd wwwrun
+
+下载程序
+  最新版本的nagios-cn源程序（当前是3.0.3）和nagios插件（当前是1.4.11版本）源程序下载
+  wget http://osdn.dl.sourceforge.net/sourceforge/nagios-cn/nagios-cn-3.0.3.tar.gz
+  wget http://osdn.dl.sourceforge.net/sourceforge/nagiosplug/nagios-plugins-1.4.11.tar.gz
+
+编译安装
+    tar xvfz nagios-cn-3.0.3.tar.gz
+    cd nagios-cn-3.0.3
+    ./configure --with-command-group=nagcmd
+    make all
+    make install
+    make install-init
+    make install-config
+    make install-commandmode
+    make install-webconf
+    chkconfig -a nagios
+    cd ..
+
+检查配置
+  /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+
+启动服务
+   /etc/rc.d/apache2 restart
+   /etc/rc.d/nagios start
+
+检查结果
+   firefox http://127.0.0.1/nagios
+   Web的登录用户和口令是nagiosadmin:888888，
+   看到里面服务全部是没有检查的红色标识，这个很正常，因为plugins没安装
+
+安装插件
+   tar xzf nagios-plugins-1.4.11.tar.gz
+   cd nagios-plugins-1.4.11
+   ./configure --with-nagios-user=nagios --with-nagios-group=nagios
+   make
+   make install
+   cd ..
+
+安装结束
+   此时Nagios-cn已经安装到你的OpenSuse10.3系统里了。
+   想修改的CGI登录用户口令的话，用下面的命令：
+     htpasswd2 -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+
+   ！！！如果不是openSuse 10.3系统不能保证以上过程全对！！！
+
+打完收工

@@ -162,7 +162,7 @@ int main(void){
 
 	/* left column of the first row */
 	printf("<td align=left valign=top width=50%%>\n");
-	display_info_table("Configuration",FALSE,&current_authdata);
+	display_info_table("配置-Configuration-",FALSE,&current_authdata);
 	printf("</td>\n");
 
 	/* right hand column of top row */
@@ -173,28 +173,28 @@ int main(void){
 		printf("<table border=0>\n");
 		printf("<form method=\"get\" action=\"%s\">\n",CONFIG_CGI);
 
-		printf("<tr><td align=left class='reportSelectSubTitle'>Object Type:</td></tr>\n");
+		printf("<tr><td align=left class='reportSelectSubTitle'>对象类型:</td></tr>\n");
 		printf("<tr><td align=left class='reportSelectItem'>");
 		printf("<select name='type'>\n");
-		printf("<option value='hosts' %s>Hosts\n",(display_type==DISPLAY_HOSTS)?"SELECTED":"");
-		printf("<option value='hostdependencies' %s>Host Dependencies\n",(display_type==DISPLAY_HOSTDEPENDENCIES)?"SELECTED":"");
-		printf("<option value='hostescalations' %s>Host Escalations\n",(display_type==DISPLAY_HOSTESCALATIONS)?"SELECTED":"");
-		printf("<option value='hostgroups' %s>Host Groups\n",(display_type==DISPLAY_HOSTGROUPS)?"SELECTED":"");
-		printf("<option value='services' %s>Services\n",(display_type==DISPLAY_SERVICES)?"SELECTED":"");
-		printf("<option value='servicegroups' %s>Service Groups\n",(display_type==DISPLAY_SERVICEGROUPS)?"SELECTED":"");
-		printf("<option value='servicedependencies' %s>Service Dependencies\n",(display_type==DISPLAY_SERVICEDEPENDENCIES)?"SELECTED":"");
-		printf("<option value='serviceescalations' %s>Service Escalations\n",(display_type==DISPLAY_SERVICEESCALATIONS)?"SELECTED":"");
-		printf("<option value='contacts' %s>Contacts\n",(display_type==DISPLAY_CONTACTS)?"SELECTED":"");
-		printf("<option value='contactgroups' %s>Contact Groups\n",(display_type==DISPLAY_CONTACTGROUPS)?"SELECTED":"");
-		printf("<option value='timeperiods' %s>Timeperiods\n",(display_type==DISPLAY_TIMEPERIODS)?"SELECTED":"");
-		printf("<option value='commands' %s>Commands\n",(display_type==DISPLAY_COMMANDS)?"SELECTED":"");
-		printf("<option value='command' %s>Command Expansion\n",(display_type==DISPLAY_COMMAND_EXPANSION)?"SELECTED":"");
+		printf("<option value='hosts' %s>主机\n",(display_type==DISPLAY_HOSTS)?"SELECTED":"");
+		printf("<option value='hostdependencies' %s>主机依赖\n",(display_type==DISPLAY_HOSTDEPENDENCIES)?"SELECTED":"");
+		printf("<option value='hostescalations' %s>主机扩展\n",(display_type==DISPLAY_HOSTESCALATIONS)?"SELECTED":"");
+		printf("<option value='hostgroups' %s>主机组\n",(display_type==DISPLAY_HOSTGROUPS)?"SELECTED":"");
+		printf("<option value='services' %s>服务\n",(display_type==DISPLAY_SERVICES)?"SELECTED":"");
+		printf("<option value='servicegroups' %s>服务组\n",(display_type==DISPLAY_SERVICEGROUPS)?"SELECTED":"");
+		printf("<option value='servicedependencies' %s>服务依赖\n",(display_type==DISPLAY_SERVICEDEPENDENCIES)?"SELECTED":"");
+		printf("<option value='serviceescalations' %s>服务扩展\n",(display_type==DISPLAY_SERVICEESCALATIONS)?"SELECTED":"");
+		printf("<option value='contacts' %s>联系人\n",(display_type==DISPLAY_CONTACTS)?"SELECTED":"");
+		printf("<option value='contactgroups' %s>联系人组\n",(display_type==DISPLAY_CONTACTGROUPS)?"SELECTED":"");
+		printf("<option value='timeperiods' %s>时间范围\n",(display_type==DISPLAY_TIMEPERIODS)?"SELECTED":"");
+		printf("<option value='commands' %s>命令\n",(display_type==DISPLAY_COMMANDS)?"SELECTED":"");
+		printf("<option value='command' %s>命令扩充\n",(display_type==DISPLAY_COMMAND_EXPANSION)?"SELECTED":"");
 		printf("</select>\n");
 		printf("</td></tr>\n");
 
 		print_expand_input(display_type);
 
-		printf("<tr><td class='reportSelectItem'><input type='submit' value='Update'></td></tr>\n");
+		printf("<tr><td class='reportSelectItem'><input type='submit' value='更新'></td></tr>\n");
 		printf("</form>\n");
 
 		printf("</table>\n");
@@ -327,8 +327,9 @@ void document_header(int use_stylesheet){
 	printf("<head>\n");
 	printf("<link rel=\"shortcut icon\" href=\"%sfavicon.ico\" type=\"image/ico\">\n",url_images_path);
 	printf("<META HTTP-EQUIV='Pragma' CONTENT='no-cache'>\n");
+	printf("<meta http-equiv='content-type' content='text/html;charset=UTF-8'>\n");
 	printf("<title>\n");
-	printf("Configuration\n");
+	printf("配置\n");
 	printf("</title>\n");
 
 	if(use_stylesheet==TRUE){
@@ -463,52 +464,53 @@ void display_hosts(void){
 		return;
 	        }
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Host%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>主机%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":" "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
-	printf("<P><DIV ALIGN=CENTER>\n");
-	printf("<TABLE BORDER=0 CLASS='data'>\n");
+	printf("<P>\n");
+	printf("<DIV ALIGN=CENTER>\n");
 
+	printf("<TABLE BORDER=0 CLASS='data'>\n");
 	printf("<TR>\n");
-	printf("<TH CLASS='data'>Host Name</TH>");
-	printf("<TH CLASS='data'>Alias/Description</TH>");
-	printf("<TH CLASS='data'>Address</TH>");
-	printf("<TH CLASS='data'>Parent Hosts</TH>");
-	printf("<TH CLASS='data'>Max. Check Attempts</TH>");
-	printf("<TH CLASS='data'>Check Interval</TH>\n");
-	printf("<TH CLASS='data'>Retry Interval</TH>\n");
-	printf("<TH CLASS='data'>Host Check Command</TH>");
+	printf("<TH CLASS='data'>主机名</TH>");
+	printf("<TH CLASS='data'>别名或描述</TH>");
+	printf("<TH CLASS='data'>地址</TH>");
+	printf("<TH CLASS='data'>上级主机</TH>");
+	printf("<TH CLASS='data'>最大检查次数</TH>");
+	printf("<TH CLASS='data'>检查间隔</TH>\n");
+	printf("<TH CLASS='data'>重试间隔</TH>\n");
+	printf("<TH CLASS='data'>主机检查命令</TH>");
 	printf("<TH CLASS='data'>Check Period</TH>");
 	printf("<TH CLASS='data'>Obsess Over</TH>\n");
-	printf("<TH CLASS='data'>Enable Active Checks</TH>\n");
-	printf("<TH CLASS='data'>Enable Passive Checks</TH>\n");
-	printf("<TH CLASS='data'>Check Freshness</TH>\n");
-	printf("<TH CLASS='data'>Freshness Threshold</TH>\n");
-	printf("<TH CLASS='data'>Default Contacts/Groups</TH>\n");
-	printf("<TH CLASS='data'>Notification Interval</TH>");
-	printf("<TH CLASS='data'>First Notification Delay</TH>");
-	printf("<TH CLASS='data'>Notification Options</TH>");
-	printf("<TH CLASS='data'>Notification Period</TH>");
-	printf("<TH CLASS='data'>Event Handler</TH>");
-	printf("<TH CLASS='data'>Enable Event Handler</TH>");
-	printf("<TH CLASS='data'>Stalking Options</TH>\n");
-	printf("<TH CLASS='data'>Enable Flap Detection</TH>");
-	printf("<TH CLASS='data'>Low Flap Threshold</TH>");
-	printf("<TH CLASS='data'>High Flap Threshold</TH>");
-	printf("<TH CLASS='data'>Flap Detection Options</TH>\n");
-	printf("<TH CLASS='data'>Process Performance Data</TH>");
-	printf("<TH CLASS='data'>Enable Failure Prediction</TH>");
-	printf("<TH CLASS='data'>Failure Prediction Options</TH>");
-	printf("<TH CLASS='data'>Notes</TH>");
-	printf("<TH CLASS='data'>Notes URL</TH>");
-	printf("<TH CLASS='data'>Action URL</TH>");
-	printf("<TH CLASS='data'>2-D Coords</TH>");
-	printf("<TH CLASS='data'>3-D Coords</TH>");
-	printf("<TH CLASS='data'>Statusmap Image</TH>");
-	printf("<TH CLASS='data'>VRML Image</TH>");
-	printf("<TH CLASS='data'>Logo Image</TH>");
-	printf("<TH CLASS='data'>Image Alt</TH>");
-	printf("<TH CLASS='data'>Retention Options</TH>");
+	printf("<TH CLASS='data'>开启主动检查</TH>\n");
+	printf("<TH CLASS='data'>开启被动检查</TH>\n");
+	printf("<TH CLASS='data'>检查更新</TH>\n");
+	printf("<TH CLASS='data'>检查更新阀值</TH>\n");
+	printf("<TH CLASS='data'>默认联系人与联系人组</TH>\n");
+	printf("<TH CLASS='data'>通知间隔</TH>");
+	printf("<TH CLASS='data'>首次通知延时</TH>");
+	printf("<TH CLASS='data'>通知选项</TH>");
+	printf("<TH CLASS='data'>通知时间范围</TH>");
+	printf("<TH CLASS='data'>事件处理</TH>");
+	printf("<TH CLASS='data'>事件处理启用</TH>");
+	printf("<TH CLASS='data'>粘附选项</TH>\n");
+	printf("<TH CLASS='data'>开启抖动监测</TH>");
+	printf("<TH CLASS='data'>抖动低限阀值</TH>");
+	printf("<TH CLASS='data'>抖动高限阀值</TH>");
+	printf("<TH CLASS='data'>抖动检测选项</TH>");
+	printf("<TH CLASS='data'>性能数据处理</TH>");
+	printf("<TH CLASS='data'>开启故障预测</TH>");
+	printf("<TH CLASS='data'>故障预测选项</TH>");
+	printf("<TH CLASS='data'>备注</TH>");
+	printf("<TH CLASS='data'>备注URL</TH>");
+	printf("<TH CLASS='data'>动作URL</TH>");
+	printf("<TH CLASS='data'>平面坐标位置</TH>");
+	printf("<TH CLASS='data'>3D坐标位置</TH>");
+	printf("<TH CLASS='data'>状态图签</TH>");
+	printf("<TH CLASS='data'>VRML图标</TH>");
+	printf("<TH CLASS='data'>Logo图标</TH>");
+	printf("<TH CLASS='data'>图签注解</TH>");
+	printf("<TH CLASS='data'>状态保持选项</TH>");
 	printf("</TR>\n");
 
 	/* check all the hosts... */
@@ -568,19 +570,19 @@ void display_hosts(void){
 			printf("<A HREF='%s?type=timeperiods&expand=%s'>%s</A>",CONFIG_CGI,url_encode(temp_host->check_period),html_encode(temp_host->check_period,FALSE));
 		printf("</TD>\n");
 
-		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_host->obsess_over_host==TRUE)?"Yes":"No");
+		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_host->obsess_over_host==TRUE)?"启用":"禁用");
 
-		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_host->checks_enabled==TRUE)?"Yes":"No");
+		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_host->checks_enabled==TRUE)?"启用":"禁用");
 
-		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_host->accept_passive_host_checks==TRUE)?"Yes":"No");
+		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_host->accept_passive_host_checks==TRUE)?"启用":"禁用");
 
-		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_host->check_freshness==TRUE)?"Yes":"No");
+		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_host->check_freshness==TRUE)?"启用":"禁用");
 
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_host->freshness_threshold==0)
-			printf("Auto-determined value\n");
+			printf("自动检测值\n");
 		else
-			printf("%d seconds\n",temp_host->freshness_threshold);
+			printf("%d 秒\n",temp_host->freshness_threshold);
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
@@ -605,7 +607,7 @@ void display_hosts(void){
 		printf("</TD>\n");
 
 		get_interval_time_string(temp_host->notification_interval,time_string,sizeof(time_string));
-		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_host->notification_interval==0)?"<i>No Re-notification</I>":html_encode(time_string,FALSE));
+		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_host->notification_interval==0)?"<i>不重新通知</I>":html_encode(time_string,FALSE));
 
 		get_interval_time_string(temp_host->first_notification_delay,time_string,sizeof(time_string));
 		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,time_string);
@@ -614,26 +616,26 @@ void display_hosts(void){
 		options=0;
 		if(temp_host->notify_on_down==TRUE){
 			options=1;
-			printf("Down");
+			printf("宕机");
 		        }
 		if(temp_host->notify_on_unreachable==TRUE){
-			printf("%sUnreachable",(options)?", ":"");
+			printf("%s不可达",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_host->notify_on_recovery==TRUE){
-			printf("%sRecovery",(options)?", ":"");
+			printf("%s恢复(RECOVERY)",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_host->notify_on_flapping==TRUE){
-			printf("%sFlapping",(options)?", ":"");
+			printf("%s抖动(FLAPPING)",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_host->notify_on_downtime==TRUE){
-			printf("%sDowntime",(options)?", ":"");
+			printf("%s停机时间表",(options)?", ":"");
 			options=1;
 		        }
 		if(options==0)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
@@ -652,69 +654,70 @@ void display_hosts(void){
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
-		printf("%s\n",(temp_host->event_handler_enabled==TRUE)?"Yes":"No");
+		printf("%s\n",(temp_host->event_handler_enabled==TRUE)?"启用":"禁用");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
 		options=0;
 		if(temp_host->stalk_on_up==TRUE){
 			options=1;
-			printf("Up");
+			printf("运行");
 		        }
 		if(temp_host->stalk_on_down==TRUE){
-			printf("%sDown",(options)?", ":"");
+			printf("%s宕机",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_host->stalk_on_unreachable==TRUE){
-			printf("%sUnreachable",(options)?", ":"");
+			printf("%s不可达",(options)?", ":"");
 			options=1;
 		        }
 		if(options==0)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
-		printf("%s\n",(temp_host->flap_detection_enabled==TRUE)?"Yes":"No");
+		printf("%s\n",(temp_host->flap_detection_enabled==TRUE)?"启用":"禁用");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_host->low_flap_threshold==0.0)
-			printf("Program-wide value\n");
+			printf("程序配置值\n");
 		else
 			printf("%3.1f%%\n",temp_host->low_flap_threshold);
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_host->high_flap_threshold==0.0)
-			printf("Program-wide value\n");
+			printf("程序配置值\n");
 		else
 			printf("%3.1f%%\n",temp_host->high_flap_threshold);
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
+		printf("%s\n",(temp_host->process_performance_data==TRUE)?"启用":"禁用");
 		options=0;
 		if(temp_host->flap_detection_on_up==TRUE){
 			options=1;
-			printf("Up");
+			printf("启动(UP)");
 		        }
 		if(temp_host->flap_detection_on_down==TRUE){
-			printf("%sDown",(options)?", ":"");
+			printf("%s停止(DOWN)",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_host->flap_detection_on_unreachable==TRUE){
-			printf("%sUnreachable",(options)?", ":"");
+			printf("%s不可达(UNREACHABLE)",(options)?", ":"");
 			options=1;
 		        }
 		if(options==0)
-			printf("None");
+			printf("没有");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
-		printf("%s\n",(temp_host->process_performance_data==TRUE)?"Yes":"No");
+		printf("%s\n",(temp_host->process_performance_data==TRUE)?"有效":"无效");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
-		printf("%s\n",(temp_host->failure_prediction_enabled==TRUE)?"Yes":"No");
+		printf("%s\n",(temp_host->failure_prediction_enabled==TRUE)?"启用":"禁用");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_host->failure_prediction_options==NULL)?"&nbsp;":html_encode(temp_host->failure_prediction_options,FALSE));
@@ -759,14 +762,14 @@ void display_hosts(void){
 		options=0;
 		if(temp_host->retain_status_information==TRUE){
 			options=1;
-			printf("Status Information");
+			printf("状态信息");
 		        }
 		if(temp_host->retain_nonstatus_information==TRUE){
-			printf("%sNon-Status Information",(options==1)?", ":"");
+			printf("%s无状态信息",(options==1)?", ":"");
 			options=1;
 		        }
 		if(options==0)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("</TR>\n");
@@ -782,8 +785,8 @@ void display_hosts(void){
 
 
 void display_hostgroups(void){
-	hostgroup *temp_hostgroup;
-	hostsmember *temp_hostsmember;
+	hostgroup *temp_hostgroup=NULL;
+	hostsmember *temp_hostsmember=NULL;
 	int odd=0;
 	char *bg_class="";
 
@@ -793,7 +796,7 @@ void display_hostgroups(void){
 		return;
 	        }
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Host Group%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>主机组%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":" "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
 	printf("<P>\n");
@@ -801,12 +804,12 @@ void display_hostgroups(void){
 
 	printf("<TABLE BORDER=0 CLASS='data'>\n");
 	printf("<TR>\n");
-	printf("<TH CLASS='data'>Group Name</TH>");
-	printf("<TH CLASS='data'>Description</TH>");
-	printf("<TH CLASS='data'>Host Members</TH>");
-	printf("<TH CLASS='data'>Notes</TH>");
-	printf("<TH CLASS='data'>Notes URL</TH>");
-	printf("<TH CLASS='data'>Action URL</TH>");
+	printf("<TH CLASS='data'>组名</TH>");
+	printf("<TH CLASS='data'>描述</TH>");
+	printf("<TH CLASS='data'>成员</TH>");
+	printf("<TH CLASS='data'>备注</TH>");
+	printf("<TH CLASS='data'>备注URL</TH>");
+	printf("<TH CLASS='data'>动作URL</TH>");
 	printf("</TR>\n");
 
 	/* check all the hostgroups... */
@@ -868,7 +871,7 @@ void display_servicegroups(void){
 		return;
 	        }
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Service Group%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>服务组%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":" "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
 	printf("<P>\n");
@@ -876,12 +879,12 @@ void display_servicegroups(void){
 
 	printf("<TABLE BORDER=0 CLASS='data'>\n");
 	printf("<TR>\n");
-	printf("<TH CLASS='data'>Group Name</TH>");
-	printf("<TH CLASS='data'>Description</TH>");
-	printf("<TH CLASS='data'>Service Members</TH>");
-	printf("<TH CLASS='data'>Notes</TH>");
-	printf("<TH CLASS='data'>Notes URL</TH>");
-	printf("<TH CLASS='data'>Action URL</TH>");
+	printf("<TH CLASS='data'>组名</TH>");
+	printf("<TH CLASS='data'>描述</TH>");
+	printf("<TH CLASS='data'>成员</TH>");
+	printf("<TH CLASS='data'>备注</TH>");
+	printf("<TH CLASS='data'>备注URL</TH>");
+	printf("<TH CLASS='data'>动作URL</TH>");
 	printf("</TR>\n");
 
 	/* check all the servicegroups... */
@@ -947,7 +950,7 @@ void display_contacts(void){
 		return;
 	        }
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Contact%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>联系人%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":" "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
 	printf("<P>\n");
@@ -956,17 +959,17 @@ void display_contacts(void){
 	printf("<TABLE CLASS='data'>\n");
     
 	printf("<TR>\n");
-	printf("<TH CLASS='data'>Contact Name</TH>");
-	printf("<TH CLASS='data'>Alias</TH>");
-	printf("<TH CLASS='data'>Email Address</TH>");
-	printf("<TH CLASS='data'>Pager Address/Number</TH>");
-	printf("<TH CLASS='data'>Service Notification Options</TH>");
-	printf("<TH CLASS='data'>Host Notification Options</TH>");
-	printf("<TH CLASS='data'>Service Notification Period</TH>");
-	printf("<TH CLASS='data'>Host Notification Period</TH>");
-	printf("<TH CLASS='data'>Service Notification Commands</TH>");
-	printf("<TH CLASS='data'>Host Notification Commands</TH>");
-	printf("<TH CLASS='data'>Retention Options</TH>");
+	printf("<TH CLASS='data'>联系人名</TH>");
+	printf("<TH CLASS='data'>别名</TH>");
+	printf("<TH CLASS='data'>邮件地址</TH>");
+	printf("<TH CLASS='data'>拷机/地址</TH>");
+	printf("<TH CLASS='data'>服务通知选项</TH>");
+	printf("<TH CLASS='data'>主机通知选项</TH>");
+	printf("<TH CLASS='data'>服务通知持续时间</TH>");
+	printf("<TH CLASS='data'>主机通知持续时间</TH>");
+	printf("<TH CLASS='data'>服务通知命令</TH>");
+	printf("<TH CLASS='data'>主机通知命令</TH>");
+	printf("<TH CLASS='data'>状态保持选项</TH>");
 	printf("</TR>\n");
 	
 	/* check all contacts... */
@@ -992,56 +995,56 @@ void display_contacts(void){
 		options=0;
 		if(temp_contact->notify_on_service_unknown==TRUE){
 			options=1;
-			printf("Unknown");
+			printf("未知");
 		        }
 		if(temp_contact->notify_on_service_warning==TRUE){
-			printf("%sWarning",(options)?", ":"");
+			printf("%s告警",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_contact->notify_on_service_critical==TRUE){
-			printf("%sCritical",(options)?", ":"");
+			printf("%s紧急",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_contact->notify_on_service_recovery==TRUE){
-			printf("%sRecovery",(options)?", ":"");
+			printf("%s恢复(RECOVERY)",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_contact->notify_on_service_flapping==TRUE){
-			printf("%sFlapping",(options)?", ":"");
+			printf("%s抖动(FLAPPING)",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_contact->notify_on_service_downtime==TRUE){
-			printf("%sDowntime",(options)?", ":"");
+			printf("%s停机时间",(options)?", ":"");
 			options=1;
 		        }
 		if(!options)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
 		options=0;
 		if(temp_contact->notify_on_host_down==TRUE){
 			options=1;
-			printf("Down");
+			printf("宕机");
 		        }
 		if(temp_contact->notify_on_host_unreachable==TRUE){
-			printf("%sUnreachable",(options)?", ":"");
+			printf("%s不可达",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_contact->notify_on_host_recovery==TRUE){
-			printf("%sRecovery",(options)?", ":"");
+			printf("%s恢复(RECOVERY)",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_contact->notify_on_host_flapping==TRUE){
-			printf("%sFlapping",(options)?", ":"");
+			printf("%s抖动(FLAPPING)",(options)?", ":"");
 			options=1;
 		        }
 		if(temp_contact->notify_on_host_downtime==TRUE){
-			printf("%sDowntime",(options)?", ":"");
+			printf("%s停机时间",(options)?", ":"");
 			options=1;
 		        }
 		if(!options)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>\n",bg_class);
@@ -1071,7 +1074,7 @@ void display_contacts(void){
 			found=TRUE;
 		        }
 		if(found==FALSE)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
@@ -1087,21 +1090,21 @@ void display_contacts(void){
 			found=TRUE;
 		        }
 		if(found==FALSE)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
 		options=0;
 		if(temp_contact->retain_status_information==TRUE){
 			options=1;
-			printf("Status Information");
+			printf("状态信息");
 		        }
 		if(temp_contact->retain_nonstatus_information==TRUE){
-			printf("%sNon-Status Information",(options==1)?", ":"");
+			printf("%s非状态信息之外",(options==1)?", ":"");
 			options=1;
 		        }
 		if(options==0)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("</TR>\n");
@@ -1129,7 +1132,7 @@ void display_contactgroups(void){
 	        }
 
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Contact Group%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>联系人组%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":" "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
 	printf("<P>\n");
@@ -1138,9 +1141,9 @@ void display_contactgroups(void){
 	printf("<TABLE BORDER=0 CELLSPACING=3 CELLPADDING=0>\n");
 
 	printf("<TR>\n");
-	printf("<TH CLASS='data'>Group Name</TH>\n");
-	printf("<TH CLASS='data'>Description</TH>\n");
-	printf("<TH CLASS='data'>Contact Members</TH>\n");
+	printf("<TH CLASS='data'>组名</TH>\n");
+	printf("<TH CLASS='data'>描述</TH>\n");
+	printf("<TH CLASS='data'>成员</TH>\n");
 	printf("</TR>\n");
 
 	/* check all the contact groups... */
@@ -1203,7 +1206,7 @@ void display_services(void){
 		return;
 	        }
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Service%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>服务%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":"s Named or on Host "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
 	printf("<P>\n");
@@ -1211,45 +1214,42 @@ void display_services(void){
 
 	printf("<TABLE BORDER=0 CLASS='data'>\n");
 	printf("<TR>\n");
-	printf("<TH CLASS='data' COLSPAN=2>Service</TH>");
-	printf("</TR>\n");
-	printf("<TR>\n");
-	printf("<TH CLASS='data'>Host</TH>\n");
-	printf("<TH CLASS='data'>Description</TH>\n");
-	printf("<TH CLASS='data'>Max. Check Attempts</TH>\n");
-	printf("<TH CLASS='data'>Normal Check Interval</TH>\n");
-	printf("<TH CLASS='data'>Retry Check Interal</TH>\n");
-	printf("<TH CLASS='data'>Check Command</TH>\n");
-	printf("<TH CLASS='data'>Check Period</TH>\n");
-	printf("<TH CLASS='data'>Parallelize</TH>\n");
-	printf("<TH CLASS='data'>Volatile</TH>\n");
-	printf("<TH CLASS='data'>Obsess Over</TH>\n");
-	printf("<TH CLASS='data'>Enable Active Checks</TH>\n");
-	printf("<TH CLASS='data'>Enable Passive Checks</TH>\n");
-	printf("<TH CLASS='data'>Check Freshness</TH>\n");
-	printf("<TH CLASS='data'>Freshness Threshold</TH>\n");
-	printf("<TH CLASS='data'>Default Contacts/Groups</TH>\n");
-	printf("<TH CLASS='data'>Enable Notifications</TH>\n");
-	printf("<TH CLASS='data'>Notification Interval</TH>\n");
-	printf("<TH CLASS='data'>First Notification Delay</TH>\n");
-	printf("<TH CLASS='data'>Notification Options</TH>\n");
-	printf("<TH CLASS='data'>Notification Period</TH>\n");
-	printf("<TH CLASS='data'>Event Handler</TH>");
-	printf("<TH CLASS='data'>Enable Event Handler</TH>");
-	printf("<TH CLASS='data'>Stalking Options</TH>\n");
-	printf("<TH CLASS='data'>Enable Flap Detection</TH>");
-	printf("<TH CLASS='data'>Low Flap Threshold</TH>");
-	printf("<TH CLASS='data'>High Flap Threshold</TH>");
-	printf("<TH CLASS='data'>Flap Detection Options</TH>");
-	printf("<TH CLASS='data'>Process Performance Data</TH>");
-	printf("<TH CLASS='data'>Enable Failure Prediction</TH>");
-	printf("<TH CLASS='data'>Failure Prediction Options</TH>");
-	printf("<TH CLASS='data'>Notes</TH>");
-	printf("<TH CLASS='data'>Notes URL</TH>");
-	printf("<TH CLASS='data'>Action URL</TH>");
-	printf("<TH CLASS='data'>Logo Image</TH>");
-	printf("<TH CLASS='data'>Image Alt</TH>");
-	printf("<TH CLASS='data'>Retention Options</TH>");
+	printf("<TH CLASS='data'>主机</TH>\n");
+	printf("<TH CLASS='data'>描述</TH>\n");
+	printf("<TH CLASS='data'>最大检查次数</TH>\n");
+	printf("<TH CLASS='data'>常规的检查间隔</TH>\n");
+	printf("<TH CLASS='data'>重查的检查间隔</TH>\n");
+	printf("<TH CLASS='data'>检查命令</TH>\n");
+	printf("<TH CLASS='data'>检查时间范围</TH>\n");
+	printf("<TH CLASS='data'>并行</TH>\n");
+	printf("<TH CLASS='data'>可变性服务</TH>\n");
+	printf("<TH CLASS='data'>强制式的</TH>\n");
+	printf("<TH CLASS='data'>开启主动检查</TH>\n");
+	printf("<TH CLASS='data'>开启被动检查</TH>\n");
+	printf("<TH CLASS='data'>检查更新</TH>\n");
+	printf("<TH CLASS='data'>检查更新阀值</TH>\n");
+	printf("<TH CLASS='data'>缺省联系人组</TH>\n");
+	printf("<TH CLASS='data'>通知使能</TH>\n");
+	printf("<TH CLASS='data'>通知间隔</TH>\n");
+	printf("<TH CLASS='data'>通知时延</TH>\n");
+	printf("<TH CLASS='data'>通知选项</TH>\n");
+	printf("<TH CLASS='data'>通知时间范围</TH>\n");
+	printf("<TH CLASS='data'>事件处理句柄</TH>");
+	printf("<TH CLASS='data'>事件处理使能</TH>");
+	printf("<TH CLASS='data'>粘附选项</TH>\n");
+	printf("<TH CLASS='data'>抖动监测使能</TH>");
+	printf("<TH CLASS='data'>抖动下限阀值</TH>");
+	printf("<TH CLASS='data'>抖动上限阀值</TH>");
+	printf("<TH CLASS='data'>抖动检测选项</TH>");
+	printf("<TH CLASS='data'>性能数据处理</TH>");
+	printf("<TH CLASS='data'>故障预测使能</TH>");
+	printf("<TH CLASS='data'>故障预测选项</TH>");
+	printf("<TH CLASS='data'>备注</TH>");
+	printf("<TH CLASS='data'>备注URL</TH>");
+	printf("<TH CLASS='data'>动作URL</TH>");
+	printf("<TH CLASS='data'>Logo图标</TH>");
+	printf("<TH CLASS='data'>图标注释</TH>");
+	printf("<TH CLASS='data'>状态保持选项</TH>");
 	printf("</TR>\n");
 
 	/* check all the services... */
@@ -1297,23 +1297,23 @@ void display_services(void){
 			printf("<A HREF='%s?type=timeperiods&expand=%s'>%s</A>",CONFIG_CGI,url_encode(temp_service->check_period),html_encode(temp_service->check_period,FALSE));
 		printf("</TD>\n");
 
-		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->parallelize==TRUE)?"Yes":"No");
+		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->parallelize==TRUE)?"启用":"禁用");
 
-		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->is_volatile==TRUE)?"Yes":"No");
+		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->is_volatile==TRUE)?"启用":"禁用");
 
-		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->obsess_over_service==TRUE)?"Yes":"No");
+		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->obsess_over_service==TRUE)?"启用":"禁用");
 
-		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->checks_enabled==TRUE)?"Yes":"No");
+		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->checks_enabled==TRUE)?"启用":"禁用");
 
-		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->accept_passive_service_checks==TRUE)?"Yes":"No");
+		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->accept_passive_service_checks==TRUE)?"启用":"禁用");
 
-		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->check_freshness==TRUE)?"Yes":"No");
+		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->check_freshness==TRUE)?"启用":"禁用");
 
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_service->freshness_threshold==0)
-			printf("Auto-determined value\n");
+			printf("自动检测值\n");
 		else
-			printf("%d seconds\n",temp_service->freshness_threshold);
+			printf("%d 秒\n",temp_service->freshness_threshold);
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
@@ -1335,7 +1335,7 @@ void display_services(void){
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
-		printf("%s\n",(temp_service->notifications_enabled==TRUE)?"Yes":"No");
+		printf("%s\n",(temp_service->notifications_enabled==TRUE)?"启用":"禁用");
 		printf("</TD>\n");
 
 		get_interval_time_string(temp_service->notification_interval,time_string,sizeof(time_string));
@@ -1348,30 +1348,30 @@ void display_services(void){
 		options=0;
 		if(temp_service->notify_on_unknown==TRUE){
 			options=1;
-			printf("Unknown");
+			printf("未知");
 	                }
 		if(temp_service->notify_on_warning==TRUE){
-			printf("%sWarning",(options)?", ":"");
+			printf("%s告警",(options)?", ":"");
 			options=1;
 	                }
 		if(temp_service->notify_on_critical==TRUE){
-			printf("%sCritical",(options)?", ":"");
+			printf("%s紧急",(options)?", ":"");
 			options=1;
 	                }
 		if(temp_service->notify_on_recovery==TRUE){
-			printf("%sRecovery",(options)?", ":"");
+			printf("%s恢复(RECOVERY)",(options)?", ":"");
 			options=1;
 	                }
 		if(temp_service->notify_on_flapping==TRUE){
-			printf("%sFlapping",(options)?", ":"");
+			printf("%s抖动(FLAPPING)",(options)?", ":"");
 			options=1;
 	                }
 		if(temp_service->notify_on_downtime==TRUE){
-			printf("%sDowntime",(options)?", ":"");
+			printf("%s停机时间",(options)?", ":"");
 			options=1;
 	                }
 		if(!options)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_service->notification_period==NULL)
@@ -1388,45 +1388,45 @@ void display_services(void){
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
-		printf("%s\n",(temp_service->event_handler_enabled==TRUE)?"Yes":"No");
+		printf("%s\n",(temp_service->event_handler_enabled==TRUE)?"启用":"禁用");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
 		options=0;
 		if(temp_service->stalk_on_ok==TRUE){
 			options=1;
-			printf("Ok");
+			printf("正常(OK)");
 	                }
 		if(temp_service->stalk_on_warning==TRUE){
-			printf("%sWarning",(options)?", ":"");
+			printf("%s告警",(options)?", ":"");
 			options=1;
 	                }
 		if(temp_service->stalk_on_unknown==TRUE){
-			printf("%sUnknown",(options)?", ":"");
+			printf("%s未知",(options)?", ":"");
 			options=1;
 	                }
 		if(temp_service->stalk_on_critical==TRUE){
-			printf("%sCritical",(options)?", ":"");
+			printf("%s紧急",(options)?", ":"");
 			options=1;
 	                }
 		if(options==0)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
-		printf("%s\n",(temp_service->flap_detection_enabled==TRUE)?"Yes":"No");
+		printf("%s\n",(temp_service->flap_detection_enabled==TRUE)?"启用":"禁用");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_service->low_flap_threshold==0.0)
-			printf("Program-wide value\n");
+			printf("程序设置值\n");
 		else
 			printf("%3.1f%%\n",temp_service->low_flap_threshold);
 		printf("</TD>\n");
 			
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_service->high_flap_threshold==0.0)
-			printf("Program-wide value\n");
+			printf("程序设置值\n");
 		else
 			printf("%3.1f%%\n",temp_service->high_flap_threshold);
 		printf("</TD>\n");
@@ -1435,30 +1435,30 @@ void display_services(void){
 		options=0;
 		if(temp_service->flap_detection_on_ok==TRUE){
 			options=1;
-			printf("Ok");
+			printf("启动(UP)");
 	                }
 		if(temp_service->flap_detection_on_warning==TRUE){
-			printf("%sWarning",(options)?", ":"");
+			printf("%s警告(WARNING)",(options)?", ":"");
 			options=1;
 	                }
 		if(temp_service->flap_detection_on_unknown==TRUE){
-			printf("%sUnknown",(options)?", ":"");
+			printf("%s未知(UNKNOWN)",(options)?", ":"");
 			options=1;
 	                }
 		if(temp_service->flap_detection_on_critical==TRUE){
-			printf("%sCritical",(options)?", ":"");
+			printf("%s紧急(CRITICAL)",(options)?", ":"");
 			options=1;
 	                }
 		if(options==0)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
-		printf("%s\n",(temp_service->process_performance_data==TRUE)?"Yes":"No");
+		printf("%s\n",(temp_service->process_performance_data==TRUE)?"有效":"无效");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>",bg_class);
-		printf("%s\n",(temp_service->failure_prediction_enabled==TRUE)?"Yes":"No");
+		printf("%s\n",(temp_service->failure_prediction_enabled==TRUE)?"启用":"禁用");
 		printf("</TD>\n");
 
 		printf("<TD CLASS='%s'>%s</TD>\n",bg_class,(temp_service->failure_prediction_options==NULL)?"&nbsp;":html_encode(temp_service->failure_prediction_options,FALSE));
@@ -1483,10 +1483,10 @@ void display_services(void){
 		options=0;
 		if(temp_service->retain_status_information==TRUE){
 			options=1;
-			printf("Status Information");
+			printf("状态信息");
 	                }
 		if(temp_service->retain_nonstatus_information==TRUE){
-			printf("%sNon-Status Information",(options==1)?", ":"");
+			printf("%s非状态信息",(options==1)?", ":"");
 			options=1;
 	                }
 		if(options==0)
@@ -1529,7 +1529,7 @@ void display_timeperiods(void){
 		return;
 	        }
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Time Period%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>时间范围%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":" "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
 	printf("<P>\n");
@@ -1537,11 +1537,11 @@ void display_timeperiods(void){
 
 	printf("<TABLE BORDER=0 CLASS='data'>\n");
 	printf("<TR>\n");
-	printf("<TH CLASS='data'>Name</TH>\n");
-	printf("<TH CLASS='data'>Alias/Description</TH>\n");
-	printf("<TH CLASS='data'>Exclusions</TH>\n");
-	printf("<TH CLASS='data'>Days/Dates</TH>\n");
-	printf("<TH CLASS='data'>Times</TH>\n");
+	printf("<TH CLASS='data'>名称</TH>\n");
+	printf("<TH CLASS='data'>别名/描述</TH>\n");
+	printf("<TH CLASS='data'>不包含</TH>\n");
+	printf("<TH CLASS='data'>周期/日期</TH>\n");
+	printf("<TH CLASS='data'>时间</TH>\n");
 	printf("</TR>\n");
 
 	/* check all the time periods... */
@@ -1704,7 +1704,7 @@ void display_timeperiods(void){
 
 
 void display_commands(void){
-	command *temp_command;
+	command *temp_command=NULL;
 	int odd=0;
 	char *bg_class="";
 
@@ -1714,12 +1714,12 @@ void display_commands(void){
 		return;
 	        }
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Command%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>命令%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":" "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
 	printf("<P><DIV ALIGN=CENTER>\n");
 	printf("<TABLE BORDER=0 CLASS='data'>\n");
-	printf("<TR><TH CLASS='data'>Command Name</TH><TH CLASS='data'>Command Line</TH></TR>\n");
+	printf("<TR><TH CLASS='data'>命令名</TH><TH CLASS='data'>命令行</TH></TR>\n");
 
 	/* check all commands */
 	for(temp_command=command_list;temp_command!=NULL;temp_command=temp_command->next) if (((*to_expand)=='\0')||(!strcmp(to_expand,temp_command->name))){
@@ -1761,7 +1761,7 @@ void display_servicedependencies(void){
 		return;
 	        }
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Service Dependencie%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>服务依赖%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":"s Involving Host "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
 	printf("<P>\n");
@@ -1769,17 +1769,17 @@ void display_servicedependencies(void){
 
 	printf("<TABLE BORDER=0 CLASS='data'>\n");
 	printf("<TR>\n");
-	printf("<TH CLASS='data' COLSPAN=2>Dependent Service</TH>");
-	printf("<TH CLASS='data' COLSPAN=2>Master Service</TH>");
+	printf("<TH CLASS='data' COLSPAN=2>依赖的服务</TH>");
+	printf("<TH CLASS='data' COLSPAN=2>主服务</TH>");
 	printf("</TR>\n");
 	printf("<TR>\n");
-	printf("<TH CLASS='data'>Host</TH>");
-	printf("<TH CLASS='data'>Service</TH>");
-	printf("<TH CLASS='data'>Host</TH>");
-	printf("<TH CLASS='data'>Service</TH>");
-	printf("<TH CLASS='data'>Dependency Type</TH>");
-	printf("<TH CLASS='data'>Dependency Period</TH>");
-	printf("<TH CLASS='data'>Dependency Failure Options</TH>");
+	printf("<TH CLASS='data'>主机</TH>");
+	printf("<TH CLASS='data'>服务</TH>");
+	printf("<TH CLASS='data'>主机</TH>");
+	printf("<TH CLASS='data'>服务</TH>");
+	printf("<TH CLASS='data'>依赖类型</TH>");
+	printf("<TH CLASS='data'>依赖过程</TH>");
+	printf("<TH CLASS='data'>依赖失败选项</TH>");
 	printf("</TR>\n");
 
 	/* check all the service dependencies... */
@@ -1807,7 +1807,7 @@ void display_servicedependencies(void){
 		printf("<TD CLASS='%s'><A HREF='%s?type=services&expand=%s#%s;",bg_class,CONFIG_CGI,url_encode(temp_sd->host_name),url_encode(temp_sd->host_name));
 		printf("%s'>%s</A></TD>\n",url_encode(temp_sd->service_description),html_encode(temp_sd->service_description,FALSE));
 
-		printf("<TD CLASS='%s'>%s</TD>",bg_class,(temp_sd->dependency_type==NOTIFICATION_DEPENDENCY)?"Notification":"Check Execution");
+		printf("<TD CLASS='%s'>%s</TD>",bg_class,(temp_sd->dependency_type==NOTIFICATION_DEPENDENCY)?"通知":"检查执行");
 
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_sd->dependency_period==NULL)
@@ -1819,23 +1819,23 @@ void display_servicedependencies(void){
 		printf("<TD CLASS='%s'>",bg_class);
 		options=FALSE;
 		if(temp_sd->fail_on_ok==TRUE){
-			printf("Ok");
+			printf("正常(OK)");
 			options=TRUE;
 		        }
 		if(temp_sd->fail_on_warning==TRUE){
-			printf("%sWarning",(options==TRUE)?", ":"");
+			printf("%s告警",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(temp_sd->fail_on_unknown==TRUE){
-			printf("%sUnknown",(options==TRUE)?", ":"");
+			printf("%s未知",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(temp_sd->fail_on_critical==TRUE){
-			printf("%sCritical",(options==TRUE)?", ":"");
+			printf("%s紧急",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(temp_sd->fail_on_pending==TRUE){
-			printf("%sPending",(options==TRUE)?", ":"");
+			printf("%s未决",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		printf("</TD>\n");
@@ -1868,7 +1868,7 @@ void display_serviceescalations(void){
 		return;
 	        }
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Service Escalation%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>服务扩展%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":"s on Host "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
 	printf("<P>\n");
@@ -1876,17 +1876,17 @@ void display_serviceescalations(void){
 
 	printf("<TABLE BORDER=0 CLASS='data'>\n");
 	printf("<TR>\n");
-	printf("<TH CLASS='data' COLSPAN=2>Service</TH>");
+	printf("<TH CLASS='data' COLSPAN=2>服务</TH>");
 	printf("</TR>\n");
 	printf("<TR>\n");
-	printf("<TH CLASS='data'>Host</TH>");
-	printf("<TH CLASS='data'>Description</TH>");
-	printf("<TH CLASS='data'>Contacts/Groups</TH>");
-	printf("<TH CLASS='data'>First Notification</TH>");
-	printf("<TH CLASS='data'>Last Notification</TH>");
-	printf("<TH CLASS='data'>Notification Interval</TH>");
-	printf("<TH CLASS='data'>Escalation Period</TH>");
-	printf("<TH CLASS='data'>Escalation Options</TH>");
+	printf("<TH CLASS='data'>主机</TH>");
+	printf("<TH CLASS='data'>描述</TH>");
+	printf("<TH CLASS='data'>联系人组</TH>");
+	printf("<TH CLASS='data'>首先通知</TH>");
+	printf("<TH CLASS='data'>最后通知</TH>");
+	printf("<TH CLASS='data'>通知间隔</TH>");
+	printf("<TH CLASS='data'>扩展持续时间</TH>");
+	printf("<TH CLASS='data'>扩展选项</TH>");
 	printf("</TR>\n");
 
 	/* check all the service escalations... */
@@ -1930,7 +1930,7 @@ void display_serviceescalations(void){
 
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_se->last_notification==0)
-			printf("Infinity");
+			printf("无限");
 		else
 			printf("%d",temp_se->last_notification);
 		printf("</TD>\n");
@@ -1938,7 +1938,7 @@ void display_serviceescalations(void){
 		get_interval_time_string(temp_se->notification_interval,time_string,sizeof(time_string));
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_se->notification_interval==0.0)
-			printf("Notify Only Once (No Re-notification)");
+			printf("一次(不重复通知)");
 		else
 			printf("%s",time_string);
 		printf("</TD>\n");
@@ -1953,23 +1953,23 @@ void display_serviceescalations(void){
 		printf("<TD CLASS='%s'>",bg_class);
 		options=FALSE;
 		if(temp_se->escalate_on_warning==TRUE){
-			printf("%sWarning",(options==TRUE)?", ":"");
+			printf("%s告警",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(temp_se->escalate_on_unknown==TRUE){
-			printf("%sUnknown",(options==TRUE)?", ":"");
+			printf("%s未知",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(temp_se->escalate_on_critical==TRUE){
-			printf("%sCritical",(options==TRUE)?", ":"");
+			printf("%s紧急",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(temp_se->escalate_on_recovery==TRUE){
-			printf("%sRecovery",(options==TRUE)?", ":"");
+			printf("%s恢复(RECOVERY)",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(options==FALSE)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("</TR>\n");
@@ -1996,7 +1996,7 @@ void display_hostdependencies(void){
 		return;
 	        }
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Host Dependencie%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>主机依赖%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":"s Involving Host "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
 	printf("<P>\n");
@@ -2004,11 +2004,11 @@ void display_hostdependencies(void){
 
 	printf("<TABLE BORDER=0 CLASS='data'>\n");
 	printf("<TR>\n");
-	printf("<TH CLASS='data'>Dependent Host</TH>");
-	printf("<TH CLASS='data'>Master Host</TH>");
-	printf("<TH CLASS='data'>Dependency Type</TH>");
-	printf("<TH CLASS='data'>Dependency Period</TH>");
-	printf("<TH CLASS='data'>Dependency Failure Options</TH>");
+	printf("<TH CLASS='data'>依赖主机</TH>");
+	printf("<TH CLASS='data'>上级主机</TH>");
+	printf("<TH CLASS='data'>依赖类型</TH>");
+	printf("<TH CLASS='data'>依赖时间段</TH>");
+	printf("<TH CLASS='data'>无效依依赖选项</TH>");
 	printf("</TR>\n");
 
 	/* check all the host dependencies... */
@@ -2042,19 +2042,19 @@ void display_hostdependencies(void){
 		printf("<TD CLASS='%s'>",bg_class);
 		options=FALSE;
 		if(temp_hd->fail_on_up==TRUE){
-			printf("Up");
+			printf("运行");
 			options=TRUE;
 		        }
 		if(temp_hd->fail_on_down==TRUE){
-			printf("%sDown",(options==TRUE)?", ":"");
+			printf("%s宕机",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(temp_hd->fail_on_unreachable==TRUE){
-			printf("%sUnreachable",(options==TRUE)?", ":"");
+			printf("%s不可达",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(temp_hd->fail_on_pending==TRUE){
-			printf("%sPending",(options==TRUE)?", ":"");
+			printf("%s未决",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		printf("</TD>\n");
@@ -2087,7 +2087,7 @@ void display_hostescalations(void){
 		return;
 	        }
 
-	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>Host Escalation%s%s</DIV></P>\n",
+	printf("<P><DIV ALIGN=CENTER CLASS='dataTitle'>主机扩展%s%s</DIV></P>\n",
 		(*to_expand=='\0'?"s":"s for Host "),(*to_expand=='\0'?"":html_encode(to_expand,FALSE)));
 
 	printf("<P>\n");
@@ -2095,13 +2095,13 @@ void display_hostescalations(void){
 
 	printf("<TABLE BORDER=0 CLASS='data'>\n");
 	printf("<TR>\n");
-	printf("<TH CLASS='data'>Host</TH>");
-	printf("<TH CLASS='data'>Contacts/Groups</TH>");
-	printf("<TH CLASS='data'>First Notification</TH>");
-	printf("<TH CLASS='data'>Last Notification</TH>");
-	printf("<TH CLASS='data'>Notification Interval</TH>");
-	printf("<TH CLASS='data'>Escalation Period</TH>");
-	printf("<TH CLASS='data'>Escalation Options</TH>");
+	printf("<TH CLASS='data'>主机</TH>");
+	printf("<TH CLASS='data'>联系人组</TH>");
+	printf("<TH CLASS='data'>首先通知</TH>");
+	printf("<TH CLASS='data'>最后通知</TH>");
+	printf("<TH CLASS='data'>通知间隔</TH>");
+	printf("<TH CLASS='data'>扩展持续时间</TH>");
+	printf("<TH CLASS='data'>扩展选项</TH>");
 	printf("</TR>\n");
 
 	/* check all the host escalations... */
@@ -2142,7 +2142,7 @@ void display_hostescalations(void){
 
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_he->last_notification==0)
-			printf("Infinity");
+			printf("无限");
 		else
 			printf("%d",temp_he->last_notification);
 		printf("</TD>\n");
@@ -2150,7 +2150,7 @@ void display_hostescalations(void){
 		get_interval_time_string(temp_he->notification_interval,time_string,sizeof(time_string));
 		printf("<TD CLASS='%s'>",bg_class);
 		if(temp_he->notification_interval==0.0)
-			printf("Notify Only Once (No Re-notification)");
+			printf("一次(不重复通知)");
 		else
 			printf("%s",time_string);
 		printf("</TD>\n");
@@ -2165,19 +2165,19 @@ void display_hostescalations(void){
 		printf("<TD CLASS='%s'>",bg_class);
 		options=FALSE;
 		if(temp_he->escalate_on_down==TRUE){
-			printf("%sDown",(options==TRUE)?", ":"");
+			printf("%s宕机",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(temp_he->escalate_on_unreachable==TRUE){
-			printf("%sUnreachable",(options==TRUE)?", ":"");
+			printf("%s不可达",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(temp_he->escalate_on_recovery==TRUE){
-			printf("%sRecovery",(options==TRUE)?", ":"");
+			printf("%s恢复(RECOVERY)",(options==TRUE)?", ":"");
 			options=TRUE;
 		        }
 		if(options==FALSE)
-			printf("None");
+			printf("无");
 		printf("</TD>\n");
 
 		printf("</TR>\n");
@@ -2194,9 +2194,8 @@ void display_hostescalations(void){
 
 void unauthorized_message(void){
 
-	printf("<P><DIV CLASS='errorMessage'>It appears as though you do not have permission to view the configuration information you requested...</DIV></P>\n");
-	printf("<P><DIV CLASS='errorDescription'>If you believe this is an error, check the HTTP server authentication requirements for accessing this CGI<br>");
-	printf("and check the authorization options in your CGI configuration file.</DIV></P>\n");
+	printf("<P><DIV CLASS='errorMessage'>无权查看配置信息。</DIV></P>\n");
+	printf("<P><DIV CLASS='errorDescription'>请检查HTTP服务器对该CGI的认证设置</DIV></P>\n");
 
 	return;
 	}
@@ -2428,7 +2427,7 @@ void display_options(void){
 
 	printf("<br><br>\n");
 
-	printf("<div align=center class='reportSelectTitle'>Select Type of Config Data You Wish To View</div>\n");
+	printf("<div align=center class='reportSelectTitle'>选择要查看的配置数据类型。</div>\n");
 
 	printf("<br><br>\n");
 
@@ -2437,26 +2436,26 @@ void display_options(void){
 	printf("<div align=center>\n");
 	printf("<table border=0>\n");
 
-	printf("<tr><td align=left class='reportSelectSubTitle'>Object Type:</td></tr>\n");
+	printf("<tr><td align=left class='reportSelectSubTitle'>对象类型:</td></tr>\n");
 	printf("<tr><td align=left class='reportSelectItem'>");
 	printf("<select name='type'>\n");
-	printf("<option value='hosts' %s>Hosts\n",(display_type==DISPLAY_HOSTS)?"SELECTED":"");
-	printf("<option value='hostdependencies' %s>Host Dependencies\n",(display_type==DISPLAY_HOSTDEPENDENCIES)?"SELECTED":"");
-	printf("<option value='hostescalations' %s>Host Escalations\n",(display_type==DISPLAY_HOSTESCALATIONS)?"SELECTED":"");
-	printf("<option value='hostgroups' %s>Host Groups\n",(display_type==DISPLAY_HOSTGROUPS)?"SELECTED":"");
-	printf("<option value='services' %s>Services\n",(display_type==DISPLAY_SERVICES)?"SELECTED":"");
-	printf("<option value='servicegroups' %s>Service Groups\n",(display_type==DISPLAY_SERVICEGROUPS)?"SELECTED":"");
-	printf("<option value='servicedependencies' %s>Service Dependencies\n",(display_type==DISPLAY_SERVICEDEPENDENCIES)?"SELECTED":"");
-	printf("<option value='serviceescalations' %s>Service Escalations\n",(display_type==DISPLAY_SERVICEESCALATIONS)?"SELECTED":"");
-	printf("<option value='contacts' %s>Contacts\n",(display_type==DISPLAY_CONTACTS)?"SELECTED":"");
-	printf("<option value='contactgroups' %s>Contact Groups\n",(display_type==DISPLAY_CONTACTGROUPS)?"SELECTED":"");
-	printf("<option value='timeperiods' %s>Timeperiods\n",(display_type==DISPLAY_TIMEPERIODS)?"SELECTED":"");
-	printf("<option value='commands' %s>Commands\n",(display_type==DISPLAY_COMMANDS)?"SELECTED":"");
+	printf("<option value='hosts' %s>主机\n",(display_type==DISPLAY_HOSTS)?"SELECTED":"");
+	printf("<option value='hostdependencies' %s>主机依赖\n",(display_type==DISPLAY_HOSTDEPENDENCIES)?"SELECTED":"");
+	printf("<option value='hostescalations' %s>主机扩展\n",(display_type==DISPLAY_HOSTESCALATIONS)?"SELECTED":"");
+	printf("<option value='hostgroups' %s>主机组\n",(display_type==DISPLAY_HOSTGROUPS)?"SELECTED":"");
+	printf("<option value='services' %s>服务\n",(display_type==DISPLAY_SERVICES)?"SELECTED":"");
+	printf("<option value='servicegroups' %s>服务组\n",(display_type==DISPLAY_SERVICEGROUPS)?"SELECTED":"");
+	printf("<option value='servicedependencies' %s>服务依赖\n",(display_type==DISPLAY_SERVICEDEPENDENCIES)?"SELECTED":"");
+	printf("<option value='serviceescalations' %s>服务扩展\n",(display_type==DISPLAY_SERVICEESCALATIONS)?"SELECTED":"");
+	printf("<option value='contacts' %s>联系人\n",(display_type==DISPLAY_CONTACTS)?"SELECTED":"");
+	printf("<option value='contactgroups' %s>联系人组\n",(display_type==DISPLAY_CONTACTGROUPS)?"SELECTED":"");
+	printf("<option value='timeperiods' %s>时间范围\n",(display_type==DISPLAY_TIMEPERIODS)?"SELECTED":"");
+	printf("<option value='commands' %s>命令\n",(display_type==DISPLAY_COMMANDS)?"SELECTED":"");
 	printf("<option value='commands' %s>Command Expansion\n",(display_type==DISPLAY_COMMAND_EXPANSION)?"SELECTED":"");
 	printf("</select>\n");
 	printf("</td></tr>\n");
 
-	printf("<tr><td class='reportSelectItem'><input type='submit' value='Continue'></td></tr>\n");
+	printf("<tr><td class='reportSelectItem'><input type='submit' value='继续'></td></tr>\n");
 	printf("</table>\n");
 	printf("</div>\n");
 

@@ -217,6 +217,7 @@ install-basic:
 	$(INSTALL) -m 775 $(INSTALL_OPTS) -d $(DESTDIR)$(LIBEXECDIR)
 	$(INSTALL) -m 775 $(INSTALL_OPTS) -d $(DESTDIR)$(LOGDIR)
 	$(INSTALL) -m 775 $(INSTALL_OPTS) -d $(DESTDIR)$(LOGDIR)/archives
+	$(INSTALL) -m 775 $(INSTALL_OPTS) -d $(DESTDIR)$(LOGDIR)/rrd
 	$(INSTALL) -m 775 $(INSTALL_OPTS) -d $(DESTDIR)$(CHECKRESULTDIR)
 	if [ $(INSTALLPERLSTUFF) = yes ]; then \
 		$(INSTALL) -m 664 $(INSTALL_OPTS) p1.pl $(DESTDIR)$(BINDIR); \
@@ -244,6 +245,8 @@ install-config:
 	$(INSTALL) -m 775 $(INSTALL_OPTS) -d $(DESTDIR)$(CFGDIR)
 	$(INSTALL) -m 775 $(INSTALL_OPTS) -d $(DESTDIR)$(CFGDIR)/objects
 	$(INSTALL) -b -m 664 $(INSTALL_OPTS) sample-config/nagios.cfg $(DESTDIR)$(CFGDIR)/nagios.cfg
+	$(INSTALL) -b -m 664 $(INSTALL_OPTS) sample-config/nagiosgraph.cfg $(DESTDIR)$(CFGDIR)/nagiosgraph.cfg
+	$(INSTALL) -b -m 664 $(INSTALL_OPTS) sample-config/htpasswd.users $(DESTDIR)$(CFGDIR)/htpasswd.users
 	$(INSTALL) -b -m 664 $(INSTALL_OPTS) sample-config/cgi.cfg $(DESTDIR)$(CFGDIR)/cgi.cfg
 	$(INSTALL) -b -m 660 $(INSTALL_OPTS) sample-config/resource.cfg $(DESTDIR)$(CFGDIR)/resource.cfg
 	$(INSTALL) -b -m 664 $(INSTALL_OPTS) sample-config/template-object/templates.cfg $(DESTDIR)$(CFGDIR)/objects/templates.cfg
@@ -254,6 +257,8 @@ install-config:
 	$(INSTALL) -b -m 664 $(INSTALL_OPTS) sample-config/template-object/windows.cfg $(DESTDIR)$(CFGDIR)/objects/windows.cfg
 	$(INSTALL) -b -m 664 $(INSTALL_OPTS) sample-config/template-object/printer.cfg $(DESTDIR)$(CFGDIR)/objects/printer.cfg
 	$(INSTALL) -b -m 664 $(INSTALL_OPTS) sample-config/template-object/switch.cfg $(DESTDIR)$(CFGDIR)/objects/switch.cfg
+	$(INSTALL) -b -m 775 $(INSTALL_OPTS) sample-config/check_sys_temperature.sh $(DESTDIR)$(LIBEXECDIR)/check_sys_temperature.sh
+	$(INSTALL) -b -m 775 $(INSTALL_OPTS) sample-config/check_traffic.sh $(DESTDIR)$(LIBEXECDIR)/check_traffic.sh
 
 	@echo ""
 	@echo "*** Config files installed ***"

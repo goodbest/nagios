@@ -548,7 +548,7 @@ soft_state_dependencies=0
 # These options determine when Nagios will react to detected changes
 # in system time (either forward or backwards).
 
-#time_change_threshold=900
+time_change_threshold=900
 
 
 
@@ -594,7 +594,7 @@ auto_rescheduling_window=180
 # This is the number of seconds to sleep between checking for system
 # events and service checks that need to be run.
 
-sleep_time=0.25
+sleep_time=2
 
 
 
@@ -828,7 +828,7 @@ enable_event_handlers=1
 # performance data.
 # Values: 1 = process performance data, 0 = do not process performance data
 
-process_performance_data=0
+process_performance_data=1
 
 
 
@@ -841,7 +841,7 @@ process_performance_data=0
 # more information on performance data.
 
 #host_perfdata_command=process-host-perfdata
-#service_perfdata_command=process-service-perfdata
+service_perfdata_command=process-service-perfdata
 
 
 
@@ -852,7 +852,7 @@ process_performance_data=0
 
 #host_perfdata_file=/tmp/host-perfdata
 #service_perfdata_file=/tmp/service-perfdata
-
+service_perfdata_file=@localstatedir@/perfdata.log
 
 
 # HOST AND SERVICE PERFORMANCE DATA FILE TEMPLATES
@@ -865,6 +865,7 @@ process_performance_data=0
 
 #host_perfdata_file_template=[HOSTPERFDATA]\t$TIMET$\t$HOSTNAME$\t$HOSTEXECUTIONTIME$\t$HOSTOUTPUT$\t$HOSTPERFDATA$
 #service_perfdata_file_template=[SERVICEPERFDATA]\t$TIMET$\t$HOSTNAME$\t$SERVICEDESC$\t$SERVICEEXECUTIONTIME$\t$SERVICELATENCY$\t$SERVICEOUTPUT$\t$SERVICEPERFDATA$
+service_perfdata_file_template=$LASTSERVICECHECK$||$HOSTNAME$||$SERVICEDESC$||$SERVICEOUTPUT$||$SERVICEPERFDATA$
 
 
 
@@ -877,7 +878,7 @@ process_performance_data=0
 
 #host_perfdata_file_mode=a
 #service_perfdata_file_mode=a
-
+service_perfdata_file_mode=a
 
 
 # HOST AND SERVICE PERFORMANCE DATA FILE PROCESSING INTERVAL
@@ -888,7 +889,7 @@ process_performance_data=0
 
 #host_perfdata_file_processing_interval=0
 #service_perfdata_file_processing_interval=0
-
+service_perfdata_file_processing_interval=30
 
 
 # HOST AND SERVICE PERFORMANCE DATA FILE PROCESSING COMMANDS
@@ -898,7 +899,7 @@ process_performance_data=0
 
 #host_perfdata_file_processing_command=process-host-perfdata-file
 #service_perfdata_file_processing_command=process-service-perfdata-file
-
+service_perfdata_file_processing_command=process-service-perfdata
 
 
 # OBSESS OVER SERVICE CHECKS OPTION
@@ -1084,7 +1085,7 @@ high_host_flap_threshold=20.0
 #	strict-iso8601	(YYYY-MM-DDTHH:MM:SS)
 #
 
-date_format=us
+date_format=iso8601
 
 
 

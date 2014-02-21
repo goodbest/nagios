@@ -40,3 +40,15 @@ Alias @htmurl@ "@datadir@"
    Require valid-user
 </Directory>
 
+#给中文在线帮助文档显示用的一个虚拟目录路径
+Alias /pub/images "@datadir@/docs/images"
+<Directory "@datadir@/docs/images">
+   Options None
+   AllowOverride None
+   Order allow,deny
+   Allow from all
+   AuthName "Nagios Access"
+   AuthType Basic
+   AuthUserFile @sysconfdir@/htpasswd.users
+   Require valid-user
+</Directory>

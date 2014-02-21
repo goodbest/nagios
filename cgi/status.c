@@ -312,50 +312,50 @@ int main(void){
 		printf("<td align=left valign=top width=33%%>\n");
 
 		/* info table */
-		display_info_table("Current Network Status",TRUE,&current_authdata);
+		display_info_table("当前的网络状态",TRUE,&current_authdata);
 
 		printf("<TABLE BORDER=1 CELLPADDING=0 CELLSPACING=0 CLASS='linkBox'>\n");
 		printf("<TR><TD CLASS='linkBox'>\n");
 
 		if(display_type==DISPLAY_HOSTS){
-			printf("<a href='%s?host=%s'>View History For %s</a><br>\n",HISTORY_CGI,(show_all_hosts==TRUE)?"all":url_encode(host_name),(show_all_hosts==TRUE)?"all hosts":"This Host");
-			printf("<a href='%s?host=%s'>View Notifications For %s</a>\n",NOTIFICATIONS_CGI,(show_all_hosts==TRUE)?"all":url_encode(host_name),(show_all_hosts==TRUE)?"All Hosts":"This Host");
+			printf("<a href='%s?host=%s'>%s的历史信息</a><br>\n",HISTORY_CGI,(show_all_hosts==TRUE)?"all":url_encode(host_name),(show_all_hosts==TRUE)?"所有主机":"该主机");
+			printf("<a href='%s?host=%s'>%s的通知历史信息</a>\n",NOTIFICATIONS_CGI,(show_all_hosts==TRUE)?"all":url_encode(host_name),(show_all_hosts==TRUE)?"所有主机":"该主机");
 			if(show_all_hosts==FALSE)
-				printf("<br><a href='%s?host=all'>View Service Status Detail For All Hosts</a>\n",STATUS_CGI);
+				printf("<br><a href='%s?host=all'>所有主机的服务详细状态</a>\n",STATUS_CGI);
 			else
-				printf("<br><a href='%s?hostgroup=all&style=hostdetail'>View Host Status Detail For All Hosts</a>\n",STATUS_CGI);
+				printf("<br><a href='%s?hostgroup=all&style=hostdetail'>所有主机的主机详细状态</a>\n",STATUS_CGI);
 	                }
 		else if(display_type==DISPLAY_SERVICEGROUPS){
 			if(show_all_servicegroups==FALSE){
 
 				if(group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_GRID || group_style_type==STYLE_SUMMARY)
-					printf("<a href='%s?servicegroup=%s&style=detail'>View Service Status Detail For This Service Group</a><br>\n",STATUS_CGI,url_encode(servicegroup_name));
+					printf("<a href='%s?servicegroup=%s&style=detail'>该服务组的服务详细状态</a><br>\n",STATUS_CGI,url_encode(servicegroup_name));
 				if(group_style_type==STYLE_DETAIL || group_style_type==STYLE_GRID || group_style_type==STYLE_SUMMARY)
-					printf("<a href='%s?servicegroup=%s&style=overview'>View Status Overview For This Service Group</a><br>\n",STATUS_CGI,url_encode(servicegroup_name));
+					printf("<a href='%s?servicegroup=%s&style=overview'>该服务组的概要状态</a><br>\n",STATUS_CGI,url_encode(servicegroup_name));
 				if(group_style_type==STYLE_DETAIL || group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_GRID)
-					printf("<a href='%s?servicegroup=%s&style=summary'>View Status Summary For This Service Group</a><br>\n",STATUS_CGI,url_encode(servicegroup_name));
+					printf("<a href='%s?servicegroup=%s&style=summary'>该服务组的汇总状态</a><br>\n",STATUS_CGI,url_encode(servicegroup_name));
 				if(group_style_type==STYLE_DETAIL || group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_SUMMARY)
-					printf("<a href='%s?servicegroup=%s&style=grid'>View Service Status Grid For This Service Group</a><br>\n",STATUS_CGI,url_encode(servicegroup_name));
+					printf("<a href='%s?servicegroup=%s&style=grid'>该服务组的服务状态表</a><br>\n",STATUS_CGI,url_encode(servicegroup_name));
 
 				if(group_style_type==STYLE_DETAIL)
-					printf("<a href='%s?servicegroup=all&style=detail'>View Service Status Detail For All Service Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?servicegroup=all&style=detail'>所有主机组的服务详细状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_OVERVIEW)
-					printf("<a href='%s?servicegroup=all&style=overview'>View Status Overview For All Service Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?servicegroup=all&style=overview'>所有主机组的概要状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_SUMMARY)
-					printf("<a href='%s?servicegroup=all&style=summary'>View Status Summary For All Service Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?servicegroup=all&style=summary'>所有服务组的汇总状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_GRID)
-					printf("<a href='%s?servicegroup=all&style=grid'>View Service Status Grid For All Service Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?servicegroup=all&style=grid'>所有服务组的服务状态表</a><br>\n",STATUS_CGI);
 
 			        }
 			else{
 				if(group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_GRID || group_style_type==STYLE_SUMMARY)
-					printf("<a href='%s?servicegroup=all&style=detail'>View Service Status Detail For All Service Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?servicegroup=all&style=detail'>所有服务组的服务详细状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_DETAIL || group_style_type==STYLE_GRID || group_style_type==STYLE_SUMMARY)
-					printf("<a href='%s?servicegroup=all&style=overview'>View Status Overview For All Service Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?servicegroup=all&style=overview'>所有服务组的概要状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_DETAIL || group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_GRID)
-					printf("<a href='%s?servicegroup=all&style=summary'>View Status Summary For All Service Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?servicegroup=all&style=summary'>所有服务组的汇总状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_DETAIL || group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_SUMMARY)
-					printf("<a href='%s?servicegroup=all&style=grid'>View Service Status Grid For All Service Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?servicegroup=all&style=grid'>所有服务组的服务状态表</a><br>\n",STATUS_CGI);
 			        }
 		
 		        }
@@ -363,38 +363,38 @@ int main(void){
 			if(show_all_hostgroups==FALSE){
 
 				if(group_style_type==STYLE_DETAIL)
-					printf("<a href='%s?hostgroup=all&style=detail'>View Service Status Detail For All Host Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?hostgroup=all&style=detail'>所有主机组的服务详细状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_HOST_DETAIL)
-					printf("<a href='%s?hostgroup=all&style=hostdetail'>View Host Status Detail For All Host Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?hostgroup=all&style=hostdetail'>所有主机组的主机详细状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_OVERVIEW)
-					printf("<a href='%s?hostgroup=all&style=overview'>View Status Overview For All Host Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?hostgroup=all&style=overview'>所有主机组的概要状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_SUMMARY)
-					printf("<a href='%s?hostgroup=all&style=summary'>View Status Summary For All Host Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?hostgroup=all&style=summary'>所有主机组的汇总状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_GRID)
-					printf("<a href='%s?hostgroup=all&style=grid'>View Status Grid For All Host Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?hostgroup=all&style=grid'>所有主机组的服务状态表</a><br>\n",STATUS_CGI);
 
 				if(group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_SUMMARY || group_style_type==STYLE_GRID || group_style_type==STYLE_HOST_DETAIL)
-					printf("<a href='%s?hostgroup=%s&style=detail'>View Service Status Detail For This Host Group</a><br>\n",STATUS_CGI,url_encode(hostgroup_name));
+					printf("<a href='%s?hostgroup=%s&style=detail'>该主机组服务详细状态</a><br>\n",STATUS_CGI,url_encode(hostgroup_name));
 				if(group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_DETAIL || group_style_type==STYLE_SUMMARY || group_style_type==STYLE_GRID)
-					printf("<a href='%s?hostgroup=%s&style=hostdetail'>View Host Status Detail For This Host Group</a><br>\n",STATUS_CGI,url_encode(hostgroup_name));
+					printf("<a href='%s?hostgroup=%s&style=hostdetail'>该主机组的主机详细状态</a><br>\n",STATUS_CGI,url_encode(hostgroup_name));
 				if(group_style_type==STYLE_DETAIL || group_style_type==STYLE_SUMMARY || group_style_type==STYLE_GRID || group_style_type==STYLE_HOST_DETAIL)
-					printf("<a href='%s?hostgroup=%s&style=overview'>View Status Overview For This Host Group</a><br>\n",STATUS_CGI,url_encode(hostgroup_name));
+					printf("<a href='%s?hostgroup=%s&style=overview'>该主机组的概要状态</a><br>\n",STATUS_CGI,url_encode(hostgroup_name));
 				if(group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_DETAIL || group_style_type==STYLE_GRID || group_style_type==STYLE_HOST_DETAIL)
-					printf("<a href='%s?hostgroup=%s&style=summary'>View Status Summary For This Host Group</a><br>\n",STATUS_CGI,url_encode(hostgroup_name));
+					printf("<a href='%s?hostgroup=%s&style=summary'>该主机组的汇总状态</a><br>\n",STATUS_CGI,url_encode(hostgroup_name));
 				if(group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_DETAIL || group_style_type==STYLE_SUMMARY || group_style_type==STYLE_HOST_DETAIL)
-					printf("<a href='%s?hostgroup=%s&style=grid'>View Status Grid For This Host Group</a><br>\n",STATUS_CGI,url_encode(hostgroup_name));
+					printf("<a href='%s?hostgroup=%s&style=grid'>该主机组的服务状态表</a><br>\n",STATUS_CGI,url_encode(hostgroup_name));
 		                }
 			else{
 				if(group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_SUMMARY || group_style_type==STYLE_GRID || group_style_type==STYLE_HOST_DETAIL)
-					printf("<a href='%s?hostgroup=all&style=detail'>View Service Status Detail For All Host Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?hostgroup=all&style=detail'>所有主机组的服务详细状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_DETAIL || group_style_type==STYLE_SUMMARY || group_style_type==STYLE_GRID)
-					printf("<a href='%s?hostgroup=all&style=hostdetail'>View Host Status Detail For All Host Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?hostgroup=all&style=hostdetail'>所有主机组的主机详细状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_DETAIL || group_style_type==STYLE_SUMMARY || group_style_type==STYLE_GRID || group_style_type==STYLE_HOST_DETAIL)
-					printf("<a href='%s?hostgroup=all&style=overview'>View Status Overview For All Host Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?hostgroup=all&style=overview'>所有主机组的概要状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_DETAIL || group_style_type==STYLE_GRID || group_style_type==STYLE_HOST_DETAIL)
-					printf("<a href='%s?hostgroup=all&style=summary'>View Status Summary For All Host Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?hostgroup=all&style=summary'>所有主机组的汇总状态</a><br>\n",STATUS_CGI);
 				if(group_style_type==STYLE_OVERVIEW || group_style_type==STYLE_DETAIL || group_style_type==STYLE_SUMMARY || group_style_type==STYLE_HOST_DETAIL)
-					printf("<a href='%s?hostgroup=all&style=grid'>View Status Grid For All Host Groups</a><br>\n",STATUS_CGI);
+					printf("<a href='%s?hostgroup=all&style=grid'>所有主机组的服务状态表</a><br>\n",STATUS_CGI);
 		                }
 	                }
 
@@ -532,8 +532,10 @@ void document_header(int use_stylesheet){
 	printf("<html>\n");
 	printf("<head>\n");
 	printf("<link rel=\"shortcut icon\" href=\"%sfavicon.ico\" type=\"image/ico\">\n",url_images_path);
+	printf("<meta http-equiv='content-type' content='text/html;charset=UTF-8'>\n");
+	printf("<meta http-equiv='Pragma' content='no-cache'>\n");
 	printf("<title>\n");
-	printf("Current Network Status\n");
+	printf("当前网络状态\n");
 	printf("</title>\n");
 
 	if(use_stylesheet==TRUE){
@@ -840,7 +842,7 @@ void show_service_status_totals(void){
 	total_problems=total_unknown+total_warning+total_critical;
 
 
-	printf("<DIV CLASS='serviceTotals'>Service Status Totals</DIV>\n");
+	printf("<DIV CLASS='serviceTotals'>服务状态汇总</DIV>\n");
 
 	printf("<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0>\n");
 	printf("<TR><TD>\n");
@@ -858,7 +860,7 @@ void show_service_status_totals(void){
 		printf("hostgroup=%s&style=detail",url_encode(hostgroup_name));
 	printf("&servicestatustypes=%d",SERVICE_OK);
 	printf("&hoststatustypes=%d'>",host_status_types);
-	printf("Ok</A></TH>\n");
+	printf("正常(OK)</A></TH>\n");
 
 	printf("<TH CLASS='serviceTotals'>");
 	printf("<A CLASS='serviceTotals' HREF='%s?",STATUS_CGI);
@@ -870,7 +872,7 @@ void show_service_status_totals(void){
 		printf("hostgroup=%s&style=detail",url_encode(hostgroup_name));
 	printf("&servicestatustypes=%d",SERVICE_WARNING);
 	printf("&hoststatustypes=%d'>",host_status_types);
-	printf("Warning</A></TH>\n");
+	printf("告警</A></TH>\n");
 
 	printf("<TH CLASS='serviceTotals'>");
 	printf("<A CLASS='serviceTotals' HREF='%s?",STATUS_CGI);
@@ -882,7 +884,7 @@ void show_service_status_totals(void){
 		printf("hostgroup=%s&style=detail",url_encode(hostgroup_name));
 	printf("&servicestatustypes=%d",SERVICE_UNKNOWN);
 	printf("&hoststatustypes=%d'>",host_status_types);
-	printf("Unknown</A></TH>\n");
+	printf("未知</A></TH>\n");
 
 	printf("<TH CLASS='serviceTotals'>");
 	printf("<A CLASS='serviceTotals' HREF='%s?",STATUS_CGI);
@@ -894,7 +896,7 @@ void show_service_status_totals(void){
 		printf("hostgroup=%s&style=detail",url_encode(hostgroup_name));
 	printf("&servicestatustypes=%d",SERVICE_CRITICAL);
 	printf("&hoststatustypes=%d'>",host_status_types);
-	printf("Critical</A></TH>\n");
+	printf("紧急</A></TH>\n");
 
 	printf("<TH CLASS='serviceTotals'>");
 	printf("<A CLASS='serviceTotals' HREF='%s?",STATUS_CGI);
@@ -906,7 +908,7 @@ void show_service_status_totals(void){
 		printf("hostgroup=%s&style=detail",url_encode(hostgroup_name));
 	printf("&servicestatustypes=%d",SERVICE_PENDING);
 	printf("&hoststatustypes=%d'>",host_status_types);
-	printf("Pending</A></TH>\n");
+	printf("未决</A></TH>\n");
 
 	printf("</TR>\n");
 
@@ -947,7 +949,7 @@ void show_service_status_totals(void){
 		printf("hostgroup=%s&style=detail",url_encode(hostgroup_name));
 	printf("&servicestatustypes=%d",SERVICE_UNKNOWN|SERVICE_WARNING|SERVICE_CRITICAL);
 	printf("&hoststatustypes=%d'>",host_status_types);
-	printf("<I>All Problems</I></A></TH>\n");
+	printf("<I>所有故障</I></A></TH>\n");
 
 	printf("<TH CLASS='serviceTotals'>");
 	printf("<A CLASS='serviceTotals' HREF='%s?",STATUS_CGI);
@@ -958,7 +960,7 @@ void show_service_status_totals(void){
 	else
 		printf("hostgroup=%s&style=detail",url_encode(hostgroup_name));
 	printf("&hoststatustypes=%d'>",host_status_types);
-	printf("<I>All Types</I></A></TH>\n");
+	printf("<I>所有类型</I></A></TH>\n");
 
 
 	printf("</TR><TR>\n");
@@ -1052,7 +1054,7 @@ void show_host_status_totals(void){
 	total_hosts=total_up+total_down+total_unreachable+total_pending;
 	total_problems=total_down+total_unreachable;
 
-	printf("<DIV CLASS='hostTotals'>Host Status Totals</DIV>\n");
+	printf("<DIV CLASS='hostTotals'>主机状态汇总</DIV>\n");
 
 	printf("<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0>\n");
 	printf("<TR><TD>\n");
@@ -1077,7 +1079,7 @@ void show_host_status_totals(void){
 	if(service_status_types!=all_service_status_types)
 		printf("&servicestatustypes=%d",service_status_types);
 	printf("&hoststatustypes=%d'>",HOST_UP);
-	printf("Up</A></TH>\n");
+	printf("运行</A></TH>\n");
 
 	printf("<TH CLASS='hostTotals'>");
 	printf("<A CLASS='hostTotals' HREF='%s?",STATUS_CGI);
@@ -1095,7 +1097,7 @@ void show_host_status_totals(void){
 	if(service_status_types!=all_service_status_types)
 		printf("&servicestatustypes=%d",service_status_types);
 	printf("&hoststatustypes=%d'>",HOST_DOWN);
-	printf("Down</A></TH>\n");
+	printf("宕机</A></TH>\n");
 
 	printf("<TH CLASS='hostTotals'>");
 	printf("<A CLASS='hostTotals' HREF='%s?",STATUS_CGI);
@@ -1113,7 +1115,7 @@ void show_host_status_totals(void){
 	if(service_status_types!=all_service_status_types)
 		printf("&servicestatustypes=%d",service_status_types);
 	printf("&hoststatustypes=%d'>",HOST_UNREACHABLE);
-	printf("Unreachable</A></TH>\n");
+	printf("不可达</A></TH>\n");
 
 	printf("<TH CLASS='hostTotals'>");
 	printf("<A CLASS='hostTotals' HREF='%s?",STATUS_CGI);
@@ -1131,7 +1133,7 @@ void show_host_status_totals(void){
 	if(service_status_types!=all_service_status_types)
 		printf("&servicestatustypes=%d",service_status_types);
 	printf("&hoststatustypes=%d'>",HOST_PENDING);
-	printf("Pending</A></TH>\n");
+	printf("未决</A></TH>\n");
 
 	printf("</TR>\n");
 
@@ -1174,7 +1176,7 @@ void show_host_status_totals(void){
 	if(service_status_types!=all_service_status_types)
 		printf("&servicestatustypes=%d",service_status_types);
 	printf("&hoststatustypes=%d'>",HOST_DOWN|HOST_UNREACHABLE);
-	printf("<I>All Problems</I></A></TH>\n");
+	printf("<I>所有故障</I></A></TH>\n");
 
 	printf("<TH CLASS='hostTotals'>");
 	printf("<A CLASS='hostTotals' HREF='%s?",STATUS_CGI);
@@ -1192,7 +1194,7 @@ void show_host_status_totals(void){
 	if(service_status_types!=all_service_status_types)
 		printf("&servicestatustypes=%d",service_status_types);
 	printf("'>");
-	printf("<I>All Types</I></A></TH>\n");
+	printf("<I>所有类型</I></A></TH>\n");
 
 	printf("</TR><TR>\n");
 
@@ -1278,47 +1280,48 @@ void show_service_detail(void){
 
 	printf("<td valign=top align=center width=33%%>\n");
 
-	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>Service Status Details For ");
+	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>");
 	if(display_type==DISPLAY_HOSTS){
 		if(show_all_hosts==TRUE)
-			printf("All Hosts");
+			printf("所有主机");
 		else
-			printf("Host '%s'",host_name);
+			printf("主机 '%s'",host_name);
 	        }
 	else if(display_type==DISPLAY_SERVICEGROUPS){
 		if(show_all_servicegroups==TRUE)
-			printf("All Service Groups");
+			printf("所有服务组");
 		else
-			printf("Service Group '%s'",url_encode(servicegroup_name));
+			printf("服务组 '%s' ",servicegroup_name);
 	        }
 	else{
 		if(show_all_hostgroups==TRUE)
-			printf("All Host Groups");
+			printf("所有主机组");
 		else
-			printf("Host Group '%s'",hostgroup_name);
+			printf("主机组 '%s' ",hostgroup_name);
 	        }
+	printf("的正常状态");
 	printf("</DIV>\n");
 
 	if(use_sort==TRUE){
-		printf("<DIV ALIGN=CENTER CLASS='statusSort'>Entries sorted by <b>");
+		printf("<DIV ALIGN=CENTER CLASS='statusSort'>排序:<b>");
 		if(sort_option==SORT_HOSTNAME)
-			printf("host name");
+			printf("主机名");
 		else if(sort_option==SORT_SERVICENAME)
-			printf("service name");
+			printf("服务");
 		else if(sort_option==SORT_SERVICESTATUS)
-			printf("service status");
+			printf("服务的状态");
 		else if(sort_option==SORT_LASTCHECKTIME)
-			printf("last check time");
+			printf("最近检查时间");
 		else if(sort_option==SORT_CURRENTATTEMPT)
-			printf("attempt number");
+			printf("尝试次数");
 		else if(sort_option==SORT_STATEDURATION)
-			printf("state duration");
-		printf("</b> (%s)\n",(sort_type==SORT_ASCENDING)?"ascending":"descending");
+			printf("持续时间");
+		printf("</b> (%s)\n",(sort_type==SORT_ASCENDING)?"升序":"降序");
 		printf("</DIV>\n");
 	        }
 
 	if(service_filter!=NULL)
-		printf("<DIV ALIGN=CENTER CLASS='statusSort'>Filtered By Services Matching \'%s\'</DIV>",service_filter);
+		printf("<DIV ALIGN=CENTER CLASS='statusSort'>按服务匹配 \'%s\' 过滤</DIV>",service_filter);
 
 	printf("<br>");
 
@@ -1373,19 +1376,21 @@ void show_service_detail(void){
 	printf("<TABLE BORDER=0 width=100%% CLASS='status'>\n");
 	printf("<TR>\n");
 
-	printf("<TH CLASS='status'>Host&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by host name (ascending)' TITLE='Sort by host name (ascending)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by host name (descending)' TITLE='Sort by host name (descending)'></A></TH>",temp_url,SORT_ASCENDING,SORT_HOSTNAME,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_HOSTNAME,url_images_path,DOWN_ARROW_ICON);
+	printf("<TH CLASS='status'>主机名&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='主机名排序(升序)' TITLE='主机名排序(升序)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='主机名排序(降序)' TITLE='主机名排序(降序)'></A></TH>",temp_url,SORT_ASCENDING,SORT_HOSTNAME,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_HOSTNAME,url_images_path,DOWN_ARROW_ICON);
+	/* sato */
+	printf("<TH CLASS='status'>别名</TH>\n");
+	
+	printf("<TH CLASS='status'>服务&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='服务排序(升序)' TITLE='服务排序(升序)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='服务排序(降序)' TITLE='服务排序(降序)'></A></TH>",temp_url,SORT_ASCENDING,SORT_SERVICENAME,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_SERVICENAME,url_images_path,DOWN_ARROW_ICON);
 
-	printf("<TH CLASS='status'>Service&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by service name (ascending)' TITLE='Sort by service name (ascending)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by service name (descending)' TITLE='Sort by service name (descending)'></A></TH>",temp_url,SORT_ASCENDING,SORT_SERVICENAME,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_SERVICENAME,url_images_path,DOWN_ARROW_ICON);
+	printf("<TH CLASS='status'>状态&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='服务正常状态排序(升序)' TITLE='服务正常状态排序(升序)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='服务正常状态排序(降序)' TITLE='服务正常状态排序(降序)'></A></TH>",temp_url,SORT_ASCENDING,SORT_SERVICESTATUS,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_SERVICESTATUS,url_images_path,DOWN_ARROW_ICON);
 
-	printf("<TH CLASS='status'>Status&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by service status (ascending)' TITLE='Sort by service status (ascending)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by service status (descending)' TITLE='Sort by service status (descending)'></A></TH>",temp_url,SORT_ASCENDING,SORT_SERVICESTATUS,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_SERVICESTATUS,url_images_path,DOWN_ARROW_ICON);
+	printf("<TH CLASS='status'>最近检查时间&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='最近检查时间排序(升序)' TITLE='最近检查时间排序(升序)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='最近检查时间排序(降序)' TITLE='最近检查时间排序(降序)'></A></TH>",temp_url,SORT_ASCENDING,SORT_LASTCHECKTIME,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_LASTCHECKTIME,url_images_path,DOWN_ARROW_ICON);
 
-	printf("<TH CLASS='status'>Last Check&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by last check time (ascending)' TITLE='Sort by last check time (ascending)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by last check time (descending)' TITLE='Sort by last check time (descending)'></A></TH>",temp_url,SORT_ASCENDING,SORT_LASTCHECKTIME,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_LASTCHECKTIME,url_images_path,DOWN_ARROW_ICON);
+	printf("<TH CLASS='status'>持续时间&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='持续时间排序(升序)' TITLE='持续时间排序(升序)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='持续时间排序(降序)' TITLE='持续时间排序(降序)'></A></TH>",temp_url,SORT_ASCENDING,SORT_STATEDURATION,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_STATEDURATION,url_images_path,DOWN_ARROW_ICON);
 
-	printf("<TH CLASS='status'>Duration&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by state duration (ascending)' TITLE='Sort by state duration (ascending)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by state duration time (descending)' TITLE='Sort by state duration time (descending)'></A></TH>",temp_url,SORT_ASCENDING,SORT_STATEDURATION,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_STATEDURATION,url_images_path,DOWN_ARROW_ICON);
+	printf("<TH CLASS='status'>尝试次数&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='尝试次数排序(升序)' TITLE='尝试次数排序(升序)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='尝试次数排序(降序)' TITLE='尝试次数排序(降序)'></A></TH>",temp_url,SORT_ASCENDING,SORT_CURRENTATTEMPT,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_CURRENTATTEMPT,url_images_path,DOWN_ARROW_ICON);
 
-	printf("<TH CLASS='status'>Attempt&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by current attempt (ascending)' TITLE='Sort by current attempt (ascending)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by current attempt (descending)' TITLE='Sort by current attempt (descending)'></A></TH>",temp_url,SORT_ASCENDING,SORT_CURRENTATTEMPT,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_CURRENTATTEMPT,url_images_path,DOWN_ARROW_ICON);
-
-	printf("<TH CLASS='status'>Status Information</TH>\n");
+	printf("<TH CLASS='status'>状态信息</TH>\n");
 	printf("</TR>\n");
 
 
@@ -1516,17 +1521,17 @@ void show_service_detail(void){
 				strcpy(date_time,"N/A");
 
 			if(temp_status->status==SERVICE_PENDING){
-				strncpy(status,"PENDING",sizeof(status));
+				strncpy(status,"未决",sizeof(status));
 				status_class="PENDING";
 				status_bg_class=(odd)?"Even":"Odd";
 		                }
 			else if(temp_status->status==SERVICE_OK){
-				strncpy(status,"OK",sizeof(status));
+				strncpy(status,"正常(OK)",sizeof(status));
 				status_class="OK";
 				status_bg_class=(odd)?"Even":"Odd";
 		                }
 			else if(temp_status->status==SERVICE_WARNING){
-				strncpy(status,"WARNING",sizeof(status));
+				strncpy(status,"告警",sizeof(status));
 				status_class="WARNING";
 				if(temp_status->problem_has_been_acknowledged==TRUE)
 					status_bg_class="BGWARNINGACK";
@@ -1536,7 +1541,7 @@ void show_service_detail(void){
 					status_bg_class="BGWARNING";
 		                }
 			else if(temp_status->status==SERVICE_UNKNOWN){
-				strncpy(status,"UNKNOWN",sizeof(status));
+				strncpy(status,"未知",sizeof(status));
 				status_class="UNKNOWN";
 				if(temp_status->problem_has_been_acknowledged==TRUE)
 					status_bg_class="BGUNKNOWNACK";
@@ -1546,7 +1551,7 @@ void show_service_detail(void){
 					status_bg_class="BGUNKNOWN";
 		                }
 			else if(temp_status->status==SERVICE_CRITICAL){
-				strncpy(status,"CRITICAL",sizeof(status));
+				strncpy(status,"紧急",sizeof(status));
 				status_class="CRITICAL";
 				if(temp_status->problem_has_been_acknowledged==TRUE)
 					status_bg_class="BGCRITICALACK";
@@ -1601,24 +1606,24 @@ void show_service_detail(void){
 				printf("<TR>\n");
 				total_comments=number_of_host_comments(temp_host->name);
 				if(temp_hoststatus->problem_has_been_acknowledged==TRUE){
-					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This host problem has been acknowledged' TITLE='This host problem has been acknowledged'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,ACKNOWLEDGEMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该' TITLE='该'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,ACKNOWLEDGEMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 			                }
 				/* only show comments if this is a non-read-only user */
 				if(is_authorized_for_read_only(&current_authdata)==FALSE){
 					if(total_comments>0)
-						printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This host has %d comment%s associated with it' TITLE='This host has %d comment%s associated with it'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,COMMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,total_comments,(total_comments==1)?"":"s",total_comments,(total_comments==1)?"":"s");
+					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该主机有%d相关注释' TITLE='该主机有%d相关注释'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,COMMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,total_comments,total_comments);
 					}
 				if(temp_hoststatus->notifications_enabled==FALSE){
-					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='Notifications for this host have been disabled' TITLE='Notifications for this host have been disabled'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,NOTIFICATIONS_DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该主机的通知已禁用' TITLE='该主机的通知已禁用'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,NOTIFICATIONS_DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 			                }
 				if(temp_hoststatus->checks_enabled==FALSE){
-					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='Checks of this host have been disabled'd TITLE='Checks of this host have been disabled'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该主机的检查已禁用' TITLE='该主机的检查已禁用'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 				        }
 				if(temp_hoststatus->is_flapping==TRUE){
-					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This host is flapping between states' TITLE='This host is flapping between states'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,FLAPPING_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该主机进行状态迁移' TITLE='该主机进行状态迁移'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,FLAPPING_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 				        }
 				if(temp_hoststatus->scheduled_downtime_depth>0){
-					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This host is currently in a period of scheduled downtime' TITLE='This host is currently in a period of scheduled downtime'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,SCHEDULED_DOWNTIME_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该主机处于宕机时间' TITLE='该主机当前处于宕机设置的时间段中'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,SCHEDULED_DOWNTIME_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 				        }
 				if(temp_host->notes_url!=NULL){
 					printf("<TD align=center valign=center>");
@@ -1666,6 +1671,9 @@ void show_service_detail(void){
 			/* grab macros */
 			grab_service_macros(temp_service);
 
+			/* alias column by sato  */
+			printf("<TD CLASS='status%s'>%s</TD>",status_bg_class,temp_host->alias);
+
 			/* service name column */
 			printf("<TD CLASS='status%s'>",status_bg_class);
 			printf("<TABLE BORDER=0 WIDTH='100%%' CELLSPACING=0 CELLPADDING=0>");
@@ -1673,8 +1681,8 @@ void show_service_detail(void){
 			printf("<TD ALIGN=LEFT>");
 			printf("<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0>\n");
 			printf("<TR>\n");
-			printf("<TD ALIGN=LEFT valign=center CLASS='status%s'><A HREF='%s?type=%d&host=%s",status_bg_class,EXTINFO_CGI,DISPLAY_SERVICE_INFO,url_encode(temp_status->host_name));
-			printf("&service=%s'>",url_encode(temp_status->description));
+			printf("<TD ALIGN=LEFT valign=center CLASS='status%s'><A HREF='%s?type=%d&host=%s",status_bg_class,EXTINFO_CGI,DISPLAY_SERVICE_INFO,temp_status->host_name);
+			printf("&service=%s'>",temp_status->description);
 			printf("%s</A></TD>",temp_status->description);
 			printf("</TR>\n");
 			printf("</TABLE>\n");
@@ -1687,72 +1695,72 @@ void show_service_detail(void){
 			if(is_authorized_for_read_only(&current_authdata)==FALSE){
 				if(total_comments>0){
 					printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s",EXTINFO_CGI,DISPLAY_SERVICE_INFO,url_encode(temp_status->host_name));
-					printf("&service=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This service has %d comment%s associated with it' TITLE='This service has %d comment%s associated with it'></A></TD>",url_encode(temp_status->description),url_images_path,COMMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,total_comments,(total_comments==1)?"":"s",total_comments,(total_comments==1)?"":"s");
+				printf("&service=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该服务有%d相关注释' TITLE='该服务有%d相关注释'></A></TD>",url_encode(temp_status->description),url_images_path,COMMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,total_comments,total_comments);
 					}
 				}
 			if(temp_status->problem_has_been_acknowledged==TRUE){
 				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s",EXTINFO_CGI,DISPLAY_SERVICE_INFO,url_encode(temp_status->host_name));
-				printf("&service=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This service problem has been acknowledged' TITLE='This service problem has been acknowledged'></A></TD>",url_encode(temp_status->description),url_images_path,ACKNOWLEDGEMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+				printf("&service=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该服务的问题已被确认' TITLE='该服务问题已确认'></A></TD>",url_encode(temp_status->description),url_images_path,ACKNOWLEDGEMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 			        }
 			if(temp_status->checks_enabled==FALSE && temp_status->accept_passive_service_checks==FALSE){
 				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s",EXTINFO_CGI,DISPLAY_SERVICE_INFO,url_encode(temp_status->host_name));
-				printf("&service=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='Active and passive checks have been disabled for this service' TITLE='Active and passive checks have been disabled for this service'></A></TD>",url_encode(temp_status->description),url_images_path,DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+				printf("&service=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该服务的主动和被动检查已被禁止' TITLE='该服务的主动和被动检查已被禁止'></A></TD>",url_encode(temp_status->description),url_images_path,DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 			        }
 			else if(temp_status->checks_enabled==FALSE){
 				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s",EXTINFO_CGI,DISPLAY_SERVICE_INFO,url_encode(temp_status->host_name));
-				printf("&service=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='Active checks of the service have been disabled - only passive checks are being accepted' TITLE='Active checks of the service have been disabled - only passive checks are being accepted'></A></TD>",url_encode(temp_status->description),url_images_path,PASSIVE_ONLY_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+				printf("&service=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='开启的主动检查被禁用。只能开启被动检查' TITLE='开启的主动检查被禁用。只能开启被动检查'></A></TD>",url_encode(temp_status->description),url_images_path,PASSIVE_ONLY_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 			        }
 			if(temp_status->notifications_enabled==FALSE){
 				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s",EXTINFO_CGI,DISPLAY_SERVICE_INFO,url_encode(temp_status->host_name));
-				printf("&service=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='Notifications for this service have been disabled' TITLE='Notifications for this service have been disabled'></A></TD>",url_encode(temp_status->description),url_images_path,NOTIFICATIONS_DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+				printf("&service=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该服务的通知服务被禁用' TITLE='该服务的通知服务被禁用'></A></TD>",url_encode(temp_status->description),url_images_path,NOTIFICATIONS_DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 			        }
 			if(temp_status->is_flapping==TRUE){
 				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s",EXTINFO_CGI,DISPLAY_SERVICE_INFO,url_encode(temp_status->host_name));
-				printf("&service=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This service is flapping between states' TITLE='This service is flapping between states'></A></TD>",url_encode(temp_status->description),url_images_path,FLAPPING_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+				printf("&service=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该服务处于状态不稳定期' TITLE='该服务处于状态不稳定期'></A></TD>",url_encode(temp_status->description),url_images_path,FLAPPING_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 			        }
 			if(temp_status->scheduled_downtime_depth>0){
 				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s",EXTINFO_CGI,DISPLAY_SERVICE_INFO,url_encode(temp_status->host_name));
-				printf("&service=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This service is currently in a period of scheduled downtime' TITLE='This service is currently in a period of scheduled downtime'></A></TD>",url_encode(temp_status->description),url_images_path,SCHEDULED_DOWNTIME_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+				printf("&service=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该服务当前处于宕机设置时间段中' TITLE='该服务当前处于宕机设置间段中'></A></TD>",url_encode(temp_status->description),url_images_path,SCHEDULED_DOWNTIME_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 			        }
 			if(temp_service->notes_url!=NULL){
-				printf("<TD align=center valign=center>");
-				printf("<A HREF='");
+					printf("<TD align=center valign=center>");
+					printf("<A HREF='");
 				process_macros(temp_service->notes_url,&processed_string,0);
 				printf("%s",processed_string);
 				free(processed_string);
 				printf("' TARGET='%s'>",(notes_url_target==NULL)?"_blank":notes_url_target);
-				printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,NOTES_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"View Extra Service Notes","View Extra Service Notes");
-				printf("</A>");
-				printf("</TD>\n");
-				}
+					printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,NOTES_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"该服务的备注","该服务的备注");
+					printf("</A>");
+					printf("</TD>\n");
+					}
 			if(temp_service->action_url!=NULL){
-				printf("<TD align=center valign=center>");
-				printf("<A HREF='");
+					printf("<TD align=center valign=center>");
+					printf("<A HREF='");
 				process_macros(temp_service->action_url,&processed_string,0);
 				printf("%s",processed_string);
 				free(processed_string);
 				printf("' TARGET='%s'>",(action_url_target==NULL)?"_blank":action_url_target);
-				printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,ACTION_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"Perform Extra Service Actions","Perform Extra Service Actions");
-				printf("</A>");
-				printf("</TD>\n");
-				}
+					printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,ACTION_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"该服务动作URL将执行是","该服务动作URL将执行是");
+					printf("</A>");
+					printf("</TD>\n");
+					}
 			if(temp_service->icon_image!=NULL){
-				printf("<TD ALIGN=center valign=center>");
-				printf("<A HREF='%s?type=%d&host=%s",EXTINFO_CGI,DISPLAY_SERVICE_INFO,url_encode(temp_service->host_name));
-				printf("&service=%s'>",url_encode(temp_service->description));
-				printf("<IMG SRC='%s",url_logo_images_path);
+					printf("<TD ALIGN=center valign=center>");
+					printf("<A HREF='%s?type=%d&host=%s",EXTINFO_CGI,DISPLAY_SERVICE_INFO,url_encode(temp_service->host_name));
+					printf("&service=%s'>",url_encode(temp_service->description));
+					printf("<IMG SRC='%s",url_logo_images_path);
 				process_macros(temp_service->icon_image,&processed_string,0);
 				printf("%s",processed_string);
 				free(processed_string);
 				printf("' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,(temp_service->icon_image_alt==NULL)?"":temp_service->icon_image_alt,(temp_service->icon_image_alt==NULL)?"":temp_service->icon_image_alt);
-				printf("</A>");
-				printf("</TD>\n");
-			        }
+					printf("</A>");
+					printf("</TD>\n");
+				        }
 			if(enable_splunk_integration==TRUE){
 				printf("<TD ALIGN=center valign=center>");
 				display_splunk_service_url(temp_service);
 				printf("</TD>\n");
-				}
+			        }
 			printf("</TR>\n");
 			printf("</TABLE>\n");
 			printf("</TD>\n");
@@ -1779,7 +1787,7 @@ void show_service_detail(void){
 			if(duration_error==TRUE)
 				snprintf(state_duration,sizeof(state_duration)-1,"???");
 			else
-				snprintf(state_duration,sizeof(state_duration)-1,"%2dd %2dh %2dm %2ds%s",days,hours,minutes,seconds,(temp_status->last_state_change==(time_t)0)?"+":"");
+				snprintf(state_duration,sizeof(state_duration)-1,"%2d日 %2d时 %2d分 %2d秒",days,hours,minutes,seconds,(temp_status->last_state_change==(time_t)0)?"+":"");
 			state_duration[sizeof(state_duration)-1]='\x0';
 
                         /* the rest of the columns... */
@@ -1808,18 +1816,17 @@ void show_service_detail(void){
 	if(user_has_seen_something==FALSE){
 
 		if(servicestatus_list!=NULL){
-			printf("<P><DIV CLASS='errorMessage'>It appears as though you do not have permission to view information for any of the services you requested...</DIV></P>\n");
-			printf("<P><DIV CLASS='errorDescription'>If you believe this is an error, check the HTTP server authentication requirements for accessing this CGI<br>");
-			printf("and check the authorization options in your CGI configuration file.</DIV></P>\n");
+			printf("<P><DIV CLASS='errorMessage'>无权查看任何主机的信息。</DIV></P>\n");
+			printf("<P><DIV CLASS='errorDescription'>请检查HTTP服务器关于该CGI的访问权限设置。</DIV></P>\n");
 		        }
 		else{
-			printf("<P><DIV CLASS='infoMessage'>There doesn't appear to be any service status information in the status log...<br><br>\n");
-			printf("Make sure that Nagios is running and that you have specified the location of you status log correctly in the configuration files.</DIV></P>\n");
+			printf("<P><DIV CLASS='infoMessage'>日志中不存在任何主机状态信息...<br><br>\n");
+			printf("请确保Nagios正常运行，并且配置文件中状态日志设置正确。</DIV></P>\n");
 		        }
 	        }
 
 	else
-		printf("<BR><DIV CLASS='itemTotalsTitle'>%d Matching Service Entries Displayed</DIV>\n",total_entries);
+		printf("<BR><DIV CLASS='itemTotalsTitle'>共%d个匹配的服务已全部显示</DIV>\n",total_entries);
 
 	return;
         }
@@ -1882,26 +1889,27 @@ void show_host_detail(void){
 
 	printf("<td valign=top align=center width=33%%>\n");
 
-	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>Host Status Details For ");
+	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>");
 	if(show_all_hostgroups==TRUE)
-		printf("All Host Groups");
+		printf("所有主机组");
 	else
-		printf("Host Group '%s'",hostgroup_name);
+		printf("主机组 '%s' ",hostgroup_name);
+	printf("的主机正常状态\n");
 	printf("</DIV>\n");
 
 	if(use_sort==TRUE){
-		printf("<DIV ALIGN=CENTER CLASS='statusSort'>Entries sorted by <b>");
+		printf("<DIV ALIGN=CENTER CLASS='statusSort'>排序:<b>");
 		if(sort_option==SORT_HOSTNAME)
-			printf("host name");
+			printf("主机名");
 		else if(sort_option==SORT_HOSTSTATUS)
-			printf("host status");
+			printf("主机的状态");
 		else if(sort_option==SORT_LASTCHECKTIME)
-			printf("last check time");
+			printf("最近检查时间");
 		else if(sort_option==SORT_CURRENTATTEMPT)
-			printf("attempt number");
+			printf("尝试次数");
 		else if(sort_option==SORT_STATEDURATION)
-			printf("state duration");
-		printf("</b> (%s)\n",(sort_type==SORT_ASCENDING)?"ascending":"descending");
+			printf("持续时间");
+		printf("</b> (%s)\n",(sort_type==SORT_ASCENDING)?"升序":"降序");
 		printf("</DIV>\n");
 	        }
 
@@ -1955,15 +1963,17 @@ void show_host_detail(void){
 	printf("<TABLE BORDER=0 CLASS='status' WIDTH=100%%>\n");
 	printf("<TR>\n");
 
-	printf("<TH CLASS='status'>Host&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by host name (ascending)' TITLE='Sort by host name (ascending)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by host name (descending)' TITLE='Sort by host name (descending)'></A></TH>",temp_url,SORT_ASCENDING,SORT_HOSTNAME,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_HOSTNAME,url_images_path,DOWN_ARROW_ICON);
+	printf("<TH CLASS='status'>主机&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='主机名排序(升序)' TITLE='主机名排序(升序)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='主机名排序(降序)' TITLE='主机名排序(降序)'></A></TH>",temp_url,SORT_ASCENDING,SORT_HOSTNAME,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_HOSTNAME,url_images_path,DOWN_ARROW_ICON);
 
-	printf("<TH CLASS='status'>Status&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by host status (ascending)' TITLE='Sort by host status (ascending)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by host status (descending)' TITLE='Sort by host status (descending)'></A></TH>",temp_url,SORT_ASCENDING,SORT_HOSTSTATUS,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_HOSTSTATUS,url_images_path,DOWN_ARROW_ICON);
+	printf("<TH CLASS='status'>别名&nbsp;</TH>");
 
-	printf("<TH CLASS='status'>Last Check&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by last check time (ascending)' TITLE='Sort by last check time (ascending)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by last check time (descending)' TITLE='Sort by last check time (descending)'></A></TH>",temp_url,SORT_ASCENDING,SORT_LASTCHECKTIME,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_LASTCHECKTIME,url_images_path,DOWN_ARROW_ICON);
+	printf("<TH CLASS='status'>状态&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='主机正常状态排序(升序)' TITLE='主机正常状态排序(升序)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='主机正常状态排序(降序)' TITLE='主机正常状态排序(降序)'></A></TH>",temp_url,SORT_ASCENDING,SORT_HOSTSTATUS,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_HOSTSTATUS,url_images_path,DOWN_ARROW_ICON);
 
-	printf("<TH CLASS='status'>Duration&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by state duration (ascending)' TITLE='Sort by state duration (ascending)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='Sort by state duration time (descending)' TITLE='Sort by state duration time (descending)'></A></TH>",temp_url,SORT_ASCENDING,SORT_STATEDURATION,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_STATEDURATION,url_images_path,DOWN_ARROW_ICON);
+	printf("<TH CLASS='status'>最近检查时间&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='最近检查时间排序(升序)' TITLE='最近检查时间排序(升序)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='最近检查时间排序(降序)' TITLE='最近检查时间排序(降序)'></A></TH>",temp_url,SORT_ASCENDING,SORT_LASTCHECKTIME,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_LASTCHECKTIME,url_images_path,DOWN_ARROW_ICON);
 
-	printf("<TH CLASS='status'>Status Information</TH>\n");
+	printf("<TH CLASS='status'>持续时间&nbsp;<A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='持续时间排序(升序)' TITLE='持续时间排序(升序)'></A><A HREF='%s&sorttype=%d&sortoption=%d'><IMG SRC='%s%s' BORDER=0 ALT='持续时间排序(降序)' TITLE='持续时间排序(降序)'></A></TH>",temp_url,SORT_ASCENDING,SORT_STATEDURATION,url_images_path,UP_ARROW_ICON,temp_url,SORT_DESCENDING,SORT_STATEDURATION,url_images_path,DOWN_ARROW_ICON);
+
+	printf("<TH CLASS='status'>状态信息</TH>\n");
 	printf("</TR>\n");
 
 
@@ -2044,17 +2054,17 @@ void show_host_detail(void){
 				strcpy(date_time,"N/A");
 
 			if(temp_status->status==HOST_PENDING){
-				strncpy(status,"PENDING",sizeof(status));
+				strncpy(status,"未决",sizeof(status));
 				status_class="PENDING";
 				status_bg_class=(odd)?"Even":"Odd";
 		                }
 			else if(temp_status->status==HOST_UP){
-				strncpy(status,"UP",sizeof(status));
+				strncpy(status,"运行",sizeof(status));
 				status_class="HOSTUP";
 				status_bg_class=(odd)?"Even":"Odd";
 		                }
 			else if(temp_status->status==HOST_DOWN){
-				strncpy(status,"DOWN",sizeof(status));
+				strncpy(status,"宕机",sizeof(status));
 				status_class="HOSTDOWN";
 				if(temp_status->problem_has_been_acknowledged==TRUE)
 					status_bg_class="BGDOWNACK";
@@ -2064,7 +2074,7 @@ void show_host_detail(void){
 					status_bg_class="BGDOWN";
 		                }
 			else if(temp_status->status==HOST_UNREACHABLE){
-				strncpy(status,"UNREACHABLE",sizeof(status));
+				strncpy(status,"不可达",sizeof(status));
 				status_class="HOSTUNREACHABLE";
 				if(temp_status->problem_has_been_acknowledged==TRUE)
 					status_bg_class="BGUNREACHABLEACK";
@@ -2097,62 +2107,62 @@ void show_host_detail(void){
 			printf("<TR>\n");
 			total_comments=number_of_host_comments(temp_host->name);
 			if(temp_status->problem_has_been_acknowledged==TRUE){
-				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This host problem has been acknowledged' TITLE='This host problem has been acknowledged'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,ACKNOWLEDGEMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该主机问题已确认' TITLE='该主机问题已确认'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,ACKNOWLEDGEMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 		                }
 			if(total_comments>0)
-				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This host has %d comment%s associated with it' TITLE='This host has %d comment%s associated with it'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,COMMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,total_comments,(total_comments==1)?"":"s",total_comments,(total_comments==1)?"":"s");
+				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s#comments'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该主机有%d相关注释' TITLE='该主机有%d相关注释'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,COMMENT_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,total_comments,total_comments);
 			if(temp_status->notifications_enabled==FALSE){
-				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='Notifications for this host have been disabled' TITLE='Notifications for this host have been disabled'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,NOTIFICATIONS_DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该主机的通知已禁用' TITLE='该主机的通知已禁用'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,NOTIFICATIONS_DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 		                }
 			if(temp_status->checks_enabled==FALSE){
-				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='Checks of this host have been disabled' TITLE='Checks of this host have been disabled'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该主机的检查已禁用' TITLE='该主机的检查已禁用'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,DISABLED_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 			        }
 			if(temp_status->is_flapping==TRUE){
-				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This host is flapping between states' TITLE='This host is flapping between states'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,FLAPPING_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该主机进行状态迁移' TITLE='该主机进行状态迁移'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,FLAPPING_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 			        }
 			if(temp_status->scheduled_downtime_depth>0){
-				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='This host is currently in a period of scheduled downtime' TITLE='This host is currently in a period of scheduled downtime'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,SCHEDULED_DOWNTIME_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
+				printf("<TD ALIGN=center valign=center><A HREF='%s?type=%d&host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='该主机当前处于宕机时间' TITLE='该主机当前处于宕机时间'></A></TD>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name),url_images_path,SCHEDULED_DOWNTIME_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT);
 			        }
 			if(temp_host->notes_url!=NULL){
-				printf("<TD align=center valign=center>");
-				printf("<A HREF='");
+					printf("<TD align=center valign=center>");
+					printf("<A HREF='");
 				process_macros(temp_host->notes_url,&processed_string,0);
 				printf("%s",processed_string);
 				free(processed_string);
 				printf("' TARGET='%s'>",(notes_url_target==NULL)?"_blank":notes_url_target);
-				printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,NOTES_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"View Extra Host Notes","View Extra Host Notes");
-				printf("</A>");
-				printf("</TD>\n");
-			        }
+					printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,NOTES_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"该主机备注信息","该主机备注信息");
+					printf("</A>");
+					printf("</TD>\n");
+				        }
 			if(temp_host->action_url!=NULL){
-				printf("<TD align=center valign=center>");
-				printf("<A HREF='");
+					printf("<TD align=center valign=center>");
+					printf("<A HREF='");
 				process_macros(temp_host->action_url,&processed_string,0);
 				printf("%s",processed_string);
 				free(processed_string);
 				printf("' TARGET='%s'>",(action_url_target==NULL)?"_blank":action_url_target);
-				printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,ACTION_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"Perform Extra Host Actions","Perform Extra Host Actions");
-				printf("</A>");
-				printf("</TD>\n");
-			        }
+					printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,ACTION_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"执行额外的主机动作","执行额外的主机动作");
+					printf("</A>");
+					printf("</TD>\n");
+				        }
 			if(temp_host->icon_image!=NULL){
-				printf("<TD align=center valign=center>");
-				printf("<A HREF='%s?type=%d&host=%s'>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name));
-				printf("<IMG SRC='%s",url_logo_images_path);
+					printf("<TD align=center valign=center>");
+					printf("<A HREF='%s?type=%d&host=%s'>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_status->host_name));
+					printf("<IMG SRC='%s",url_logo_images_path);
 				process_macros(temp_host->icon_image,&processed_string,0);
 				printf("%s",processed_string);
 				free(processed_string);
 				printf("' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,(temp_host->icon_image_alt==NULL)?"":temp_host->icon_image_alt,(temp_host->icon_image_alt==NULL)?"":temp_host->icon_image_alt);
-				printf("</A>");
-				printf("</TD>\n");
-			        }
+					printf("</A>");
+					printf("</TD>\n");
+				        }
 			if(enable_splunk_integration==TRUE){
 				printf("<TD ALIGN=center valign=center>");
 				display_splunk_host_url(temp_host);
 				printf("</TD>\n");
-				}
+			        }
 			printf("<TD>");
-			printf("<a href='%s?host=%s'><img src='%s%s' border=0 alt='View Service Details For This Host' title='View Service Details For This Host'></a>",STATUS_CGI,url_encode(temp_status->host_name),url_images_path,STATUS_DETAIL_ICON);
+			printf("<a href='%s?host=%s'><img src='%s%s' border=0 alt='该主机的详细服务状态' title='该主机的详细服务状态'></a>\n",STATUS_CGI,url_encode(temp_status->host_name),url_images_path,STATUS_DETAIL_ICON);
 			printf("</TD>\n");
 			printf("</TR>\n");
 			printf("</TABLE>\n");
@@ -2162,6 +2172,8 @@ void show_host_detail(void){
 
 			printf("</TD>\n");
 
+			/* alias column by sato  */
+			printf("<TD CLASS='status%s'>%s</TD>",status_bg_class,temp_host->alias);
 
 			/* state duration calculation... */
 			t=0;
@@ -2182,7 +2194,7 @@ void show_host_detail(void){
 			if(duration_error==TRUE)
 				snprintf(state_duration,sizeof(state_duration)-1,"???");
 			else
-				snprintf(state_duration,sizeof(state_duration)-1,"%2dd %2dh %2dm %2ds%s",days,hours,minutes,seconds,(temp_status->last_state_change==(time_t)0)?"+":"");
+				snprintf(state_duration,sizeof(state_duration)-1,"%2d日 %2d时 %2d分 %2d秒",days,hours,minutes,seconds,(temp_status->last_state_change==(time_t)0)?"+":"");
 			state_duration[sizeof(state_duration)-1]='\x0';
 
                         /* the rest of the columns... */
@@ -2209,18 +2221,17 @@ void show_host_detail(void){
 	if(user_has_seen_something==FALSE){
 
 		if(hoststatus_list!=NULL){
-			printf("<P><DIV CLASS='errorMessage'>It appears as though you do not have permission to view information for any of the hosts you requested...</DIV></P>\n");
-			printf("<P><DIV CLASS='errorDescription'>If you believe this is an error, check the HTTP server authentication requirements for accessing this CGI<br>");
-			printf("and check the authorization options in your CGI configuration file.</DIV></P>\n");
+			printf("<P><DIV CLASS='errorMessage'>无权查看任何主机的信息...</DIV></P>\n");
+			printf("<P><DIV CLASS='errorDescription'>请检查HTTP服务器关于该CGI的访问权限设置。</DIV></P>\n");
 		        }
 		else{
-			printf("<P><DIV CLASS='infoMessage'>There doesn't appear to be any host status information in the status log...<br><br>\n");
-			printf("Make sure that Nagios is running and that you have specified the location of you status log correctly in the configuration files.</DIV></P>\n");
+			printf("<P><DIV CLASS='infoMessage'>日志中不存在任何主机状态信息...<br><br>\n");
+			printf("请确保Nagios正常运行，并且配置文件中状态日志设置正确。</DIV></P>\n");
 		        }
 	        }
 
 	else
-		printf("<BR><DIV CLASS='itemTotalsTitle'>%d Matching Host Entries Displayed</DIV>\n",total_entries);
+		printf("<BR><DIV CLASS='itemTotalsTitle'>共%d个匹配的主机已全部显示</DIV>\n",total_entries);
 
 	return;
         }
@@ -2230,7 +2241,7 @@ void show_host_detail(void){
 
 /* show an overview of servicegroup(s)... */
 void show_servicegroup_overviews(void){
-	servicegroup *temp_servicegroup=NULL;
+	servicesmember *temp_servicegroup;
 	int current_column;
 	int user_has_seen_something=FALSE;
 	int servicegroup_error=FALSE;
@@ -2249,11 +2260,12 @@ void show_servicegroup_overviews(void){
 
 	printf("<td valign=top align=center width=33%%>\n");
 
-	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>Service Overview For ");
+	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>");
 	if(show_all_servicegroups==TRUE)
-		printf("All Service Groups");
+		printf("所有服务组");
 	else
-		printf("Service Group '%s'",servicegroup_name);
+		printf("服务组 '%s' ",servicegroup_name);
+	printf("的服务概要");
 	printf("</DIV>\n");
 
 	printf("<br>");
@@ -2335,7 +2347,7 @@ void show_servicegroup_overviews(void){
 			printf("</P>\n");
 		        }
 		else{
-			printf("<DIV CLASS='errorMessage'>Sorry, but service group '%s' doesn't seem to exist...</DIV>",servicegroup_name);
+			printf("<DIV CLASS='errorMessage'>'%s' 服务组不存在</DIV>",servicegroup_name);
 			servicegroup_error=TRUE;
 		        }
 	        }
@@ -2347,12 +2359,11 @@ void show_servicegroup_overviews(void){
 		printf("<div align='center'>\n");
 
 		if(servicegroup_list!=NULL){
-			printf("<DIV CLASS='errorMessage'>It appears as though you do not have permission to view information for any of the hosts you requested...</DIV>\n");
-			printf("<DIV CLASS='errorDescription'>If you believe this is an error, check the HTTP server authentication requirements for accessing this CGI<br>");
-			printf("and check the authorization options in your CGI configuration file.</DIV>\n");
+			printf("<DIV CLASS='errorMessage'>无权查看任何主机的信息...</DIV>\n");
+			printf("<DIV CLASS='errorDescription'>请检查HTTP服务器关于该CGI的访问权限设置。</DIV>\n");
 		        }
 		else{
-			printf("<DIV CLASS='errorMessage'>There are no service groups defined.</DIV>\n");
+			printf("<DIV CLASS='errorMessage'>服务组不存在。</DIV>\n");
 			}
 
 		printf("</div>\n");
@@ -2382,7 +2393,7 @@ void show_servicegroup_overview(servicegroup *temp_servicegroup){
 	printf("<table border=1 CLASS='status'>\n");
 
 	printf("<TR>\n");
-	printf("<TH CLASS='status'>Host</TH><TH CLASS='status'>Status</TH><TH CLASS='status'>Services</TH><TH CLASS='status'>Actions</TH>\n");
+	printf("<TH CLASS='status'>主机名</TH><TH CLASS='status'>别名</TH><TH CLASS='status'>状态</TH><TH CLASS='status'>服务</TH><TH CLASS='status'>动作</TH>\n");
 	printf("</TR>\n");
 
 	/* find all hosts that have services that are members of the servicegroup */
@@ -2450,11 +2461,12 @@ void show_servicegroup_summaries(void){
 
 	printf("<td valign=top align=center width=33%%>\n");
 
-	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>Status Summary For ");
+	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>");
 	if(show_all_servicegroups==TRUE)
-		printf("All Service Groups");
+		printf("所有服务组");
 	else
-		printf("Service Group '%s'",servicegroup_name);
+		printf("服务组 '%s' ",servicegroup_name);
+	printf("的状态汇总");
 	printf("</DIV>\n");
 
 	printf("<br>");
@@ -2473,7 +2485,7 @@ void show_servicegroup_summaries(void){
 	printf("<table border=1 CLASS='status'>\n");
 
 	printf("<TR>\n");
-	printf("<TH CLASS='status'>Service Group</TH><TH CLASS='status'>Host Status Summary</TH><TH CLASS='status'>Service Status Summary</TH>\n");
+	printf("<TH CLASS='status'>服务组名</TH><TH CLASS='status'>主机状态汇总</TH><TH CLASS='status'>服务状态汇总</TH>\n");
 	printf("</TR>\n");
 
 	/* display status summary for all servicegroups */
@@ -2519,12 +2531,11 @@ void show_servicegroup_summaries(void){
 		printf("<P><DIV ALIGN=CENTER>\n");
 
 		if(servicegroup_list!=NULL){
-			printf("<DIV CLASS='errorMessage'>It appears as though you do not have permission to view information for any of the hosts you requested...</DIV>\n");
-			printf("<DIV CLASS='errorDescription'>If you believe this is an error, check the HTTP server authentication requirements for accessing this CGI<br>");
-			printf("and check the authorization options in your CGI configuration file.</DIV>\n");
+			printf("<DIV CLASS='errorMessage'>无权查看任何主机的信息...</DIV>\n");
+			printf("<DIV CLASS='errorDescription'>请检查HTTP服务器关于该CGI的访问权限设置。</DIV>\n");
 		        }
 		else{
-			printf("<DIV CLASS='errorMessage'>There are no service groups defined.</DIV>\n");
+			printf("<DIV CLASS='errorMessage'>服务组不存在。</DIV>\n");
 			}
 
 		printf("</DIV></P>\n");
@@ -2533,7 +2544,7 @@ void show_servicegroup_summaries(void){
 	/* we couldn't find the servicegroup */
 	else if(servicegroup_error==TRUE){
 		printf("<P><DIV ALIGN=CENTER>\n");
-		printf("<DIV CLASS='errorMessage'>Sorry, but servicegroup '%s' doesn't seem to exist...</DIV>\n",servicegroup_name);
+		printf("<DIV CLASS='errorMessage'>'%s' 服务组不存在</DIV>\n",servicegroup_name);
 		printf("</DIV></P>\n");
 	        }
 
@@ -2667,7 +2678,7 @@ void show_servicegroup_host_totals_summary(servicegroup *temp_servicegroup){
 
 	if(hosts_up>0){
 		printf("<TR>");
-		printf("<TD CLASS='miniStatusUP'><A HREF='%s?servicegroup=%s&style=detail&&hoststatustypes=%d&hostprops=%lu'>%d UP</A></TD>",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UP,host_properties,hosts_up);
+		printf("<TD CLASS='miniStatusUP'><A HREF='%s?servicegroup=%s&style=detail&&hoststatustypes=%d&hostprops=%lu'>状态正常%d个<BR>(OK)</A></TD>",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UP,host_properties,hosts_up);
 		printf("</TR>\n");
 		}
 
@@ -2676,21 +2687,21 @@ void show_servicegroup_host_totals_summary(servicegroup *temp_servicegroup){
 		printf("<TD CLASS='miniStatusDOWN'><TABLE BORDER='0'>\n");
 		printf("<TR>\n");
 
-		printf("<TD CLASS='miniStatusDOWN'><A HREF='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%lu'>%d DOWN</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_DOWN,host_properties,hosts_down);
+		printf("<TD CLASS='miniStatusDOWN'><A HREF='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%lu'>状态停止%d个<BR>(DOWN)</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_DOWN,host_properties,hosts_down);
 
 		printf("<TD><TABLE BORDER='0'>\n");
 
 		if(hosts_down_unacknowledged>0)
-			printf("<tr><td width=100%% class='hostImportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>%d Unhandled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_DOWN,HOST_NO_SCHEDULED_DOWNTIME|HOST_STATE_UNACKNOWLEDGED|HOST_CHECKS_ENABLED,hosts_down_unacknowledged);
+			printf("<tr><td width=100%% class='hostImportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>尚未解决%d个<BR>(Unhandled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_DOWN,HOST_NO_SCHEDULED_DOWNTIME|HOST_STATE_UNACKNOWLEDGED|HOST_CHECKS_ENABLED,hosts_down_unacknowledged);
 
 		if(hosts_down_scheduled>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>%d Scheduled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_DOWN,HOST_SCHEDULED_DOWNTIME,hosts_down_scheduled);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>计划内非重要故障%d个<BR>(Scheduled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_DOWN,HOST_SCHEDULED_DOWNTIME,hosts_down_scheduled);
 
 		if(hosts_down_acknowledged>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>%d Acknowledged</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_DOWN,HOST_STATE_ACKNOWLEDGED,hosts_down_acknowledged);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>已登记的非重要故障%d个<BR>(Acknowledged)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_DOWN,HOST_STATE_ACKNOWLEDGED,hosts_down_acknowledged);
 
 		if(hosts_down_disabled>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>%d Disabled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_DOWN,HOST_CHECKS_DISABLED,hosts_down_disabled);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>关闭的非重要故障%d个<BR>(Disabled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_DOWN,HOST_CHECKS_DISABLED,hosts_down_disabled);
 
 		printf("</TABLE></TD>\n");
 		
@@ -2704,21 +2715,21 @@ void show_servicegroup_host_totals_summary(servicegroup *temp_servicegroup){
 		printf("<TD CLASS='miniStatusUNREACHABLE'><TABLE BORDER='0'>\n");
 		printf("<TR>\n");
 
-		printf("<TD CLASS='miniStatusUNREACHABLE'><A HREF='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%lu'>%d UNREACHABLE</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UNREACHABLE,host_properties,hosts_unreachable);
+		printf("<TD CLASS='miniStatusUNREACHABLE'><A HREF='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%lu'>状态不可达%d个<BR>(UNREACHABLE)</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UNREACHABLE,host_properties,hosts_unreachable);
 
 		printf("<TD><TABLE BORDER='0'>\n");
 
 		if(hosts_unreachable_unacknowledged>0)
-			printf("<tr><td width=100%% class='hostImportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>%d Unhandled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UNREACHABLE,HOST_NO_SCHEDULED_DOWNTIME|HOST_STATE_UNACKNOWLEDGED|HOST_CHECKS_ENABLED,hosts_unreachable_unacknowledged);
+			printf("<tr><td width=100%% class='hostImportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>尚未解决%d个<BR>(Unhandled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UNREACHABLE,HOST_NO_SCHEDULED_DOWNTIME|HOST_STATE_UNACKNOWLEDGED|HOST_CHECKS_ENABLED,hosts_unreachable_unacknowledged);
 
 		if(hosts_unreachable_scheduled>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>%d Scheduled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UNREACHABLE,HOST_SCHEDULED_DOWNTIME,hosts_unreachable_scheduled);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>计划内非重要故障%d个<BR>(Scheduled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UNREACHABLE,HOST_SCHEDULED_DOWNTIME,hosts_unreachable_scheduled);
 
 		if(hosts_unreachable_acknowledged>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>%d Acknowledged</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UNREACHABLE,HOST_STATE_ACKNOWLEDGED,hosts_unreachable_acknowledged);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>已登记的非重要故障%d个<BR>(Acknowledged)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UNREACHABLE,HOST_STATE_ACKNOWLEDGED,hosts_unreachable_acknowledged);
 
 		if(hosts_unreachable_disabled>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>%d Disabled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UNREACHABLE,HOST_CHECKS_DISABLED,hosts_unreachable_disabled);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%d'>关闭的非重要故障%d个<BR>(Disabled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_UNREACHABLE,HOST_CHECKS_DISABLED,hosts_unreachable_disabled);
 
 		printf("</TABLE></TD>\n");
 		
@@ -2728,12 +2739,12 @@ void show_servicegroup_host_totals_summary(servicegroup *temp_servicegroup){
 		}
 
 	if(hosts_pending>0)
-		printf("<TR><TD CLASS='miniStatusPENDING'><A HREF='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%lu'>%d PENDING</A></TD></TR>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_PENDING,host_properties,hosts_pending);
+		printf("<TR><TD CLASS='miniStatusPENDING'><A HREF='%s?servicegroup=%s&style=detail&hoststatustypes=%d&hostprops=%lu'>状态保持%d个<BR>(PENDING)</A></TD></TR>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),HOST_PENDING,host_properties,hosts_pending);
 
 	printf("</TABLE>\n");
 
 	if((hosts_up + hosts_down + hosts_unreachable + hosts_pending)==0)
-		printf("No matching hosts");
+		printf("无符合条件的主机");
 
 	return;
 	return;
@@ -2886,31 +2897,31 @@ void show_servicegroup_service_totals_summary(servicegroup *temp_servicegroup){
 	printf("<TABLE BORDER=0>\n");
 
 	if(services_ok>0)
-		printf("<TR><TD CLASS='miniStatusOK'><A HREF='%s?servicegroup=%s&style=detail&&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d OK</A></TD></TR>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_OK,host_status_types,service_properties,host_properties,services_ok);
+		printf("<TR><TD CLASS='miniStatusOK'><A HREF='%s?servicegroup=%s&style=detail&&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>状态正常%d个<BR>(OK)</A></TD></TR>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_OK,host_status_types,service_properties,host_properties,services_ok);
 
 	if(services_warning>0){
 		printf("<TR>\n");
 		printf("<TD CLASS='miniStatusWARNING'><TABLE BORDER='0'>\n");
 		printf("<TR>\n");
 
-		printf("<TD CLASS='miniStatusWARNING'><A HREF='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d WARNING</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,host_status_types,service_properties,host_properties,services_warning);
+		printf("<TD CLASS='miniStatusWARNING'><A HREF='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>状态告警%d个<BR>(WARNING)</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,host_status_types,service_properties,host_properties,services_warning);
 
 		printf("<TD><TABLE BORDER='0'>\n");
 
 		if(services_warning_unacknowledged>0)
-			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>%d Unhandled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_warning_unacknowledged);
+			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>尚未解决%d个<BR>(Unhandled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_warning_unacknowledged);
 
 		if(services_warning_host_problem>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>%d on Problem Hosts</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,HOST_DOWN|HOST_UNREACHABLE,services_warning_host_problem);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>主机上的问题有%d个</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,HOST_DOWN|HOST_UNREACHABLE,services_warning_host_problem);
 
 		if(services_warning_scheduled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Scheduled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,SERVICE_SCHEDULED_DOWNTIME,services_warning_scheduled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>计划内非重要故障%d个<BR>(Scheduled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,SERVICE_SCHEDULED_DOWNTIME,services_warning_scheduled);
 
 		if(services_warning_acknowledged>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Acknowledged</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,SERVICE_STATE_ACKNOWLEDGED,services_warning_acknowledged);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>>已登记的非重要故障%d个<BR>(Acknowledged)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,SERVICE_STATE_ACKNOWLEDGED,services_warning_acknowledged);
 
 		if(services_warning_disabled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Disabled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,SERVICE_CHECKS_DISABLED,services_warning_disabled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>关闭的非重要故障%d个<BR>(Disabled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_WARNING,SERVICE_CHECKS_DISABLED,services_warning_disabled);
 
 		printf("</TABLE></TD>\n");
 		
@@ -2924,24 +2935,24 @@ void show_servicegroup_service_totals_summary(servicegroup *temp_servicegroup){
 		printf("<TD CLASS='miniStatusUNKNOWN'><TABLE BORDER='0'>\n");
 		printf("<TR>\n");
 
-		printf("<TD CLASS='miniStatusUNKNOWN'><A HREF='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d UNKNOWN</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,host_status_types,service_properties,host_properties,services_unknown);
+		printf("<TD CLASS='miniStatusUNKNOWN'><A HREF='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>状态未决%d个<BR>(UNKNOWN)</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,host_status_types,service_properties,host_properties,services_unknown);
 
 		printf("<TD><TABLE BORDER='0'>\n");
 
 		if(services_unknown_unacknowledged>0)
-			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>%d Unhandled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_unknown_unacknowledged);
+			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>尚未解决%d个<BR>(Unhandled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_unknown_unacknowledged);
 
 		if(services_unknown_host_problem>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>%d on Problem Hosts</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,HOST_DOWN|HOST_UNREACHABLE,services_unknown_host_problem);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>主机上的问题有%d个</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,HOST_DOWN|HOST_UNREACHABLE,services_unknown_host_problem);
 
 		if(services_unknown_scheduled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Scheduled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,SERVICE_SCHEDULED_DOWNTIME,services_unknown_scheduled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>计划内非重要故障%d个<BR>(Scheduled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,SERVICE_SCHEDULED_DOWNTIME,services_unknown_scheduled);
 
 		if(services_unknown_acknowledged>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Acknowledged</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,SERVICE_STATE_ACKNOWLEDGED,services_unknown_acknowledged);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>>已登记的非重要故障%d个<BR>(Acknowledged)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,SERVICE_STATE_ACKNOWLEDGED,services_unknown_acknowledged);
 
 		if(services_unknown_disabled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Disabled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,SERVICE_CHECKS_DISABLED,services_unknown_disabled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>关闭的非重要故障%d个<BR>(Disabled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_UNKNOWN,SERVICE_CHECKS_DISABLED,services_unknown_disabled);
 
 		printf("</TABLE></TD>\n");
 		
@@ -2955,24 +2966,24 @@ void show_servicegroup_service_totals_summary(servicegroup *temp_servicegroup){
 		printf("<TD CLASS='miniStatusCRITICAL'><TABLE BORDER='0'>\n");
 		printf("<TR>\n");
 
-		printf("<TD CLASS='miniStatusCRITICAL'><A HREF='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d CRITICAL</A>&nbsp:</TD>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,host_status_types,service_properties,host_properties,services_critical);
+		printf("<TD CLASS='miniStatusCRITICAL'><A HREF='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>状态异常有%d个<BR>(CRITICAL)</A>&nbsp:</TD>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,host_status_types,service_properties,host_properties,services_critical);
 
 		printf("<TD><TABLE BORDER='0'>\n");
 
 		if(services_critical_unacknowledged>0)
-			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>%d Unhandled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_critical_unacknowledged);
+			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>尚未解决%d个<BR>(Unhandled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_critical_unacknowledged);
 
 		if(services_critical_host_problem>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>%d on Problem Hosts</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,HOST_DOWN|HOST_UNREACHABLE,services_critical_host_problem);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>主机上的问题有%d个</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,HOST_DOWN|HOST_UNREACHABLE,services_critical_host_problem);
 
 		if(services_critical_scheduled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Scheduled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,SERVICE_SCHEDULED_DOWNTIME,services_critical_scheduled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>计划内非重要故障%d个<BR>(Scheduled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,SERVICE_SCHEDULED_DOWNTIME,services_critical_scheduled);
 
 		if(services_critical_acknowledged>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Acknowledged</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,SERVICE_STATE_ACKNOWLEDGED,services_critical_acknowledged);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>>已登记的非重要故障%d个<BR>(Acknowledged)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,SERVICE_STATE_ACKNOWLEDGED,services_critical_acknowledged);
 
 		if(services_critical_disabled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Disabled</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,SERVICE_CHECKS_DISABLED,services_critical_disabled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?servicegroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>关闭的非重要故障%d个<BR>(Disabled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_CRITICAL,SERVICE_CHECKS_DISABLED,services_critical_disabled);
 
 		printf("</TABLE></TD>\n");
 		
@@ -2982,12 +2993,12 @@ void show_servicegroup_service_totals_summary(servicegroup *temp_servicegroup){
 		}
 
 	if(services_pending>0)
-		printf("<TR><TD CLASS='miniStatusPENDING'><A HREF='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d PENDING</A></TD></TR>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_PENDING,host_status_types,service_properties,host_properties,services_pending);
+		printf("<TR><TD CLASS='miniStatusPENDING'><A HREF='%s?servicegroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>状态保持%d个<BR>(PENDING)</A></TD></TR>\n",STATUS_CGI,url_encode(temp_servicegroup->group_name),SERVICE_PENDING,host_status_types,service_properties,host_properties,services_pending);
 
 	printf("</TABLE>\n");
 
 	if((services_ok + services_warning + services_unknown + services_critical + services_pending)==0)
-		printf("No matching services");
+		printf("无符合条件的服务");
 
 	return;
         }
@@ -3015,11 +3026,12 @@ void show_servicegroup_grids(void){
 
 	printf("<td valign=top align=center width=33%%>\n");
 
-	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>Status Grid For ");
+	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>");
 	if(show_all_servicegroups==TRUE)
-		printf("All Service Groups");
+		printf("所有服务组");
 	else
-		printf("Service Group '%s'",servicegroup_name);
+		printf("服务组 '%s' ",servicegroup_name);
+	printf("的状态表格");
 	printf("</DIV>\n");
 
 	printf("<br>");
@@ -3074,12 +3086,11 @@ void show_servicegroup_grids(void){
 		printf("<P><DIV ALIGN=CENTER>\n");
 
 		if(servicegroup_list!=NULL){
-			printf("<DIV CLASS='errorMessage'>It appears as though you do not have permission to view information for any of the hosts you requested...</DIV>\n");
-			printf("<DIV CLASS='errorDescription'>If you believe this is an error, check the HTTP server authentication requirements for accessing this CGI<br>");
-			printf("and check the authorization options in your CGI configuration file.</DIV>\n");
+			printf("<DIV CLASS='errorMessage'>无权查看任何主机的信息...</DIV>\n");
+			printf("<DIV CLASS='errorDescription'>请检查HTTP服务器关于该CGI的访问权限设置。</DIV>\n");
 		        }
 		else{
-			printf("<DIV CLASS='errorMessage'>There are no service groups defined.</DIV>\n");
+			printf("<DIV CLASS='errorMessage'>服务组不存在。</DIV>\n");
 			}
 
 		printf("</DIV></P>\n");
@@ -3088,7 +3099,7 @@ void show_servicegroup_grids(void){
 	/* we couldn't find the servicegroup */
 	else if(servicegroup_error==TRUE){
 		printf("<P><DIV ALIGN=CENTER>\n");
-		printf("<DIV CLASS='errorMessage'>Sorry, but servicegroup '%s' doesn't seem to exist...</DIV>\n",servicegroup_name);
+		printf("<DIV CLASS='errorMessage'>'%s' 服务组不存在</DIV>\n",servicegroup_name);
 		printf("</DIV></P>\n");
 	        }
 
@@ -3110,8 +3121,7 @@ void show_servicegroup_grid(servicegroup *temp_servicegroup){
 	servicestatus *temp_servicestatus;
 	int odd=0;
 	int current_item;
-
-
+	
 	printf("<P>\n");
 	printf("<DIV ALIGN=CENTER>\n");
 
@@ -3119,7 +3129,7 @@ void show_servicegroup_grid(servicegroup *temp_servicegroup){
 	printf(" (<A HREF='%s?type=%d&servicegroup=%s'>%s</A>)</DIV>",EXTINFO_CGI,DISPLAY_SERVICEGROUP_INFO,url_encode(temp_servicegroup->group_name),temp_servicegroup->group_name);
 
 	printf("<TABLE BORDER=1 CLASS='status' ALIGN=CENTER>\n");
-	printf("<TR><TH CLASS='status'>Host</TH><TH CLASS='status'>Services</a></TH><TH CLASS='status'>Actions</TH></TR>\n");
+	printf("<TR><TH CLASS='status'>主机名</TH><TH CLASS='status'>别名</TH><TH CLASS='status'>服务</a></TH><TH CLASS='status'>动作</TH></TR>\n");
 
 	/* find all hosts that have services that are members of the servicegroup */
 	last_host=NULL;
@@ -3175,16 +3185,16 @@ void show_servicegroup_grid(servicegroup *temp_servicegroup){
 		printf("<TR>\n");
 
 		if(temp_host->icon_image!=NULL){
-			printf("<TD align=center valign=center>");
-			printf("<A HREF='%s?type=%d&host=%s'>\n",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_host->name));
-			printf("<IMG SRC='%s",url_logo_images_path);
+				printf("<TD align=center valign=center>");
+				printf("<A HREF='%s?type=%d&host=%s'>\n",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_host->name));
+				printf("<IMG SRC='%s",url_logo_images_path);
 			process_macros(temp_host->icon_image,&processed_string,0);
 			printf("%s",processed_string);
 			free(processed_string);
 			printf("' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,(temp_host->icon_image_alt==NULL)?"":temp_host->icon_image_alt,(temp_host->icon_image_alt==NULL)?"":temp_host->icon_image_alt);
-			printf("</A>");
-			printf("<TD>\n");
-		        }
+				printf("</A>");
+				printf("<TD>\n");
+			        }
 
 		printf("</TR>\n");
 		printf("</TABLE>\n");
@@ -3193,6 +3203,8 @@ void show_servicegroup_grid(servicegroup *temp_servicegroup){
 		printf("</TABLE>\n");
 
 		printf("</TD>\n");
+
+		printf("<td CLASS='status%s'>%s</td>\n",status_bg_class,temp_host->alias);
 
 		printf("<TD CLASS='status%s'>",host_status_class);
 
@@ -3237,32 +3249,32 @@ void show_servicegroup_grid(servicegroup *temp_servicegroup){
 		grab_host_macros(temp_host);
 
 		printf("<A HREF='%s?type=%d&host=%s'>\n",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_host->name));
-		printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,DETAIL_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"View Extended Information For This Host","View Extended Information For This Host");
+		printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,DETAIL_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"该主机的额外信息","该主机的额外信息");
 		printf("</A>");
 
 		if(temp_host->notes_url!=NULL){
-			printf("<A HREF='");
+				printf("<A HREF='");
 			process_macros(temp_host->notes_url,&processed_string,0);
 			printf("%s",processed_string);
 			free(processed_string);
 			printf("' TARGET='%s'>",(notes_url_target==NULL)?"_blank":notes_url_target);
-			printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,NOTES_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"View Extra Host Notes","View Extra Host Notes");
-			printf("</A>");
-		        }
+				printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,NOTES_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"该主机备注信息","该主机备注信息");
+				printf("</A>");
+			        }
 		if(temp_host->action_url!=NULL){
-			printf("<A HREF='");
+				printf("<A HREF='");
 			process_macros(temp_host->action_url,&processed_string,0);
 			printf("%s",processed_string);
 			free(processed_string);
 			printf("' TARGET='%s'>",(action_url_target==NULL)?"blank":action_url_target);
-			printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,ACTION_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"Perform Extra Host Actions","Perform Extra Host Actions");
-			printf("</A>");
-		        }
+				printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,ACTION_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"执行额外的主机动作","执行额外的主机动作");
+				printf("</A>");
+			        }
 
-		printf("<a href='%s?host=%s'><img src='%s%s' border=0 alt='View Service Details For This Host' title='View Service Details For This Host'></a>\n",STATUS_CGI,url_encode(temp_host->name),url_images_path,STATUS_DETAIL_ICON);
+		printf("<a href='%s?host=%s'><img src='%s%s' border=0 alt='该主机的详细服务状态' title='该主机的详细服务状态'></a>\n",STATUS_CGI,url_encode(temp_host->name),url_images_path,STATUS_DETAIL_ICON);
 
 #ifdef USE_STATUSMAP
-		printf("<A HREF='%s?host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'></A>",STATUSMAP_CGI,url_encode(temp_host->name),url_images_path,STATUSMAP_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"Locate Host On Map","Locate Host On Map");
+		printf("<A HREF='%s?host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'></A>",STATUSMAP_CGI,url_encode(temp_host->name),url_images_path,STATUSMAP_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"在地图上定位主机","在地图上定位主机");
 #endif
 		printf("</TD>\n");
 		printf("</TR>\n");
@@ -3300,11 +3312,12 @@ void show_hostgroup_overviews(void){
 
 	printf("<td valign=top align=center width=33%%>\n");
 
-	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>Service Overview For ");
+	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>");
 	if(show_all_hostgroups==TRUE)
-		printf("All Host Groups");
+		printf("所有主机组");
 	else
-		printf("Host Group '%s'",hostgroup_name);
+		printf("主机组 '%s'",hostgroup_name);
+	printf("的服务概要");
 	printf("</DIV>\n");
 
 	printf("<br>");
@@ -3386,7 +3399,7 @@ void show_hostgroup_overviews(void){
 			printf("</P>\n");
 		        }
 		else{
-			printf("<DIV CLASS='errorMessage'>Sorry, but host group '%s' doesn't seem to exist...</DIV>",hostgroup_name);
+			printf("<DIV CLASS='errorMessage'>'%s' 主机组不存在...</DIV>",hostgroup_name);
 			hostgroup_error=TRUE;
 		        }
 	        }
@@ -3398,13 +3411,12 @@ void show_hostgroup_overviews(void){
 		printf("<div align='center'>\n");
 
 		if(hoststatus_list!=NULL){
-			printf("<DIV CLASS='errorMessage'>It appears as though you do not have permission to view information for any of the hosts you requested...</DIV>\n");
-			printf("<DIV CLASS='errorDescription'>If you believe this is an error, check the HTTP server authentication requirements for accessing this CGI<br>");
-			printf("and check the authorization options in your CGI configuration file.</DIV>\n");
+			printf("<DIV CLASS='errorMessage'>无权查看任何主机的信息...</DIV>\n");
+			printf("<DIV CLASS='errorDescription'>请检查HTTP服务器关于该CGI的访问权限设置。</DIV>\n");
 		        }
 		else{
-			printf("<DIV CLASS='infoMessage'>There doesn't appear to be any host status information in the status log...<br><br>\n");
-			printf("Make sure that Nagios is running and that you have specified the location of you status log correctly in the configuration files.</DIV>\n");
+			printf("<DIV CLASS='infoMessage'>日志中不存在任何主机状态信息...<br><br>\n");
+			printf("请确保Nagios正常运行，并且配置文件中状态日志设置正确。</DIV>\n");
 		        }
 
 		printf("</div>\n");
@@ -3436,7 +3448,7 @@ void show_hostgroup_overview(hostgroup *hstgrp){
 	printf("<table border=1 CLASS='status'>\n");
 
 	printf("<TR>\n");
-	printf("<TH CLASS='status'>Host</TH><TH CLASS='status'>Status</TH><TH CLASS='status'>Services</TH><TH CLASS='status'>Actions</TH>\n");
+	printf("<TH CLASS='status'>主机名</TH><TH CLASS='status'>别名</TH><TH CLASS='status'>状态</TH><TH CLASS='status'>服务</TH><TH CLASS='status'>动作</TH>\n");
 	printf("</TR>\n");
 
 	/* find all the hosts that belong to the hostgroup */
@@ -3490,22 +3502,22 @@ void show_servicegroup_hostgroup_member_overview(hoststatus *hststatus,int odd,v
 	grab_host_macros(temp_host);
 
 	if(hststatus->status==HOST_PENDING){
-		strncpy(status,"PENDING",sizeof(status));
+		strncpy(status,"未决",sizeof(status));
 		status_class="HOSTPENDING";
 		status_bg_class=(odd)?"Even":"Odd";
 	        }
 	else if(hststatus->status==HOST_UP){
-		strncpy(status,"UP",sizeof(status));
+		strncpy(status,"运行",sizeof(status));
 		status_class="HOSTUP";
 		status_bg_class=(odd)?"Even":"Odd";
 	        }
 	else if(hststatus->status==HOST_DOWN){
-		strncpy(status,"DOWN",sizeof(status));
+		strncpy(status,"宕机",sizeof(status));
 		status_class="HOSTDOWN";
 		status_bg_class="HOSTDOWN";
 	        }
 	else if(hststatus->status==HOST_UNREACHABLE){
-		strncpy(status,"UNREACHABLE",sizeof(status));
+		strncpy(status,"不可达",sizeof(status));
 		status_class="HOSTUNREACHABLE";
 		status_bg_class="HOSTUNREACHABLE";
 	        }
@@ -3514,6 +3526,9 @@ void show_servicegroup_hostgroup_member_overview(hoststatus *hststatus,int odd,v
 
 	printf("<TR CLASS='status%s'>\n",status_bg_class);
 
+	/* find host infomation for this host by sato */
+	temp_host=find_host(hststatus->host_name);
+
 	printf("<TD CLASS='status%s'>\n",status_bg_class);
 
 	printf("<TABLE BORDER=0 WIDTH=100%% cellpadding=0 cellspacing=0>\n");
@@ -3521,20 +3536,23 @@ void show_servicegroup_hostgroup_member_overview(hoststatus *hststatus,int odd,v
 	printf("<TD CLASS='status%s'><A HREF='%s?host=%s&style=detail' title='%s'>%s</A></TD>\n",status_bg_class,STATUS_CGI,url_encode(hststatus->host_name),temp_host->address,hststatus->host_name);
 
 	if(temp_host->icon_image!=NULL){
-		printf("<TD CLASS='status%s' WIDTH=5></TD>\n",status_bg_class);
-		printf("<TD CLASS='status%s' ALIGN=right>",status_bg_class);
-		printf("<a href='%s?type=%d&host=%s'>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(hststatus->host_name));
-		printf("<IMG SRC='%s",url_logo_images_path);
+			printf("<TD CLASS='status%s' WIDTH=50></TD>\n",status_bg_class);
+			printf("<TD CLASS='status%s' ALIGN=right>",status_bg_class);
+			printf("<a href='%s?type=%d&host=%s'>",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(hststatus->host_name));
+			printf("<IMG SRC='%s",url_logo_images_path);
 		process_macros(temp_host->icon_image,&processed_string,0);
 		printf("%s",processed_string);
 		free(processed_string);
 		printf("' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,(temp_host->icon_image_alt==NULL)?"":temp_host->icon_image_alt,(temp_host->icon_image_alt==NULL)?"":temp_host->icon_image_alt);
-		printf("</A>");
-		printf("</TD>\n");
-	        }
+			printf("</A>");
+			printf("</TD>\n");
+	                }
 	printf("</TR>\n");
 	printf("</TABLE>\n");
 	printf("</TD>\n");
+
+	/* add alias by sato */
+	printf("<td CLASS='status%s'>%s</td>\n",status_bg_class,temp_host->alias);
 
 	printf("<td CLASS='status%s'>%s</td>\n",status_class,status);
 
@@ -3543,28 +3561,28 @@ void show_servicegroup_hostgroup_member_overview(hoststatus *hststatus,int odd,v
 	printf("</td>\n");
 
 	printf("<td valign=center CLASS='status%s'>",status_bg_class);
-	printf("<a href='%s?type=%d&host=%s'><img src='%s%s' border=0 alt='View Extended Information For This Host' title='View Extended Information For This Host'></a>\n",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(hststatus->host_name),url_images_path,DETAIL_ICON);
+	printf("<a href='%s?type=%d&host=%s'><img src='%s%s' border=0 alt='该主机的额外信息' title='该主机的额外信息'></a>\n",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(hststatus->host_name),url_images_path,DETAIL_ICON);
 	if(temp_host->notes_url!=NULL){
-		printf("<A HREF='");
+			printf("<A HREF='");
 		process_macros(temp_host->notes_url,&processed_string,0);
 		printf("%s",processed_string);
 		free(processed_string);
 		printf("' TARGET='%s'>",(notes_url_target==NULL)?"_blank":notes_url_target);
-		printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,NOTES_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"View Extra Host Notes","View Extra Host Notes");
-		printf("</A>");
-	        }
+			printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,NOTES_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"该主机备注信息","该主机备注信息");
+			printf("</A>");
+		        }
 	if(temp_host->action_url!=NULL){
-		printf("<A HREF='");
+			printf("<A HREF='");
 		process_macros(temp_host->action_url,&processed_string,0);
 		printf("%s",processed_string);
 		free(processed_string);
 		printf("' TARGET='%s'>",(action_url_target==NULL)?"_blank":action_url_target);
-		printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,ACTION_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"Perform Extra Host Actions","Perform Extra Host Actions");
-		printf("</A>");
-	        }
-	printf("<a href='%s?host=%s'><img src='%s%s' border=0 alt='View Service Details For This Host' title='View Service Details For This Host'></a>\n",STATUS_CGI,url_encode(hststatus->host_name),url_images_path,STATUS_DETAIL_ICON);
+			printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,ACTION_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"执行额外的主机动作","执行额外的主机动作");
+			printf("</A>");
+		        }
+	printf("<a href='%s?host=%s'><img src='%s%s' border=0 alt='该主机的详细服务状态' title='该主机的详细服务状态'></a>\n",STATUS_CGI,url_encode(hststatus->host_name),url_images_path,STATUS_DETAIL_ICON);
 #ifdef USE_STATUSMAP
-	printf("<A HREF='%s?host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'></A>",STATUSMAP_CGI,url_encode(hststatus->host_name),url_images_path,STATUSMAP_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"Locate Host On Map","Locate Host On Map");
+	printf("<A HREF='%s?host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'></A>",STATUSMAP_CGI,url_encode(hststatus->host_name),url_images_path,STATUSMAP_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"在地图上定位主机","在地图上定位主机");
 #endif
 	printf("</TD>");
 
@@ -3640,20 +3658,20 @@ void show_servicegroup_hostgroup_member_service_status_totals(char *host_name,vo
 	temp_buffer[sizeof(temp_buffer)-1]='\x0';
 
 	if(total_ok>0)
-		printf("<TR><TD CLASS='miniStatusOK'><A HREF='%s?%s&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d OK</A></TD></TR>\n",STATUS_CGI,temp_buffer,SERVICE_OK,host_status_types,service_properties,host_properties,total_ok);
+		printf("<TR><TD CLASS='miniStatusOK'><A HREF='%s?%s&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>正常状态: %d <BR>(OK)</A></TD></TR>\n",STATUS_CGI,temp_buffer,SERVICE_OK,host_status_types,service_properties,host_properties,total_ok);
 	if(total_warning>0)
-		printf("<TR><TD CLASS='miniStatusWARNING'><A HREF='%s?%s&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d WARNING</A></TD></TR>\n",STATUS_CGI,temp_buffer,SERVICE_WARNING,host_status_types,service_properties,host_properties,total_warning);
+		printf("<TR><TD CLASS='miniStatusWARNING'><A HREF='%s?%s&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>告警状态: %d <BR>(WARNING)</A></TD></TR>\n",STATUS_CGI,temp_buffer,SERVICE_WARNING,host_status_types,service_properties,host_properties,total_warning);
 	if(total_unknown>0)
-		printf("<TR><TD CLASS='miniStatusUNKNOWN'><A HREF='%s?%s&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d UNKNOWN</A></TD></TR>\n",STATUS_CGI,temp_buffer,SERVICE_UNKNOWN,host_status_types,service_properties,host_properties,total_unknown);
+		printf("<TR><TD CLASS='miniStatusUNKNOWN'><A HREF='%s?%s&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>未知状态: %d <BR>(UNKNOWN)</A></TD></TR>\n",STATUS_CGI,temp_buffer,SERVICE_UNKNOWN,host_status_types,service_properties,host_properties,total_unknown);
 	if(total_critical>0)
-		printf("<TR><TD CLASS='miniStatusCRITICAL'><A HREF='%s?%s&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d CRITICAL</A></TD></TR>\n",STATUS_CGI,temp_buffer,SERVICE_CRITICAL,host_status_types,service_properties,host_properties,total_critical);
+		printf("<TR><TD CLASS='miniStatusCRITICAL'><A HREF='%s?%s&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>紧急状态: %d <BR>(CRITICAL)</A></TD></TR>\n",STATUS_CGI,temp_buffer,SERVICE_CRITICAL,host_status_types,service_properties,host_properties,total_critical);
 	if(total_pending>0)
-		printf("<TR><TD CLASS='miniStatusPENDING'><A HREF='%s?%s&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d PENDING</A></TD></TR>\n",STATUS_CGI,temp_buffer,SERVICE_PENDING,host_status_types,service_properties,host_properties,total_pending);
+		printf("<TR><TD CLASS='miniStatusPENDING'><A HREF='%s?%s&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>未决状态: %d <BR>(PENDING)</A></TD></TR>\n",STATUS_CGI,temp_buffer,SERVICE_PENDING,host_status_types,service_properties,host_properties,total_pending);
 
 	printf("</TABLE>\n");
 
 	if((total_ok + total_warning + total_unknown + total_critical + total_pending)==0)
-		printf("No matching services");
+		printf("无符合条件的服务");
 
 	return;
         }
@@ -3681,11 +3699,12 @@ void show_hostgroup_summaries(void){
 
 	printf("<td valign=top align=center width=33%%>\n");
 
-	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>Status Summary For ");
+	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>");
 	if(show_all_hostgroups==TRUE)
-		printf("All Host Groups");
+		printf("所有主机组");
 	else
-		printf("Host Group '%s'",hostgroup_name);
+		printf("主机组 '%s' ",hostgroup_name);
+	printf("的状态汇总");
 	printf("</DIV>\n");
 
 	printf("<br>");
@@ -3704,7 +3723,7 @@ void show_hostgroup_summaries(void){
 	printf("<table border=1 CLASS='status'>\n");
 
 	printf("<TR>\n");
-	printf("<TH CLASS='status'>Host Group</TH><TH CLASS='status'>Host Status Summary</TH><TH CLASS='status'>Service Status Summary</TH>\n");
+	printf("<TH CLASS='status'>主机组</TH><TH CLASS='status'>主机状态汇总</TH><TH CLASS='status'>服务状态汇总</TH>\n");
 	printf("</TR>\n");
 
 	/* display status summary for all hostgroups */
@@ -3750,13 +3769,12 @@ void show_hostgroup_summaries(void){
 		printf("<P><DIV ALIGN=CENTER>\n");
 
 		if(hoststatus_list!=NULL){
-			printf("<DIV CLASS='errorMessage'>It appears as though you do not have permission to view information for any of the hosts you requested...</DIV>\n");
-			printf("<DIV CLASS='errorDescription'>If you believe this is an error, check the HTTP server authentication requirements for accessing this CGI<br>");
-			printf("and check the authorization options in your CGI configuration file.</DIV>\n");
+			printf("<DIV CLASS='errorMessage'>无权查看任何主机的信息...</DIV>\n");
+			printf("<DIV CLASS='errorDescription'>请检查HTTP服务器关于该CGI的访问权限设置。</DIV>\n");
 		        }
 		else{
-			printf("<DIV CLASS='infoMessage'>There doesn't appear to be any host status information in the status log...<br><br>\n");
-			printf("Make sure that Nagios is running and that you have specified the location of you status log correctly in the configuration files.</DIV>\n");
+			printf("<DIV CLASS='infoMessage'>日志中不存在任何主机状态信息...<br><br>\n");
+			printf("请确保Nagios正常运行，并且配置文件中状态日志设置正确。</DIV>\n");
 		        }
 
 		printf("</DIV></P>\n");
@@ -3765,7 +3783,7 @@ void show_hostgroup_summaries(void){
 	/* we couldn't find the hostgroup */
 	else if(hostgroup_error==TRUE){
 		printf("<P><DIV ALIGN=CENTER>\n");
-		printf("<DIV CLASS='errorMessage'>Sorry, but hostgroup '%s' doesn't seem to exist...</DIV>\n",hostgroup_name);
+		printf("<DIV CLASS='errorMessage'>'%s' 主机组不存在...</DIV>\n",hostgroup_name);
 		printf("</DIV></P>\n");
 	        }
 
@@ -3845,7 +3863,7 @@ void show_hostgroup_host_totals_summary(hostgroup *temp_hostgroup){
 
 		problem=TRUE;
 
-		if(temp_hoststatus->status==HOST_UP)
+ 		if(temp_hoststatus->status==HOST_UP)
 			hosts_up++;
 
 		else if(temp_hoststatus->status==HOST_DOWN){
@@ -3892,7 +3910,7 @@ void show_hostgroup_host_totals_summary(hostgroup *temp_hostgroup){
 
 	if(hosts_up>0){
 		printf("<TR>");
-		printf("<TD CLASS='miniStatusUP'><A HREF='%s?hostgroup=%s&style=hostdetail&&hoststatustypes=%d&hostprops=%lu'>%d UP</A></TD>",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UP,host_properties,hosts_up);
+		printf("<TD CLASS='miniStatusUP'><A HREF='%s?hostgroup=%s&style=hostdetail&&hoststatustypes=%d&hostprops=%lu'>运行状态%d个运<BR>(UP)</A></TD>",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UP,host_properties,hosts_up);
 		printf("</TR>\n");
 		}
 
@@ -3901,21 +3919,21 @@ void show_hostgroup_host_totals_summary(hostgroup *temp_hostgroup){
 		printf("<TD CLASS='miniStatusDOWN'><TABLE BORDER='0'>\n");
 		printf("<TR>\n");
 
-		printf("<TD CLASS='miniStatusDOWN'><A HREF='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%lu'>%d DOWN</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_DOWN,host_properties,hosts_down);
+		printf("<TD CLASS='miniStatusDOWN'><A HREF='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%lu'>状态停止%d个<BR>(DOWN)</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_DOWN,host_properties,hosts_down);
 
 		printf("<TD><TABLE BORDER='0'>\n");
 
 		if(hosts_down_unacknowledged>0)
-			printf("<tr><td width=100%% class='hostImportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>%d Unhandled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_DOWN,HOST_NO_SCHEDULED_DOWNTIME|HOST_STATE_UNACKNOWLEDGED|HOST_CHECKS_ENABLED,hosts_down_unacknowledged);
+			printf("<tr><td width=100%% class='hostImportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>尚未解决%d个<BR>(Unhandled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_DOWN,HOST_NO_SCHEDULED_DOWNTIME|HOST_STATE_UNACKNOWLEDGED|HOST_CHECKS_ENABLED,hosts_down_unacknowledged);
 
 		if(hosts_down_scheduled>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>%d Scheduled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_DOWN,HOST_SCHEDULED_DOWNTIME,hosts_down_scheduled);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>计划内非重要故障%d个<BR>(Scheduled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_DOWN,HOST_SCHEDULED_DOWNTIME,hosts_down_scheduled);
 
 		if(hosts_down_acknowledged>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>%d Acknowledged</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_DOWN,HOST_STATE_ACKNOWLEDGED,hosts_down_acknowledged);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>已登记的非重要故障%d个<BR>(Acknowledged)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_DOWN,HOST_STATE_ACKNOWLEDGED,hosts_down_acknowledged);
 
 		if(hosts_down_disabled>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>%d Disabled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_DOWN,HOST_CHECKS_DISABLED,hosts_down_disabled);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>关闭的非重要故障%d个<BR>(Disabled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_DOWN,HOST_CHECKS_DISABLED,hosts_down_disabled);
 
 		printf("</TABLE></TD>\n");
 		
@@ -3929,21 +3947,21 @@ void show_hostgroup_host_totals_summary(hostgroup *temp_hostgroup){
 		printf("<TD CLASS='miniStatusUNREACHABLE'><TABLE BORDER='0'>\n");
 		printf("<TR>\n");
 
-		printf("<TD CLASS='miniStatusUNREACHABLE'><A HREF='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%lu'>%d UNREACHABLE</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UNREACHABLE,host_properties,hosts_unreachable);
+		printf("<TD CLASS='miniStatusUNREACHABLE'><A HREF='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%lu'>状态不可达%d个<BR>(UNREACHABLE)</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UNREACHABLE,host_properties,hosts_unreachable);
 
 		printf("<TD><TABLE BORDER='0'>\n");
 
 		if(hosts_unreachable_unacknowledged>0)
-			printf("<tr><td width=100%% class='hostImportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>%d Unhandled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UNREACHABLE,HOST_NO_SCHEDULED_DOWNTIME|HOST_STATE_UNACKNOWLEDGED|HOST_CHECKS_ENABLED,hosts_unreachable_unacknowledged);
+			printf("<tr><td width=100%% class='hostImportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>尚未解决%d个<BR>(Unhandled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UNREACHABLE,HOST_NO_SCHEDULED_DOWNTIME|HOST_STATE_UNACKNOWLEDGED|HOST_CHECKS_ENABLED,hosts_unreachable_unacknowledged);
 
 		if(hosts_unreachable_scheduled>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>%d Scheduled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UNREACHABLE,HOST_SCHEDULED_DOWNTIME,hosts_unreachable_scheduled);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>计划内非重要故障%d个<BR>(Scheduled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UNREACHABLE,HOST_SCHEDULED_DOWNTIME,hosts_unreachable_scheduled);
 
 		if(hosts_unreachable_acknowledged>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>%d Acknowledged</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UNREACHABLE,HOST_STATE_ACKNOWLEDGED,hosts_unreachable_acknowledged);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>已登记的非重要故障%d个<BR>(Acknowledged)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UNREACHABLE,HOST_STATE_ACKNOWLEDGED,hosts_unreachable_acknowledged);
 
 		if(hosts_unreachable_disabled>0)
-			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>%d Disabled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UNREACHABLE,HOST_CHECKS_DISABLED,hosts_unreachable_disabled);
+			printf("<tr><td width=100%% class='hostUnimportantProblem'><a href='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%d'>关闭的非重要故障%d个<BR>(Disabled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_UNREACHABLE,HOST_CHECKS_DISABLED,hosts_unreachable_disabled);
 
 		printf("</TABLE></TD>\n");
 		
@@ -3953,12 +3971,12 @@ void show_hostgroup_host_totals_summary(hostgroup *temp_hostgroup){
 		}
 
 	if(hosts_pending>0)
-		printf("<TR><TD CLASS='miniStatusPENDING'><A HREF='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%lu'>%d PENDING</A></TD></TR>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_PENDING,host_properties,hosts_pending);
+		printf("<TR><TD CLASS='miniStatusPENDING'><A HREF='%s?hostgroup=%s&style=hostdetail&hoststatustypes=%d&hostprops=%lu'>状态保持%d个<BR>(PENDING)</A></TD></TR>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),HOST_PENDING,host_properties,hosts_pending);
 
 	printf("</TABLE>\n");
 
 	if((hosts_up + hosts_down + hosts_unreachable + hosts_pending)==0)
-		printf("No matching hosts");
+		printf("无符合条件的主机");
 
 	return;
         }
@@ -4113,31 +4131,31 @@ void show_hostgroup_service_totals_summary(hostgroup *temp_hostgroup){
 	printf("<TABLE BORDER=0>\n");
 
 	if(services_ok>0)
-		printf("<TR><TD CLASS='miniStatusOK'><A HREF='%s?hostgroup=%s&style=detail&&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d OK</A></TD></TR>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_OK,host_status_types,service_properties,host_properties,services_ok);
+		printf("<TR><TD CLASS='miniStatusOK'><A HREF='%s?hostgroup=%s&style=detail&&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>状态正常%d个<BR>(OK)</A></TD></TR>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_OK,host_status_types,service_properties,host_properties,services_ok);
 
 	if(services_warning>0){
 		printf("<TR>\n");
 		printf("<TD CLASS='miniStatusWARNING'><TABLE BORDER='0'>\n");
 		printf("<TR>\n");
 
-		printf("<TD CLASS='miniStatusWARNING'><A HREF='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d WARNING</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,host_status_types,service_properties,host_properties,services_warning);
+		printf("<TD CLASS='miniStatusWARNING'><A HREF='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>状态告警%d个<BR>(WARNING)</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,host_status_types,service_properties,host_properties,services_warning);
 
 		printf("<TD><TABLE BORDER='0'>\n");
 
 		if(services_warning_unacknowledged>0)
-			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>%d Unhandled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_warning_unacknowledged);
+			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>尚未解决%d个<BR>(Unhandled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_warning_unacknowledged);
 
 		if(services_warning_host_problem>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>%d on Problem Hosts</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,HOST_DOWN|HOST_UNREACHABLE,services_warning_host_problem);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>主机上的问题有%d个</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,HOST_DOWN|HOST_UNREACHABLE,services_warning_host_problem);
 
 		if(services_warning_scheduled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Scheduled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,SERVICE_SCHEDULED_DOWNTIME,services_warning_scheduled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>计划内非重要故障%d个<BR>(Scheduled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,SERVICE_SCHEDULED_DOWNTIME,services_warning_scheduled);
 
 		if(services_warning_acknowledged>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Acknowledged</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,SERVICE_STATE_ACKNOWLEDGED,services_warning_acknowledged);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>已登记的非重要故障%d个<BR>(Acknowledged)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,SERVICE_STATE_ACKNOWLEDGED,services_warning_acknowledged);
 
 		if(services_warning_disabled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Disabled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,SERVICE_CHECKS_DISABLED,services_warning_disabled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>关闭的非重要故障%d个<BR>(Disabled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_WARNING,SERVICE_CHECKS_DISABLED,services_warning_disabled);
 
 		printf("</TABLE></TD>\n");
 		
@@ -4151,24 +4169,24 @@ void show_hostgroup_service_totals_summary(hostgroup *temp_hostgroup){
 		printf("<TD CLASS='miniStatusUNKNOWN'><TABLE BORDER='0'>\n");
 		printf("<TR>\n");
 
-		printf("<TD CLASS='miniStatusUNKNOWN'><A HREF='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d UNKNOWN</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,host_status_types,service_properties,host_properties,services_unknown);
+		printf("<TD CLASS='miniStatusUNKNOWN'><A HREF='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>状态未决%d个<BR>(UNKNOWN)</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,host_status_types,service_properties,host_properties,services_unknown);
 
 		printf("<TD><TABLE BORDER='0'>\n");
 
 		if(services_unknown_unacknowledged>0)
-			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>%d Unhandled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_unknown_unacknowledged);
+			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>尚未解决%d个<BR>(Unhandled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_unknown_unacknowledged);
 
 		if(services_unknown_host_problem>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>%d on Problem Hosts</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,HOST_DOWN|HOST_UNREACHABLE,services_unknown_host_problem);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>主机上的问题有%d个</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,HOST_DOWN|HOST_UNREACHABLE,services_unknown_host_problem);
 
 		if(services_unknown_scheduled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Scheduled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,SERVICE_SCHEDULED_DOWNTIME,services_unknown_scheduled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>计划内非重要故障%d个<BR>(Scheduled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,SERVICE_SCHEDULED_DOWNTIME,services_unknown_scheduled);
 
 		if(services_unknown_acknowledged>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Acknowledged</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,SERVICE_STATE_ACKNOWLEDGED,services_unknown_acknowledged);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>已登记的非重要故障%d个<BR>(Acknowledged)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,SERVICE_STATE_ACKNOWLEDGED,services_unknown_acknowledged);
 
 		if(services_unknown_disabled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Disabled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,SERVICE_CHECKS_DISABLED,services_unknown_disabled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>关闭的非重要故障%d个<BR>(Disabled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_UNKNOWN,SERVICE_CHECKS_DISABLED,services_unknown_disabled);
 
 		printf("</TABLE></TD>\n");
 		
@@ -4182,24 +4200,24 @@ void show_hostgroup_service_totals_summary(hostgroup *temp_hostgroup){
 		printf("<TD CLASS='miniStatusCRITICAL'><TABLE BORDER='0'>\n");
 		printf("<TR>\n");
 
-		printf("<TD CLASS='miniStatusCRITICAL'><A HREF='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d CRITICAL</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,host_status_types,service_properties,host_properties,services_critical);
+		printf("<TD CLASS='miniStatusCRITICAL'><A HREF='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>状态异常有%d个<BR>(CRITICAL)</A>&nbsp;:</TD>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,host_status_types,service_properties,host_properties,services_critical);
 
 		printf("<TD><TABLE BORDER='0'>\n");
 
 		if(services_critical_unacknowledged>0)
-			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>%d Unhandled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_critical_unacknowledged);
+			printf("<tr><td width=100%% class='serviceImportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%d'>尚未解决%d个<BR>(Unhandled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,HOST_UP|HOST_PENDING,SERVICE_NO_SCHEDULED_DOWNTIME|SERVICE_STATE_UNACKNOWLEDGED|SERVICE_CHECKS_ENABLED,services_critical_unacknowledged);
 
 		if(services_critical_host_problem>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>%d on Problem Hosts</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,HOST_DOWN|HOST_UNREACHABLE,services_critical_host_problem);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d'>主机上的问题有%d个</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,HOST_DOWN|HOST_UNREACHABLE,services_critical_host_problem);
 
 		if(services_critical_scheduled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Scheduled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,SERVICE_SCHEDULED_DOWNTIME,services_critical_scheduled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>计划内非重要故障%d个<BR>(Scheduled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,SERVICE_SCHEDULED_DOWNTIME,services_critical_scheduled);
 
 		if(services_critical_acknowledged>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Acknowledged</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,SERVICE_STATE_ACKNOWLEDGED,services_critical_acknowledged);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>已登记的非重要故障%d个<BR>(Acknowledged)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,SERVICE_STATE_ACKNOWLEDGED,services_critical_acknowledged);
 
 		if(services_critical_disabled>0)
-			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>%d Disabled</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,SERVICE_CHECKS_DISABLED,services_critical_disabled);
+			printf("<tr><td width=100%% class='serviceUnimportantProblem'><a href='%s?hostgroup=%s&style=detail&servicestatustypes=%d&serviceprops=%d'>关闭的非重要故障%d个<BR>(Disabled)</a></td></tr>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_CRITICAL,SERVICE_CHECKS_DISABLED,services_critical_disabled);
 
 		printf("</TABLE></TD>\n");
 		
@@ -4209,12 +4227,12 @@ void show_hostgroup_service_totals_summary(hostgroup *temp_hostgroup){
 		}
 
 	if(services_pending>0)
-		printf("<TR><TD CLASS='miniStatusPENDING'><A HREF='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>%d PENDING</A></TD></TR>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_PENDING,host_status_types,service_properties,host_properties,services_pending);
+		printf("<TR><TD CLASS='miniStatusPENDING'><A HREF='%s?hostgroup=%s&style=detail&servicestatustypes=%d&hoststatustypes=%d&serviceprops=%lu&hostprops=%lu'>状态保持%d个<BR>(PENDING)</A></TD></TR>\n",STATUS_CGI,url_encode(temp_hostgroup->group_name),SERVICE_PENDING,host_status_types,service_properties,host_properties,services_pending);
 
 	printf("</TABLE>\n");
 
 	if((services_ok + services_warning + services_unknown + services_critical + services_pending)==0)
-		printf("No matching services");
+		printf("无符合条件的服务");
 
 	return;
         }
@@ -4242,11 +4260,12 @@ void show_hostgroup_grids(void){
 
 	printf("<td valign=top align=center width=33%%>\n");
 
-	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>Status Grid For ");
+	printf("<DIV ALIGN=CENTER CLASS='statusTitle'>");
 	if(show_all_hostgroups==TRUE)
-		printf("All Host Groups");
+		printf("所有主机组");
 	else
-		printf("Host Group '%s'",hostgroup_name);
+		printf("主机组 '%s' ",hostgroup_name);
+	printf("的状态表格");
 	printf("</DIV>\n");
 
 	printf("<br>");
@@ -4301,13 +4320,12 @@ void show_hostgroup_grids(void){
 		printf("<P><DIV ALIGN=CENTER>\n");
 
 		if(hoststatus_list!=NULL){
-			printf("<DIV CLASS='errorMessage'>It appears as though you do not have permission to view information for any of the hosts you requested...</DIV>\n");
-			printf("<DIV CLASS='errorDescription'>If you believe this is an error, check the HTTP server authentication requirements for accessing this CGI<br>");
-			printf("and check the authorization options in your CGI configuration file.</DIV>\n");
+			printf("<DIV CLASS='errorMessage'>无权查看任何主机的信息...</DIV>\n");
+			printf("<DIV CLASS='errorDescription'>请检查HTTP服务器关于该CGI的访问权限设置。</DIV>\n");
 		        }
 		else{
-			printf("<DIV CLASS='infoMessage'>There doesn't appear to be any host status information in the status log...<br><br>\n");
-			printf("Make sure that Nagios is running and that you have specified the location of you status log correctly in the configuration files.</DIV>\n");
+			printf("<DIV CLASS='infoMessage'>日志中不存在任何主机状态信息...<br><br>\n");
+			printf("请确保Nagios正常运行，并且配置文件中状态日志设置正确。</DIV>\n");
 		        }
 
 		printf("</DIV></P>\n");
@@ -4316,7 +4334,7 @@ void show_hostgroup_grids(void){
 	/* we couldn't find the hostgroup */
 	else if(hostgroup_error==TRUE){
 		printf("<P><DIV ALIGN=CENTER>\n");
-		printf("<DIV CLASS='errorMessage'>Sorry, but hostgroup '%s' doesn't seem to exist...</DIV>\n",hostgroup_name);
+		printf("<DIV CLASS='errorMessage'>'%s' 主机组不存在....</DIV>\n",hostgroup_name);
 		printf("</DIV></P>\n");
 	        }
 
@@ -4346,7 +4364,7 @@ void show_hostgroup_grid(hostgroup *temp_hostgroup){
 	printf(" (<A HREF='%s?type=%d&hostgroup=%s'>%s</A>)</DIV>",EXTINFO_CGI,DISPLAY_HOSTGROUP_INFO,url_encode(temp_hostgroup->group_name),temp_hostgroup->group_name);
 
 	printf("<TABLE BORDER=1 CLASS='status' ALIGN=CENTER>\n");
-	printf("<TR><TH CLASS='status'>Host</TH><TH CLASS='status'>Services</a></TH><TH CLASS='status'>Actions</TH></TR>\n");
+	printf("<TR><TH CLASS='status'>主机名</TH><TH CLASS='status'>别名</TH><TH CLASS='status'>服务</a></TH><TH CLASS='status'>动作</TH></TR>\n");
 
 	/* find all the hosts that belong to the hostgroup */
 	for(temp_member=temp_hostgroup->members;temp_member!=NULL;temp_member=temp_member->next){
@@ -4401,16 +4419,16 @@ void show_hostgroup_grid(hostgroup *temp_hostgroup){
 		printf("<TR>\n");
 
 		if(temp_host->icon_image!=NULL){
-			printf("<TD align=center valign=center>");
-			printf("<A HREF='%s?type=%d&host=%s'>\n",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_host->name));
-			printf("<IMG SRC='%s",url_logo_images_path);
+				printf("<TD align=center valign=center>");
+				printf("<A HREF='%s?type=%d&host=%s'>\n",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_host->name));
+				printf("<IMG SRC='%s",url_logo_images_path);
 			process_macros(temp_host->icon_image,&processed_string,0);
 			printf("%s",processed_string);
 			free(processed_string);
 			printf("' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,(temp_host->icon_image_alt==NULL)?"":temp_host->icon_image_alt,(temp_host->icon_image_alt==NULL)?"":temp_host->icon_image_alt);
-			printf("</A>");
-			printf("<TD>\n");
-		        }
+				printf("</A>");
+				printf("<TD>\n");
+			        }
 		printf("<TD>\n");
 
 		printf("</TR>\n");
@@ -4420,6 +4438,9 @@ void show_hostgroup_grid(hostgroup *temp_hostgroup){
 		printf("</TABLE>\n");
 
 		printf("</TD>\n");
+
+		/* dispay Alias by sato  */
+		printf("<TD>%s</td>",temp_host->alias);
 
 		printf("<TD CLASS='status%s'>",host_status_class);
 
@@ -4466,31 +4487,31 @@ void show_hostgroup_grid(hostgroup *temp_hostgroup){
 		printf("<TD CLASS='status%s'>",host_status_class);
 
 		printf("<A HREF='%s?type=%d&host=%s'>\n",EXTINFO_CGI,DISPLAY_HOST_INFO,url_encode(temp_host->name));
-		printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,DETAIL_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"View Extended Information For This Host","View Extended Information For This Host");
+		printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,DETAIL_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"该主机的额外信息","该主机的额外信息");
 		printf("</A>");
 
 		if(temp_host->notes_url!=NULL){
-			printf("<A HREF='");
+				printf("<A HREF='");
 			process_macros(temp_host->notes_url,&processed_string,0);
 			printf("%s",processed_string);
 			free(processed_string);
 			printf("' TARGET='%s'>",(notes_url_target==NULL)?"_blank":notes_url_target);
-			printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,NOTES_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"View Extra Host Notes","View Extra Host Notes");
-			printf("</A>");
-		        }
+				printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,NOTES_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"该主机备注信息","该主机备注信息");
+				printf("</A>");
+			        }
 		if(temp_host->action_url!=NULL){
-			printf("<A HREF='");
+				printf("<A HREF='");
 			process_macros(temp_host->action_url,&processed_string,0);
 			printf("%s",processed_string);
 			free(processed_string);
 			printf("' TARGET='%s'>",(action_url_target==NULL)?"_blank":action_url_target);
-			printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,ACTION_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"Perform Extra Host Actions","Perform Extra Host Actions");
-			printf("</A>");
-		        }
+				printf("<IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'>",url_images_path,ACTION_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"执行额外的主机动作","执行额外的主机动作");
+				printf("</A>");
+			        }
 
-		printf("<a href='%s?host=%s'><img src='%s%s' border=0 alt='View Service Details For This Host' title='View Service Details For This Host'></a>\n",STATUS_CGI,url_encode(temp_host->name),url_images_path,STATUS_DETAIL_ICON);
+		printf("<a href='%s?host=%s'><img src='%s%s' border=0 alt='该主机的详细服务状态' title='该主机的详细服务状态'></a>\n",STATUS_CGI,url_encode(temp_host->name),url_images_path,STATUS_DETAIL_ICON);
 #ifdef USE_STATUSMAP
-		printf("<A HREF='%s?host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'></A>",STATUSMAP_CGI,url_encode(temp_host->name),url_images_path,STATUSMAP_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"Locate Host On Map","Locate Host On Map");
+		printf("<A HREF='%s?host=%s'><IMG SRC='%s%s' BORDER=0 WIDTH=%d HEIGHT=%d ALT='%s' TITLE='%s'></A>",STATUSMAP_CGI,url_encode(temp_host->name),url_images_path,STATUSMAP_ICON,STATUS_ICON_WIDTH,STATUS_ICON_HEIGHT,"在地图上定位主机","在地图上定位主机");
 #endif
 		printf("</TD>\n");
 
@@ -4985,115 +5006,115 @@ void show_filters(void){
 		printf("<table border=1 class='filter' cellspacing=0 cellpadding=0>\n");
 		printf("<tr><td class='filter'>\n");
 		printf("<table border=0 cellspacing=2 cellpadding=0>\n");
-		printf("<tr><td colspan=2 valign=top align=left CLASS='filterTitle'>Display Filters:</td></tr>");
-		printf("<tr><td valign=top align=left CLASS='filterName'>Host Status Types:</td>");
+		printf("<tr><td colspan=2 valign=top align=left CLASS='filterTitle'>显示过滤:</td></tr>");
+		printf("<tr><td valign=top align=left CLASS='filterName'>主机状态的类型:</td>");
 		printf("<td valign=top align=left CLASS='filterValue'>");
 		if(host_status_types==all_host_status_types)
-			printf("All");
+			printf("所有");
 		else if(host_status_types==all_host_problems)
-			printf("All problems");
+			printf("所有故障");
 		else{
 			found=0;
 			if(host_status_types & HOST_PENDING){
-				printf(" Pending");
+				printf("未决状态");
 				found=1;
 		                }
 			if(host_status_types & HOST_UP){
-				printf("%s Up",(found==1)?" |":"");
+				printf("%s 运行状态",(found==1)?" |":"");
 				found=1;
 		                }
 			if(host_status_types & HOST_DOWN){
-				printf("%s Down",(found==1)?" |":"");
+				printf("%s 宕机状态",(found==1)?" |":"");
 				found=1;
 		                }
 			if(host_status_types & HOST_UNREACHABLE)
-				printf("%s Unreachable",(found==1)?" |":"");
+				printf("%s 不可达状态",(found==1)?" |":"");
 	                }
 		printf("</td></tr>");
-		printf("<tr><td valign=top align=left CLASS='filterName'>Host Properties:</td>");
+		printf("<tr><td valign=top align=left CLASS='filterName'>主机属性:</td>");
 		printf("<td valign=top align=left CLASS='filterValue'>");
 		if(host_properties==0)
-			printf("Any");
+			printf("所有");
 		else{
 			found=0;
 			if(host_properties & HOST_SCHEDULED_DOWNTIME){
-				printf(" In Scheduled Downtime");
+				printf("在安排的宕机时间中");
 				found=1;
 		                }
 			if(host_properties & HOST_NO_SCHEDULED_DOWNTIME){
-				printf("%s Not In Scheduled Downtime",(found==1)?" &amp;":"");
+				printf("%s 不在安排的宕机时间中",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_STATE_ACKNOWLEDGED){
-				printf("%s Has Been Acknowledged",(found==1)?" &amp;":"");
+				printf("%s 问题已确认",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_STATE_UNACKNOWLEDGED){
-				printf("%s Has Not Been Acknowledged",(found==1)?" &amp;":"");
+				printf("%s 问题未确认",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_CHECKS_DISABLED){
-				printf("%s Checks Disabled",(found==1)?" &amp;":"");
+				printf("%s 检查被禁用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_CHECKS_ENABLED){
-				printf("%s Checks Enabled",(found==1)?" &amp;":"");
+				printf("%s 检查已启用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_EVENT_HANDLER_DISABLED){
-				printf("%s Event Handler Disabled",(found==1)?" &amp;":"");
+				printf("%s 事件处理被禁用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_EVENT_HANDLER_ENABLED){
-				printf("%s Event Handler Enabled",(found==1)?" &amp;":"");
+				printf("%s 事件处理已启用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_FLAP_DETECTION_DISABLED){
-				printf("%s Flap Detection Disabled",(found==1)?" &amp;":"");
+				printf("%s 抖动监测被禁用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_FLAP_DETECTION_ENABLED){
-				printf("%s Flap Detection Enabled",(found==1)?" &amp;":"");
+				printf("%s 抖动监测已启用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_IS_FLAPPING){
-				printf("%s Is Flapping",(found==1)?" &amp;":"");
+				printf("%s 处于flapping中",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_IS_NOT_FLAPPING){
-				printf("%s Is Not Flapping",(found==1)?" &amp;":"");
+				printf("%s 不处于flapping中",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_NOTIFICATIONS_DISABLED){
-				printf("%s Notifications Disabled",(found==1)?" &amp;":"");
+				printf("%s 通知被禁用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_NOTIFICATIONS_ENABLED){
-				printf("%s Notifications Enabled",(found==1)?" &amp;":"");
+				printf("%s 通知已启用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_PASSIVE_CHECKS_DISABLED){
-				printf("%s Passive Checks Disabled",(found==1)?" &amp;":"");
+				printf("%s 被动检查被禁用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_PASSIVE_CHECKS_ENABLED){
-				printf("%s Passive Checks Enabled",(found==1)?" &amp;":"");
+				printf("%s 被动检查已启用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_PASSIVE_CHECK){
-				printf("%s Passive Checks",(found==1)?" &amp;":"");
+				printf("%s 被动检查",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_ACTIVE_CHECK){
-				printf("%s Active Checks",(found==1)?" &amp;":"");
+				printf("%s 主动检查",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_HARD_STATE){
-				printf("%s In Hard State",(found==1)?" &amp;":"");
+				printf("%s 处于硬态状态",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(host_properties & HOST_SOFT_STATE){
-				printf("%s In Soft State",(found==1)?" &amp;":"");
+				printf("%s 处于软态状态",(found==1)?" &amp;":"");
 				found=1;
 		                }
 	                }
@@ -5101,120 +5122,120 @@ void show_filters(void){
 		printf("</tr>\n");
 
 
-		printf("<tr><td valign=top align=left CLASS='filterName'>Service Status Types:</td>");
+		printf("<tr><td valign=top align=left CLASS='filterName'>服务状态的类型:</td>");
 		printf("<td valign=top align=left CLASS='filterValue'>");
 		if(service_status_types==all_service_status_types)
-			printf("All");
+			printf("所有");
 		else if(service_status_types==all_service_problems)
-			printf("All Problems");
+			printf("所有故障");
 		else{
 			found=0;
 			if(service_status_types & SERVICE_PENDING){
-				printf(" Pending");
+				printf("未决状态");
 				found=1;
 		                }
 			if(service_status_types & SERVICE_OK){
-				printf("%s Ok",(found==1)?" |":"");
+				printf("%s 正常状态",(found==1)?" |":"");
 				found=1;
 		                }
 			if(service_status_types & SERVICE_UNKNOWN){
-				printf("%s Unknown",(found==1)?" |":"");
+				printf("%s 未知状态",(found==1)?" |":"");
 				found=1;
 		                }
 			if(service_status_types & SERVICE_WARNING){
-				printf("%s Warning",(found==1)?" |":"");
+				printf("%s 告警状态",(found==1)?" |":"");
 				found=1;
 		                }
 			if(service_status_types & SERVICE_CRITICAL){
-				printf("%s Critical",(found==1)?" |":"");
+				printf("%s 紧急状态",(found==1)?" |":"");
 				found=1;
 		                }
 	                }
 		printf("</td></tr>");
-		printf("<tr><td valign=top align=left CLASS='filterName'>Service Properties:</td>");
+		printf("<tr><td valign=top align=left CLASS='filterName'>服务属性:</td>");
 		printf("<td valign=top align=left CLASS='filterValue'>");
 		if(service_properties==0)
-			printf("Any");
+			printf("所有");
 		else{
 			found=0;
 			if(service_properties & SERVICE_SCHEDULED_DOWNTIME){
-				printf(" In Scheduled Downtime");
+				printf("当前处于宕机时间中なも的");
 				found=1;
 		                }
 			if(service_properties & SERVICE_NO_SCHEDULED_DOWNTIME){
-				printf("%s Not In Scheduled Downtime",(found==1)?" &amp;":"");
+				printf("%s 没有处于宕机计划时间段",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_STATE_ACKNOWLEDGED){
-				printf("%s Has Been Acknowledged",(found==1)?" &amp;":"");
+				printf("%s 问题已确认",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_STATE_UNACKNOWLEDGED){
-				printf("%s Has Not Been Acknowledged",(found==1)?" &amp;":"");
+				printf("%s 问题未确认",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_CHECKS_DISABLED){
-				printf("%s Active Checks Disabled",(found==1)?" &amp;":"");
+				printf("%s 开启主动检查被禁用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_CHECKS_ENABLED){
-				printf("%s Active Checks Enabled",(found==1)?" &amp;":"");
+				printf("%s 主动检查已启用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_EVENT_HANDLER_DISABLED){
-				printf("%s Event Handler Disabled",(found==1)?" &amp;":"");
+				printf("%s 事件处理被禁用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_EVENT_HANDLER_ENABLED){
-				printf("%s Event Handler Enabled",(found==1)?" &amp;":"");
+				printf("%s 事件处理已启用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_FLAP_DETECTION_DISABLED){
-				printf("%s Flap Detection Disabled",(found==1)?" &amp;":"");
+				printf("%s 抖动监测被禁用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_FLAP_DETECTION_ENABLED){
-				printf("%s Flap Detection Enabled",(found==1)?" &amp;":"");
+				printf("%s 抖动监测已启用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_IS_FLAPPING){
-				printf("%s Is Flapping",(found==1)?" &amp;":"");
+				printf("%s 处于flapping中",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_IS_NOT_FLAPPING){
-				printf("%s Is Not Flapping",(found==1)?" &amp;":"");
+				printf("%s 不处于flapping中",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_NOTIFICATIONS_DISABLED){
-				printf("%s Notifications Disabled",(found==1)?" &amp;":"");
+				printf("%s 通知被禁用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_NOTIFICATIONS_ENABLED){
-				printf("%s Notifications Enabled",(found==1)?" &amp;":"");
+				printf("%s 通知已启用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_PASSIVE_CHECKS_DISABLED){
-				printf("%s Passive Checks Disabled",(found==1)?" &amp;":"");
+				printf("%s 被动检查被禁用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_PASSIVE_CHECKS_ENABLED){
-				printf("%s Passive Checks Enabled",(found==1)?" &amp;":"");
+				printf("%s 被动检查已启用",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_PASSIVE_CHECK){
-				printf("%s Passive Checks",(found==1)?" &amp;":"");
+				printf("%s 被动检查",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_ACTIVE_CHECK){
-				printf("%s Active Checks",(found==1)?" &amp;":"");
+				printf("%s 主动检查",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_HARD_STATE){
-				printf("%s In Hard State",(found==1)?" &amp;":"");
+				printf("%s 处于硬态状态",(found==1)?" &amp;":"");
 				found=1;
 		                }
 			if(service_properties & SERVICE_SOFT_STATE){
-				printf("%s In Soft State",(found==1)?" &amp;":"");
+				printf("%s 处于软态状态",(found==1)?" &amp;":"");
 				found=1;
 		                }
 	                }

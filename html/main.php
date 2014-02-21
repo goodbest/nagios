@@ -10,7 +10,7 @@ include_once(dirname(__FILE__).'/includes/utils.inc.php');
 
 <HEAD>
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
-<TITLE>Nagios Core</TITLE>
+<meta http-equiv='content-type' content='text/html;charset=UTF-8'>
 <LINK REL='stylesheet' TYPE='text/css' HREF='stylesheets/common.css'>
 </HEAD>
 
@@ -24,11 +24,11 @@ include_once(dirname(__FILE__).'/includes/utils.inc.php');
 </div>
 
 <div id="currentversioninfo">
-<div class="product">Nagios<sup><span style="font-size: small;">&reg;</span></sup> Core<sup><span style="font-size: small;">&trade;</span></sup></div>
-<div class="version">Version 3.2.3</div>
-<div class="releasedate">October 03, 2010</div>
-<div class="checkforupdates"><a href="http://www.nagios.org/checkforupdates/?version=3.2.3&product=nagioscore" target="_blank">Check for updates</a></div>
-<div class="whatsnew"><a href="docs/whatsnew.html">Read what's new in Nagios Core 3</a></div>
+<div class="version">V3.2.0</div>
+<div class="releasedate">2009年8月12日</div>
+<div class="whatsnew"><a href="docs/whatsnew.html">Nagios 3新功能</a></div>
+<div class="checkforupdates"><a href="http://www.nagios.org/checkforupdates/?version=3.2.0&product=nagioscore" target="_blank">检测升级</a></div>
+<div class="whatsnew"><a href="docs/whatsnew.html">阅读新版本内容</a></div>
 </div>
 
 
@@ -41,16 +41,16 @@ include_once(dirname(__FILE__).'/includes/utils.inc.php');
 	if($updateinfo['update_checks_enabled']==false){
 ?>
 		<div class="updatechecksdisabled">
-		<div class="warningmessage">Warning: Automatic Update Checks are Disabled!</div>
-		<div class="submessage">Disabling update checks presents a possible security risk.  Visit <a href="http://www.nagios.org/" target="_blank">nagios.org</a> to check for updates manually or enable update checks in your Nagios config file.</a></div>
+		<div class="warningmessage">警告：未启用自动升级检测！</div>
+		<div class="submessage">不启用升级检测可能存在风险。请手动访问<a href="http://www.nagios.org/" target="_blank">nagios.org</a>或是在Nagios配置文件里启用升级检测。</a></div>
 		</div>
 <?php
 		}
 	else if($updateinfo['update_available']==true){
 ?>
 		<div class="updateavailable">
-		<div class="updatemessage">A new version of Nagios Core is available!</div>
-		<div class="submessage">Visit <a href="http://www.nagios.org/download/" target="_blank">nagios.org</a> to download Nagios <?php echo $updateinfo['update_version'];?>.</div>
+		<div class="updatemessage">有可用的新版本Nagios！</div>
+		<div class="submessage">访问<a href="http://www.nagios.org/" target="_blank">nagios.org</a>以获取 Nagios <?php echo $updateinfo['update_version'];?>.</div>
 		</div>
 <?php
 		}
@@ -59,7 +59,7 @@ include_once(dirname(__FILE__).'/includes/utils.inc.php');
 
 
 <div id="mainfooter">
-<div id="maincopy">Copyright &copy; 2010 Nagios Core Development Team and Community Contributors.<br>Copyright &copy; 1999-2009 Ethan Galstad.<br>See the THANKS file for more information on contributors.</div>
+<div id="maincopy">版权所有 &copy; 1999-2009 Ethan Galstad.<br>Portions copyright by Nagios community members  - see the THANKS file for more information.</div>
 <div CLASS="disclaimer">
 Nagios Core is licensed under the GNU General Public License and is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE.  Nagios, Nagios Core and the Nagios logo are trademarks, servicemarks, registered trademarks or registered servicemarks owned by Nagios Enterprises, LLC.  Usage of the Nagios marks are governed by our <A href="http://www.nagios.org/legal/trademarkpolicy/">trademark policy</a>.
 </div>
@@ -75,4 +75,3 @@ Nagios Core is licensed under the GNU General Public License and is provided AS 
 
 </BODY>
 </HTML>
-

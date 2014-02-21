@@ -194,8 +194,8 @@ authorized_for_all_host_commands=nagiosadmin
 # However, I recommend that you convert your image to GD2 format
 # (uncompressed), as this will cause less CPU load when the CGI
 # generates the image.
-
 #statusmap_background_image=smbackground.gd2
+statusmap_background_image=zytianbk.png
 
 
 
@@ -225,7 +225,7 @@ authorized_for_all_host_commands=nagiosadmin
 #       4 = Circular
 #       5 = Circular (Marked Up)
 
-default_statusmap_layout=5
+default_statusmap_layout=0
 
 
 
@@ -355,3 +355,18 @@ lock_author_names=1
 
 
 
+
+# TRUE TYPE FONT FILE (you can copy font file from
+# /usr/X11R6/lib/X11/fonts/truetype/FZSongTi.ttf to @sysconfdir@/FZSongTi.ttf)
+# /usr/share/fonts/fonts/truetype/FZSongTi.ttf       @ openSuse 10.3 
+# The font file used for the text of the image outputted by GD 
+# is specified. The path of the file to specify is absolutely 
+# performed by specification. 
+#ttf_file=/usr/share/fonts/truetype/FZSongTi.ttf
+ttf_file=@sbindir@/simhei.ttf
+
+# STATUSMAP MODE
+# added by nagios-cn
+# MODE value range is [0..2], default is 0
+# 0 -- PNG high compressed, 1 -- JPEG high compressed, 2 -- SVG
+statusmap_mod=2

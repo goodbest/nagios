@@ -26,6 +26,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *****************************************************************************/
+/*************************************************************************
+ * Translation to Chinese by 田朝阳(zytian@gmail.com)
+ * $Id: nagios-2.7-zh_CN.patch $
+ * !注意系统环境变量须设置为utf-8才可以正确显示中文。
+ * !系统提供了SVG格式的输出格式，因没有测试不推荐使用，编程者也要慎用！
+ **************************************************************************/
 
 #include "../include/config.h"
 #include "../include/common.h"
@@ -46,20 +52,22 @@ extern int             refresh_rate;
 #define UNKNOWN_GD2_ICON      "unknown.gd2"
 #define UNKNOWN_ICON_IMAGE    "unknown.gif"
 #define NAGIOS_GD2_ICON       "nagios.gd2"
+#define NAGIOS_GIF_ICON       "nagios.gif"
 
 extern char main_config_file[MAX_FILENAME_LENGTH];
 extern char url_html_path[MAX_FILENAME_LENGTH];
+extern char ttf_file[MAX_FILENAME_LENGTH];
 extern char physical_images_path[MAX_FILENAME_LENGTH];
 extern char url_images_path[MAX_FILENAME_LENGTH];
 extern char url_logo_images_path[MAX_FILENAME_LENGTH];
 extern char url_stylesheets_path[MAX_FILENAME_LENGTH];
-
+extern char ttf_file[MAX_FILENAME_LENGTH];
 extern host *host_list;
 extern hostgroup *hostgroup_list;
 extern service *service_list;
 extern hoststatus *hoststatus_list;
 extern servicestatus *servicestatus_list;
-
+extern int statusmap_mod;
 extern char *statusmap_background_image;
 
 extern int default_statusmap_layout_method;
@@ -92,6 +100,7 @@ extern int default_statusmap_layout_method;
 #define LAYOUT_CIRCULAR_MARKUP          5
 #define LAYOUT_CIRCULAR_BALLOON         6
 
+#define SMALL_FONT_SIZE 9 
 
 typedef struct layer_struct{
 	char *layer_name;
@@ -118,6 +127,7 @@ void draw_host_links(void);
 void draw_hosts(void);
 void draw_host_text(char *,int,int);
 void draw_text(char *,int,int,int);
+void draw_host_popup_win(host *, int,int);
 void write_popup_code(void);
 void write_host_popup_text(host *);
 
@@ -126,6 +136,9 @@ gdImagePtr load_image_from_file(char *);
 void write_graphics(void);
 void cleanup_graphics(void);
 void draw_line(int,int,int,int,int);
+void draw_arc(int,int,int,int,int,int,int);
+void draw_filltoborder(int,int,int,int);
+void draw_floodfan(int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int);
 void draw_dotted_line(int,int,int,int,int);
 void draw_dashed_line(int,int,int,int,int);
 
@@ -158,17 +171,17 @@ gdImagePtr unknown_logo_image=NULL;
 gdImagePtr logo_image=NULL;
 gdImagePtr map_image=NULL;
 gdImagePtr background_image=NULL;
-int color_white=0;
-int color_black=0;
-int color_red=0;
-int color_lightred=0;
-int color_green=0;
-int color_lightgreen=0;
-int color_blue=0;
-int color_yellow=0;
-int color_orange=0;
-int color_grey=0;
-int color_lightgrey=0;
+int color_white=0xFFFFFF;
+int color_black=0x000000;
+int color_red=0xFF0000;
+int color_lightred=0xD76F6F;
+int color_green=0x00FF00;
+int color_lightgreen=0xD2FFD7;
+int color_blue=0x000FF00;
+int color_yellow=0xFFFF00;
+int color_orange=0x0F0F00;
+int color_grey=0x0F0F0F;
+int color_lightgrey=0xD2D2D2;
 int color_transparency_index=0;
 extern int color_transparency_index_r;
 extern int color_transparency_index_g;
@@ -218,6 +231,9 @@ int draw_nagios_icon=FALSE;    /* should we drawn the Nagios process icon? */
 int nagios_icon_x=0;           /* coords of Nagios icon */
 int nagios_icon_y=0;
 
+int pop_width=360;
+int pop_height=320;
+
 extern hoststatus *hoststatus_list;
 
 extern time_t program_start;
@@ -225,6 +241,8 @@ extern time_t program_start;
 layer *layer_list=NULL;
 int exclude_layers=TRUE;
 int all_layers=FALSE;
+
+FILE *image_output_file=NULL;
 
 
 
@@ -323,17 +341,18 @@ void document_header(int use_stylesheet){
 		expire_time=0L;
 		get_time_string(&expire_time,date_time,sizeof(date_time),HTTP_DATE_TIME);
 		printf("Expires: %s\r\n",date_time);
-
+		
 		printf("Content-Type: text/html\r\n\r\n");
-
+		
 		if(embedded==TRUE)
 			return;
 
 		printf("<html>\n");
 		printf("<head>\n");
+		printf("<meta http-equiv='content-type' content='text/html;charset=UTF-8'>\n");
 		printf("<link rel=\"shortcut icon\" href=\"%sfavicon.ico\" type=\"image/ico\">\n",url_images_path);
 		printf("<title>\n");
-		printf("Network Map\n");
+		printf("网络图\n");
 		printf("</title>\n");
 
 		if(use_stylesheet==TRUE){
@@ -342,10 +361,10 @@ void document_header(int use_stylesheet){
 		        }
 
 		/* write JavaScript code for popup window */
-		write_popup_code();
+		if( 2 != statusmap_mod) write_popup_code();
 
 		printf("</head>\n");
-		
+
 		printf("<body CLASS='statusmap' name='mappage' id='mappage'>\n");
 
 		/* include user SSI header */
@@ -365,8 +384,11 @@ void document_header(int use_stylesheet){
 		expire_time=(time_t)0L;
 		get_time_string(&expire_time,date_time,sizeof(date_time),HTTP_DATE_TIME);
 		printf("Expires: %s\n",date_time);
-
-		printf("Content-Type: image/png\n\n");
+		if( 2 != statusmap_mod){
+			printf("Content-Type: image/png\n\n");
+		}else{
+			printf("Content-Type: image/svg+xml\r\n\r\n");
+		}
 	        }
 
 	return;
@@ -580,8 +602,18 @@ int process_cgivars(void){
 			strip_html_brackets(variables[x]);
 			add_layer(variables[x]);
 		        }
-	        }
-
+		/* we found the statusmap_mod method option */
+		else if(!strcmp(variables[x],"statusmap_mod")){
+			x++;
+			if(variables[x]==NULL){
+				error=TRUE;
+				break;
+			        }
+			statusmap_mod=atoi(variables[x]);
+			if(statusmap_mod > 2) statusmap_mod = 2;
+			if(statusmap_mod < 0) statusmap_mod = 0;
+		        }
+		}
 	/* free memory allocated to the CGI variables */
 	free_cgivars(variables);
 
@@ -616,9 +648,9 @@ void display_page_header(void){
 		printf("<td align=left valign=top>\n");
 
 		if(show_all_hosts==TRUE)
-			snprintf(temp_buffer,sizeof(temp_buffer)-1,"Network Map For All Hosts");
+			snprintf(temp_buffer,sizeof(temp_buffer)-1,"所有主机的网络图");
 		else
-			snprintf(temp_buffer,sizeof(temp_buffer)-1,"Network Map For Host <I>%s</I>",host_name);
+			snprintf(temp_buffer,sizeof(temp_buffer)-1,"<I>%s</I>的网络图",host_name);
 		temp_buffer[sizeof(temp_buffer)-1]='\x0';
 		display_info_table(temp_buffer,TRUE,&current_authdata);
 
@@ -626,11 +658,11 @@ void display_page_header(void){
 		printf("<TR><TD CLASS='linkBox'>\n");
 
 		if(show_all_hosts==FALSE){
-			printf("<a href='%s?host=all&max_width=%d&max_height=%d'>View Status Map For All Hosts</a><BR>",STATUSMAP_CGI,max_image_width,max_image_height);
-			printf("<a href='%s?host=%s'>View Status Detail For This Host</a><BR>\n",STATUS_CGI,url_encode(host_name));
+			printf("<a href='%s?host=all&max_width=%d&max_height=%d'>所有主机的状态图</a><BR>",STATUSMAP_CGI,max_image_width,max_image_height);
+			printf("<a href='%s?host=%s'>该主机的详细状态</a><BR>\n",STATUS_CGI,url_encode(host_name));
 		        }
-		printf("<a href='%s?host=all'>View Status Detail For All Hosts</a><BR>\n",STATUS_CGI);
-		printf("<a href='%s?hostgroup=all'>View Status Overview For All Hosts</a>\n",STATUS_CGI);
+		printf("<a href='%s?host=all'>所有主机的详细状态</a><BR>\n",STATUS_CGI);
+		printf("<a href='%s?hostgroup=all'>所有主机的概要状态</a>\n",STATUS_CGI);
 
 		printf("</TD></TR>\n");
 		printf("</TABLE>\n");
@@ -655,7 +687,7 @@ void display_page_header(void){
 
 		/* zoom links */
 		if(user_supplied_canvas==FALSE && strcmp(host_name,"all") && display_header==TRUE){
-			
+
 			printf("<p><div align=center>\n");
 
 			zoom_width_granularity=((total_image_width-MINIMUM_PROXIMITY_WIDTH)/11);
@@ -672,14 +704,14 @@ void display_page_header(void){
 
 			printf("<table border=0 cellpadding=0 cellspacing=2>\n");
 			printf("<tr>\n");
-			printf("<td valign=center class='zoomTitle'>Zoom Out&nbsp;&nbsp;</td>\n");
+			printf("<td valign=center class='zoomTitle'>缩小(Zoom Out)&nbsp;&nbsp;</td>\n");
 
 			for(zoom=0;zoom<=10;zoom++){
 
 				zoom_width=total_image_width-(zoom*zoom_width_granularity);
 				zoom_height=total_image_height-(zoom*zoom_height_granularity);
 
-				printf("<td valign=center><a href='%s?host=%s&layout=%d&max_width=%d&max_height=%d&proximity_width=%d&proximity_height=%d%s%s",STATUSMAP_CGI,url_encode(host_name),layout_method,max_image_width,max_image_height,zoom_width,zoom_height,(display_header==TRUE)?"":"&noheader",(display_popups==FALSE)?"&nopopups":"");
+				printf("<td valign=center><a href='%s?host=%s&layout=%d&statusmap_mod=%d&max_width=%d&max_height=%d&proximity_width=%d&proximity_height=%d%s%s",STATUSMAP_CGI,url_encode(host_name),layout_method,statusmap_mod,max_image_width,max_image_height,zoom_width,zoom_height,(display_header==TRUE)?"":"&noheader",(display_popups==FALSE)?"&nopopups":"");
 				if(user_supplied_scaling==TRUE)
 					printf("&scaling_factor=%2.1f",user_scaling_factor);
 				print_layer_url(TRUE);
@@ -687,7 +719,7 @@ void display_page_header(void){
 				printf("<img src='%s%s' border=0 alt='%d' title='%d'></a></td>\n",url_images_path,(current_zoom_granularity==zoom)?ZOOM2_ICON:ZOOM1_ICON,zoom,zoom);
 		                }
 
-			printf("<td valign=center class='zoomTitle'>&nbsp;&nbsp;Zoom In</td>\n");
+			printf("<td valign=center class='zoomTitle'>&nbsp;&nbsp;放大(Zoom In)</td>\n");
 			printf("</tr>\n");
 			printf("</table>\n");
 
@@ -706,46 +738,55 @@ void display_page_header(void){
 		printf("<tr><td valign=top>\n");
 		printf("<input type='hidden' name='host' value='%s'>\n",escape_string(host_name));
 		printf("<input type='hidden' name='layout' value='%d'>\n",layout_method);
+		printf("<input type='hidden' name='statusmap_mod' value='%d'>\n",statusmap_mod);
 
 		printf("</td><td valign=top>\n");
 
 		printf("<table border=0>\n");
 
 		printf("<tr><td CLASS='optBoxItem'>\n");
-		printf("Layout Method:<br>\n");
+		printf("展示方式:<br>\n");
 		printf("<select name='layout'>\n");
 #ifndef DUMMY_INSTALL
-		printf("<option value=%d %s>User-supplied coords\n",LAYOUT_USER_SUPPLIED,(layout_method==LAYOUT_USER_SUPPLIED)?"selected":"");
+		printf("<option value=%d %s>用户定义坐标\n",LAYOUT_USER_SUPPLIED,(layout_method==LAYOUT_USER_SUPPLIED)?"selected":"");
 #endif
-		printf("<option value=%d %s>Depth layers\n",LAYOUT_SUBLAYERS,(layout_method==LAYOUT_SUBLAYERS)?"selected":"");
-		printf("<option value=%d %s>Collapsed tree\n",LAYOUT_COLLAPSED_TREE,(layout_method==LAYOUT_COLLAPSED_TREE)?"selected":"");
-		printf("<option value=%d %s>Balanced tree\n",LAYOUT_BALANCED_TREE,(layout_method==LAYOUT_BALANCED_TREE)?"selected":"");
-		printf("<option value=%d %s>Circular\n",LAYOUT_CIRCULAR,(layout_method==LAYOUT_CIRCULAR)?"selected":"");
-		printf("<option value=%d %s>Circular (Marked Up)\n",LAYOUT_CIRCULAR_MARKUP,(layout_method==LAYOUT_CIRCULAR_MARKUP)?"selected":"");
-		printf("<option value=%d %s>Circular (Balloon)\n",LAYOUT_CIRCULAR_BALLOON,(layout_method==LAYOUT_CIRCULAR_BALLOON)?"selected":"");
+		printf("<option value=%d %s>深度分层\n",LAYOUT_SUBLAYERS,(layout_method==LAYOUT_SUBLAYERS)?"selected":"");
+		printf("<option value=%d %s>折叠图\n",LAYOUT_COLLAPSED_TREE,(layout_method==LAYOUT_COLLAPSED_TREE)?"selected":"");
+		printf("<option value=%d %s>平衡折叠图\n",LAYOUT_BALANCED_TREE,(layout_method==LAYOUT_BALANCED_TREE)?"selected":"");
+		printf("<option value=%d %s>圆形图\n",LAYOUT_CIRCULAR,(layout_method==LAYOUT_CIRCULAR)?"selected":"");
+		printf("<option value=%d %s>圆形图(标记)\n",LAYOUT_CIRCULAR_MARKUP,(layout_method==LAYOUT_CIRCULAR_MARKUP)?"selected":"");
+		printf("<option value=%d %s>圆形图(气球)\n",LAYOUT_CIRCULAR_BALLOON,(layout_method==LAYOUT_CIRCULAR_BALLOON)?"selected":"");
 		printf("</select>\n");
 		printf("</td>\n");
 		printf("<td CLASS='optBoxItem'>\n");
-		printf("Scaling factor:<br>\n");
+		printf("缩放比例:<br>\n");
 		printf("<input type='text' name='scaling_factor' maxlength='5' size='4' value='%2.1f'>\n",(user_supplied_scaling==TRUE)?user_scaling_factor:0.0);
 		printf("</td></tr>\n");
 
+		printf("<td CLASS='optBoxItem'>\n");
+		printf("图形格式:<br>\n");
+		printf("<select name='statusmap_mod'>\n");
+		printf("<option value=%d %s>PNG\n",0,(statusmap_mod==0)?"selected":"");
+		printf("<option value=%d %s>JPEG\n",1,(statusmap_mod==1)?"selected":"");
+		printf("<option value=%d %s>SVG\n",2,(statusmap_mod==2)?"selected":"");
+		printf("</select>\n");
+		printf("</td>\n");
 		/*
 		printf("<tr><td CLASS='optBoxItem'>\n");
-		printf("Max image width:<br>\n");
+		printf("最大图像宽度:<br>\n");
 		printf("<input type='text' name='max_width' maxlength='5' size='4' value='%d'>\n",max_image_width);
 		printf("</td>\n");
 		printf("<td CLASS='optBoxItem'>\n");
-		printf("Max image height:<br>\n");
+		printf("最大图像高度:<br>\n");
 		printf("<input type='text' name='max_height' maxlength='5' size='4' value='%d'>\n",max_image_height);
 		printf("</td></tr>\n");
 
 		printf("<tr><td CLASS='optBoxItem'>\n");
-		printf("Proximity width:<br>\n");
+		printf("近似宽度:<br>\n");
 		printf("<input type='text' name='proximity_width' maxlength='5' size='4' value='%d'>\n",proximity_width);
 		printf("</td>\n");
 		printf("<td CLASS='optBoxItem'>\n");
-		printf("Proximity height:<br>\n");
+		printf("近似高度:<br>\n");
 		printf("<input type='text' name='proximity_height' maxlength='5' size='4' value='%d'>\n",proximity_height);
 		printf("</td></tr>\n");
 		*/
@@ -755,7 +796,7 @@ void display_page_header(void){
 		printf("<input type='hidden' name='proximity_width' value='%d'>\n",proximity_width);
 		printf("<input type='hidden' name='proximity_height' value='%d'>\n",proximity_height);
 
-		printf("<tr><td CLASS='optBoxItem'>Drawing Layers:<br>\n");
+		printf("<tr><td CLASS='optBoxItem'>图层:<br>\n");
 		printf("<select multiple name='layer' size='4'>\n");
 		for(temp_hostgroup=hostgroup_list;temp_hostgroup!=NULL;temp_hostgroup=temp_hostgroup->next){
 			if(is_authorized_for_hostgroup(temp_hostgroup,&current_authdata)==FALSE)
@@ -770,16 +811,16 @@ void display_page_header(void){
 			printf("<option value='%s' %s>%s\n",escape_string(temp_hostgroup->group_name),(found==1)?"SELECTED":"",temp_hostgroup->alias);
 		        }
 		printf("</select>\n");
-		printf("</td><td CLASS='optBoxItem' valign=top>Layer mode:<br>");
-		printf("<input type='radio' name='layermode' value='include' %s>Include<br>\n",(exclude_layers==FALSE)?"CHECKED":"");
-		printf("<input type='radio' name='layermode' value='exclude' %s>Exclude\n",(exclude_layers==TRUE)?"CHECKED":"");
+		printf("</td><td CLASS='optBoxItem' valign=top>图层模式:<br>");
+		printf("<input type='radio' name='layermode' value='include' %s>包括<br>\n",(exclude_layers==FALSE)?"CHECKED":"");
+		printf("<input type='radio' name='layermode' value='exclude' %s>排除\n",(exclude_layers==TRUE)?"CHECKED":"");
 		printf("</td></tr>\n");
 
 		printf("<tr><td CLASS='optBoxItem'>\n");
-		printf("Suppress popups:<br>\n");
+		printf("无弹出菜单:\n");
 		printf("<input type='checkbox' name='nopopups' %s>\n",(display_popups==FALSE)?"CHECKED":"");
 		printf("</td><td CLASS='optBoxItem'>\n");
-		printf("<input type='submit' value='Update'>\n");
+		printf("<input type='submit' value='更新'>\n");
 		printf("</td></tr>\n");
 
 		/* display context-sensitive help */
@@ -794,7 +835,7 @@ void display_page_header(void){
 		printf("</form>\n");
 
 		printf("</td>\n");
-	
+
 		/* end of top table */
 		printf("</tr>\n");
 		printf("</table>\n");
@@ -838,14 +879,22 @@ void display_map(void){
 
 	/* write the URL location for the image we just generated - the web browser will come and get it... */
 	if(create_type==CREATE_HTML){
-		printf("<P><DIV ALIGN=center>\n");
-		printf("<img src='%s?host=%s&createimage&time=%lu",STATUSMAP_CGI,url_encode(host_name),(unsigned long)time(NULL));
-		printf("&canvas_x=%d&canvas_y=%d&canvas_width=%d&canvas_height=%d&max_width=%d&max_height=%d&layout=%d%s%s%s",canvas_x,canvas_y,canvas_width,canvas_height,max_image_width,max_image_height,layout_method,(use_links==FALSE)?"&nolinks":"",(use_text==FALSE)?"&notext":"",(use_highlights==FALSE)?"&nohighlights":"");
-		print_layer_url(TRUE);
-		printf("' width=%d height=%d border=0 name='statusimage' useMap='#statusmap'>\n",(int)(canvas_width*scaling_factor),(int)(canvas_height*scaling_factor));
-		printf("</DIV></P>\n");
-	        }
-	
+		if( 2 != statusmap_mod){
+			printf("<P><DIV ALIGN=center>\n");
+			printf("<img src='%s?host=%s&createimage&time=%lu",STATUSMAP_CGI,url_encode(host_name),(unsigned long)time(NULL));
+			printf("&canvas_x=%d&canvas_y=%d&canvas_width=%d&canvas_height=%d&max_width=%d&max_height=%d&layout=%d&statusmap_mod=%d%s%s%s",canvas_x,canvas_y,canvas_width,canvas_height,max_image_width,max_image_height,layout_method,statusmap_mod,(use_links==FALSE)?"&nolinks":"",(use_text==FALSE)?"&notext":"",(use_highlights==FALSE)?"&nohighlights":"");
+			print_layer_url(TRUE);
+			printf("' width=%d height=%d border=0 name='statusimage' useMap='#statusmap'>\n",(int)(canvas_width*scaling_factor),(int)(canvas_height*scaling_factor));
+			printf("</DIV></P>\n");
+	    }else{
+			printf("<P><DIV ALIGN=center>\n");
+			printf("<object data='%s?host=%s&createimage&time=%lu",STATUSMAP_CGI,url_encode(host_name),(unsigned long)time(NULL));
+			printf("&canvas_x=%d&canvas_y=%d&canvas_width=%d&canvas_height=%d&max_width=%d&max_height=%d&layout=%d&statusmap_mod=%d%s%s%s%s",canvas_x,canvas_y,canvas_width,canvas_height,max_image_width,max_image_height,layout_method,statusmap_mod,(use_links==FALSE)?"&nolinks":"",(use_text==FALSE)?"&notext":"",(use_highlights==FALSE)?"&nohighlights":"",(display_popups==FALSE)?"&nopopups":"");
+			print_layer_url(TRUE);
+			printf("' width=%d height=%d border=0 name='statusimage' useMap='#statusmap' type='image/svg+xml'>\n",(int)(canvas_width*scaling_factor),(int)(canvas_height*scaling_factor));
+			printf("</DIV></P>\n");
+		}
+	}
 	return;
         }
 
@@ -871,7 +920,7 @@ void calculate_host_coords(void){
 	int layer_members=0;
 	int current_layer_member=0;
 	int max_drawing_width=0;
-  
+
 
 	/******************************/
 	/***** MANUAL LAYOUT MODE *****/
@@ -882,7 +931,7 @@ void calculate_host_coords(void){
 
 		/* see which hosts we should draw and calculate drawing coords */
 		for(temp_host=host_list;temp_host!=NULL;temp_host=temp_host->next){
-			
+
 			if(temp_host->have_2d_coords==TRUE)
 				temp_host->should_be_drawn=TRUE;
 			else
@@ -942,7 +991,7 @@ void calculate_host_coords(void){
 				temp_host->y_2d=offset_y;
 				current_parent_host++;
 			        }
-			
+
 			/* this is the "main" host we're drawing */
 			else if(this_host==temp_host){
 				temp_host->should_be_drawn=TRUE;
@@ -1026,7 +1075,7 @@ void calculate_host_coords(void){
 				temp_host->y_2d=offset_y;
 				current_parent_host++;
 			        }
-			
+
 			/* this is the "main" host we're drawing */
 			else if(this_host==temp_host){
 				temp_host->should_be_drawn=TRUE;
@@ -1047,7 +1096,7 @@ void calculate_host_coords(void){
 
 		/* draw hosts in child "layers" */
 		for(current_layer=1;;current_layer++){
-			
+
 			/* how many members in this layer? */
 			layer_members=number_of_host_layer_members(this_host,current_layer);
 
@@ -1086,7 +1135,7 @@ void calculate_host_coords(void){
 		else
 			this_host=find_host(host_name);
 		*/
-		
+
 		/* always use NULL as the "main" host, screen coords/dimensions are adjusted automatically */
 		this_host=NULL;
 
@@ -1125,7 +1174,7 @@ void calculate_host_coords(void){
 				temp_host->y_2d=offset_y;
 				current_parent_host++;
 			        }
-			
+
 			/* this is the "main" host we're drawing */
 			else if(this_host==temp_host){
 				temp_host->should_be_drawn=TRUE;
@@ -1181,7 +1230,7 @@ void calculate_total_image_bounds(void){
 		/* skip hosts we shouldn't be drawing */
 		if(temp_host->should_be_drawn==FALSE)
 			continue;
-		
+
 		if(temp_host->x_2d>total_image_width)
 			total_image_width=temp_host->x_2d;
 		if(temp_host->y_2d>total_image_height)
@@ -1258,7 +1307,7 @@ void calculate_canvas_bounds_from_host(char *host_name){
 	/* make sure we have 2-D coords */
 	if(temp_host->have_2d_coords==FALSE)
 		return;
-	
+
 	if(max_image_width>0 && proximity_width>max_image_width)
 		zoom_width=max_image_width;
 	else
@@ -1395,36 +1444,40 @@ void draw_background_image(void){
 	/* bail out if we shouldn't be drawing a background image */
 	if(create_type==CREATE_HTML || layout_method!=LAYOUT_USER_SUPPLIED || statusmap_background_image==NULL)
 		return;
-
-	/* bail out if we don't have an image */
-	if(background_image==NULL)
-		return;
-
-	/* copy the background image to the canvas */
-	gdImageCopy(map_image,background_image,0,0,canvas_x,canvas_y,canvas_width,canvas_height);
-
-	/* free memory for background image, as we don't need it anymore */
-	gdImageDestroy(background_image);
-
+	if( 2 != statusmap_mod ) {
+		/* bail out if we don't have an image */
+		if(background_image==NULL)
+			return;
+		/* copy the background image to the canvas */
+		gdImageCopy(map_image,background_image,0,0,canvas_x,canvas_y,canvas_width,canvas_height);
+		/* free memory for background image, as we don't need it anymore */
+		gdImageDestroy(background_image);
+	}
+	else {
+		char temp_buffer[MAX_INPUT_BUFFER];
+		memset(temp_buffer,'\x0',MAX_INPUT_BUFFER);
+		snprintf(temp_buffer,sizeof(temp_buffer)-1,"%s%s",url_images_path,statusmap_background_image);
+		temp_buffer[sizeof(temp_buffer)-1]='\x0';
+		fprintf(image_output_file,"<g id=\"Background_Layer\">\n");
+		fprintf(image_output_file,"<image id=\"BackgroundIMG\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\" xlink:href=\"%s\"/>\n",
+			canvas_width,canvas_height,temp_buffer);
+		fprintf(image_output_file,"</g>\n");
+	}
 	return;
-        }
+}
 
 
 
 /* draws background "extras" */
 void draw_background_extras(void){
-
 	/* bail out if we shouldn't be here */
 	if(create_type==CREATE_HTML)
 		return;
-
 	/* circular layout stuff... */
 	if(layout_method==LAYOUT_CIRCULAR_MARKUP){
-
 		/* draw colored sections... */
 		draw_circular_markup();
-	        }
-
+        }
 	return;
         }
 
@@ -1449,6 +1502,7 @@ void draw_host_links(void){
 
 	if(use_links==FALSE)
 		return;
+	if( 2 == statusmap_mod )	printf("<g id=\"Links_Layer\">\n");
 
 	/* find the "main" host we're drawing */
 	main_host=find_host(host_name);
@@ -1557,7 +1611,7 @@ void draw_host_links(void){
 		        }
 
 	        }
-
+	if( 2 == statusmap_mod )	printf("</g>\n");
 	return;
         }
 
@@ -1565,11 +1619,12 @@ void draw_host_links(void){
 
 /* draws hosts */
 void draw_hosts(void){
-	host *temp_host;
+	host *temp_host=NULL;
 	int x1, x2;
 	int y1, y2;
 	int has_image=FALSE;
 	char image_input_file[MAX_INPUT_BUFFER];
+	
 	int current_radius=0;
 	int status_color=color_black;
 	hoststatus *temp_hoststatus;
@@ -1583,103 +1638,87 @@ void draw_hosts(void){
 	time_t current_time;
 	int translated_x;
 	int translated_y;
-
-	
+	if( (2 == statusmap_mod)&&(CREATE_IMAGE==create_type) )printf("<g id=\"Hosts_Layer\">\n");
 	/* user didn't supply any coordinates for hosts, so display a warning */
 	if(coordinates_were_specified==FALSE){
-
 		if(create_type==CREATE_IMAGE){
 			draw_text("You have not supplied any host drawing coordinates, so you cannot use this layout method.",(COORDS_WARNING_WIDTH/2),30,color_black);
 			draw_text("Read the FAQs for more information on specifying drawing coordinates or select a different layout method.",(COORDS_WARNING_WIDTH/2),45,color_black);
-		        }
-
+        }
 		return;
-	        }
-
+    }
 	/* draw Nagios process icon if using auto-layout mode */
 	if(layout_method!=LAYOUT_USER_SUPPLIED && draw_nagios_icon==TRUE){
-
 		/* get coords of bounding box */
 		x1=nagios_icon_x-canvas_x;
 		x2=x1+DEFAULT_NODE_WIDTH;
 		y1=nagios_icon_y-canvas_y;
 		y2=y1+DEFAULT_NODE_HEIGHT;
-
 		/* get the name of the image file to open for the logo */
 		snprintf(image_input_file,sizeof(image_input_file)-1,"%s%s",physical_logo_images_path,NAGIOS_GD2_ICON);
 		image_input_file[sizeof(image_input_file)-1]='\x0';
-
-		/* read in the image from file... */
-		logo_image=load_image_from_file(image_input_file);
-
-	        /* copy the logo image to the canvas image... */
-		if(logo_image!=NULL){
-			gdImageCopy(map_image,logo_image,x1,y1,0,0,logo_image->sx,logo_image->sy);
-			gdImageDestroy(logo_image);
-                        }
-
-		/* if we don't have an image, draw a bounding box */
+		if(2 != statusmap_mod){
+			/* read in the image from file... */
+			logo_image=load_image_from_file(image_input_file);
+        		/* copy the logo image to the canvas image... */
+			if(logo_image!=NULL){
+				gdImageCopy(map_image,logo_image,x1,y1,0,0,logo_image->sx,logo_image->sy);
+				gdImageDestroy(logo_image);
+        		}
+			/* if we don't have an image, draw a bounding box */
+			else{
+				draw_line(x1,y1,x1,y1+DEFAULT_NODE_WIDTH,color_black);
+				draw_line(x1,y1+DEFAULT_NODE_WIDTH,x2,y1+DEFAULT_NODE_WIDTH,color_black);
+				draw_line(x2,y1+DEFAULT_NODE_WIDTH,x2,y1,color_black);
+				draw_line(x2,y1,x1,y1,color_black);
+        		}
+		}
 		else{
-			draw_line(x1,y1,x1,y1+DEFAULT_NODE_WIDTH,color_black);
-			draw_line(x1,y1+DEFAULT_NODE_WIDTH,x2,y1+DEFAULT_NODE_WIDTH,color_black);
-			draw_line(x2,y1+DEFAULT_NODE_WIDTH,x2,y1,color_black);
-			draw_line(x2,y1,x1,y1,color_black);
-	                }
-
+			if(create_type==CREATE_IMAGE)
+				fprintf(image_output_file,"<image id=\"IMG_%s\" x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" xlink:href=\"%s%s\"/>\n","NAGIOS",x1,y1-scaled_image_height/4,scaled_image_width,scaled_image_height,url_logo_images_path,NAGIOS_GIF_ICON);
+		}
 		if(create_type==CREATE_IMAGE)
-			draw_text("Nagios Process",x1+(DEFAULT_NODE_WIDTH/2),y1+DEFAULT_NODE_HEIGHT,color_black);
-	        }
-
+			draw_text("监控中心",x1+(DEFAULT_NODE_WIDTH/2),y1+DEFAULT_NODE_HEIGHT,color_black);
+    	}//if auto draw
 	/* calculate average services per host */
 	average_host_services=4;
-
 	/* draw all hosts... */
 	for(temp_host=host_list;temp_host!=NULL;temp_host=temp_host->next){
-		
 		/* skip hosts that should not be drawn */
 		if(temp_host->should_be_drawn==FALSE)
 			continue;
-
+			
 		/* is this host in the layer inclusion/exclusion list? */
 		in_layer_list=is_host_in_layer_list(temp_host);
 		if((in_layer_list==TRUE && exclude_layers==TRUE) || (in_layer_list==FALSE && exclude_layers==FALSE))
 			continue;
-
 		/* get coords of host bounding box */
 		x1=temp_host->x_2d-canvas_x;
 		x2=x1+DEFAULT_NODE_WIDTH;
 		y1=temp_host->y_2d-canvas_y;
 		y2=y1+DEFAULT_NODE_HEIGHT;
-
 		if(create_type==CREATE_IMAGE){
-
-
 			temp_hoststatus=find_hoststatus(temp_host->name);
 			if(temp_hoststatus!=NULL){
 				if(temp_hoststatus->status==HOST_DOWN)
 					status_color=color_red;
 				else if(temp_hoststatus->status==HOST_UNREACHABLE)
-					status_color=color_red;
+						status_color=color_red;
 				else if(temp_hoststatus->status==HOST_UP)
-					status_color=color_green;
+						status_color=color_green;
 				else if(temp_hoststatus->status==HOST_PENDING)
-					status_color=color_grey;
-			        }
-			else
+						status_color=color_grey;
+		    	} else
 				status_color=color_black;
-
-
 			/* use balloons instead of icons... */
 			if(layout_method==LAYOUT_CIRCULAR_BALLOON){
-
-				/* get the number of services associated with the host */
+			/* get the number of services associated with the host */
 				host_services=number_of_host_services(temp_host);
-
-				if(average_host_services==0)
+				if(average_host_services==0){
 					host_services_ratio=0.0;
-				else
+				} else {
 					host_services_ratio=(double)((double)host_services/(double)average_host_services);
-
+				}
 				/* calculate size of node */
 				if(host_services_ratio>=2.0)
 					outer_radius=DEFAULT_NODE_WIDTH;
@@ -1691,7 +1730,6 @@ void draw_hosts(void){
 					outer_radius=DEFAULT_NODE_WIDTH*0.4;
 				else
 					outer_radius=DEFAULT_NODE_WIDTH*0.2;
-
 				/* calculate width of border */
 				if(temp_hoststatus==NULL)
 					inner_radius=outer_radius;
@@ -1699,10 +1737,8 @@ void draw_hosts(void){
 					inner_radius=outer_radius-3;
 				else
 					inner_radius=outer_radius;
-
 				/* fill node with color based on how long its been in this state... */
-				gdImageArc(map_image,x1+(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH/2),outer_radius,outer_radius,0,360,color_blue);
-
+				draw_arc(x1+(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH/2),outer_radius,outer_radius,0,360,color_blue);
 				/* determine fill color */
 				time(&current_time);
 				if(temp_hoststatus==NULL)
@@ -1713,143 +1749,167 @@ void draw_hosts(void){
 					time_color=color_yellow;
 				else
 					time_color=color_white;
-
 				/* fill node with appropriate time color */
 				/* the fill function only works with coordinates that are in bounds of the actual image */
 				translated_x=x1+(DEFAULT_NODE_WIDTH/2);
 				translated_y=y1+(DEFAULT_NODE_WIDTH/2);
 				if(translated_x>0 && translated_y>0 && translated_x<canvas_width && translated_y<canvas_height)
-					gdImageFillToBorder(map_image,translated_x,translated_y,color_blue,time_color);
-
+					draw_filltoborder(translated_x,translated_y,color_blue,time_color);
 				/* border of node should reflect current state */
 				for(current_radius=outer_radius;current_radius>=inner_radius;current_radius--)
-					gdImageArc(map_image,x1+(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH/2),current_radius,current_radius,0,360,status_color);
-
+					draw_arc(x1+(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH/2),current_radius,current_radius,0,360,status_color);
 				/* draw circles around the selected host (if there is one) */
 				if(!strcmp(host_name,temp_host->name) && use_highlights==TRUE){
 					for(current_radius=DEFAULT_NODE_WIDTH*2;current_radius>0;current_radius-=10)
-						gdImageArc(map_image,x1+(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH/2),current_radius,current_radius,0,360,status_color);
-			                }
-			        }
-
-
+					draw_arc(x1+(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH/2),current_radius,current_radius,0,360,status_color);
+		    		}
+			}
 			/* normal method is to use icons for hosts... */
 			else{
-
 				/* draw a target around root hosts (hosts with no parents) */
 				if(temp_host!=NULL && use_highlights==TRUE){
 					if(temp_host->parent_hosts==NULL){
-						gdImageArc(map_image,x1+(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH/2),(DEFAULT_NODE_WIDTH*2),(DEFAULT_NODE_WIDTH*2),0,360,status_color);
+						draw_arc(x1+(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH/2),(DEFAULT_NODE_WIDTH*2),(DEFAULT_NODE_WIDTH*2),0,360,status_color);
 						draw_line(x1-(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH/2),x1+(DEFAULT_NODE_WIDTH*3/2),y1+(DEFAULT_NODE_WIDTH/2),status_color);
 						draw_line(x1+(DEFAULT_NODE_WIDTH/2),y1-(DEFAULT_NODE_WIDTH/2),x1+(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH*3/2),status_color);
-				                }
-			                }
-
+	    	        		}
+		    		}//if(temp_host!=NULL)
 				/* draw circles around the selected host (if there is one) */
 				if(!strcmp(host_name,temp_host->name) && use_highlights==TRUE){
 					for(current_radius=DEFAULT_NODE_WIDTH*2;current_radius>0;current_radius-=10)
-						gdImageArc(map_image,x1+(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH/2),current_radius,current_radius,0,360,status_color);
-			                }
-
-
+						draw_arc(x1+(DEFAULT_NODE_WIDTH/2),y1+(DEFAULT_NODE_WIDTH/2),current_radius,current_radius,0,360,status_color);
+				}
 				if(temp_host->statusmap_image!=NULL)
 					has_image=TRUE;
 				else
 					has_image=FALSE;
-				
 				/* load the logo associated with this host */
 				if(has_image==TRUE){
-
-				        /* get the name of the image file to open for the logo */
+			        /* get the name of the image file to open for the logo */
 					snprintf(image_input_file,sizeof(image_input_file)-1,"%s%s",physical_logo_images_path,temp_host->statusmap_image);
 					image_input_file[sizeof(image_input_file)-1]='\x0';
-
+        	        /* copy the logo image to the canvas image... */
+					if( 2 == statusmap_mod){
+						fprintf(image_output_file,"<image id=\"%s\" x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" xlink:href=\"%s%s\" ", temp_host->name,x1,y1-scaled_image_height/4,scaled_image_width,scaled_image_height,url_logo_images_path,temp_host->icon_image);
+						if(TRUE==display_popups)fprintf(image_output_file,"onmouseover=\"fmover(evt)\" onmouseout=\"fmout(evt)\" ");
+						fprintf(image_output_file,"/>\n");
+					}
+					else{
 				        /* read in the logo image from file... */
-					logo_image=load_image_from_file(image_input_file);
-
-			                /* copy the logo image to the canvas image... */
-					if(logo_image!=NULL){
-						gdImageCopy(map_image,logo_image,x1,y1,0,0,logo_image->sx,logo_image->sy);
-						gdImageDestroy(logo_image);
-		                                }
-					else
-						has_image=FALSE;
-			                }
-
+						logo_image=load_image_from_file(image_input_file);
+						if(logo_image!=NULL){
+							gdImageCopy(map_image,logo_image,x1,y1,0,0,logo_image->sx,logo_image->sy);
+							gdImageDestroy(logo_image);
+						}
+						else
+							has_image=FALSE;
+                			}
+            			}
 				/* if the host doesn't have an image associated with it (or the user doesn't have rights to see this host), use the unknown image */
 				if(has_image==FALSE){
-
-					if(unknown_logo_image!=NULL)
+					if( 2 == statusmap_mod){
+						fprintf(image_output_file,"<image id=\"IMG_%s\" x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" xlink:href=\"%s%s\"/>\n", "UNKNOW",x1,y1,scaled_image_width,scaled_image_height,url_logo_images_path,UNKNOWN_ICON_IMAGE);
+					} 
+					else if(unknown_logo_image!=NULL){
 						gdImageCopy(map_image,unknown_logo_image,x1,y1,0,0,unknown_logo_image->sx,unknown_logo_image->sy);
-
+					}
 					else{
-
 						/* last ditch effort - draw a host bounding box */
 						draw_line(x1,y1,x1,y1+DEFAULT_NODE_WIDTH,color_black);
 						draw_line(x1,y1+DEFAULT_NODE_WIDTH,x2,y1+DEFAULT_NODE_WIDTH,color_black);
 						draw_line(x2,y1+DEFAULT_NODE_WIDTH,x2,y1,color_black);
 						draw_line(x2,y1,x1,y1,color_black);
-				                }
-		                        }
-			        }
-
-
+					}
+	    			}//has_image==FALSE
+    			}//else
 			/* draw host name, status, etc. */
 			draw_host_text(temp_host->name,x1+(DEFAULT_NODE_WIDTH/2),y1+DEFAULT_NODE_HEIGHT);
-		        }
-
+		}//if(create_type==CREATE_IMAGE)
 		/* we're creating HTML image map... */
-		else{
-			printf("<AREA shape='rect' ");
-
-			/* coordinates */
-			printf("coords='%d,%d,%d,%d' ",(int)(x1*scaling_factor),(int)(y1*scaling_factor),(int)((x1+DEFAULT_NODE_WIDTH)*scaling_factor),(int)((y1+DEFAULT_NODE_HEIGHT)*scaling_factor));
-
-			/* URL */
-			if(!strcmp(host_name,temp_host->name))
-				printf("href='%s?host=%s' ",STATUS_CGI,url_encode(temp_host->name));
-			else{
-				printf("href='%s?host=%s&layout=%d&max_width=%d&max_height=%d&proximity_width=%d&proximity_height=%d%s%s%s%s%s",STATUSMAP_CGI,url_encode(temp_host->name),layout_method,max_image_width,max_image_height,proximity_width,proximity_height,(display_header==TRUE)?"":"&noheader",(use_links==FALSE)?"&nolinks":"",(use_text==FALSE)?"&notext":"",(use_highlights==FALSE)?"&nohighlights":"",(display_popups==FALSE)?"&nopopups":"");
-				if(user_supplied_scaling==TRUE)
-					printf("&scaling_factor=%2.1f",user_scaling_factor);
-				print_layer_url(TRUE);
-				printf("' ");
-			        }
-
-			/* popup text */
-			if(display_popups==TRUE){
-
-				printf("onMouseOver='showPopup(\"");
-				write_host_popup_text(find_host(temp_host->name));
-				printf("\",event)' onMouseOut='hidePopup()'");
-			        }
-
-			printf(">\n");
-		        }
-
-	        }
-
+		else {
+			if( 2 != statusmap_mod ) {
+				printf("<AREA shape='rect' ");
+				/* coordinates */
+				printf("coords='%d,%d,%d,%d' ",(int)(x1*scaling_factor),(int)(y1*scaling_factor),(int)((x1+DEFAULT_NODE_WIDTH)*scaling_factor),(int)((y1+DEFAULT_NODE_HEIGHT)*scaling_factor));
+				/* URL */
+				if(!strcmp(host_name,temp_host->name))
+					printf("href='%s?host=%s' ",STATUS_CGI,url_encode(temp_host->name));
+				else{
+					printf("href='%s?host=%s&layout=%d&statusmap_mod=%d&max_width=%d&max_height=%d&proximity_width=%d&proximity_height=%d%s%s%s%s%s",STATUSMAP_CGI,url_encode(temp_host->name),layout_method,statusmap_mod,max_image_width,max_image_height,proximity_width,proximity_height,(display_header==TRUE)?"":"&noheader",(use_links==FALSE)?"&nolinks":"",(use_text==FALSE)?"&notext":"",(use_highlights==FALSE)?"&nohighlights":"",(display_popups==FALSE)?"&nopopups":"");
+					if(user_supplied_scaling==TRUE)
+						printf("&scaling_factor=%2.1f",user_scaling_factor);
+					print_layer_url(TRUE);
+					printf("' ");
+        			}
+				/* popup text */
+				if(display_popups==TRUE){
+					printf("onMouseOver='showPopup(\"");
+					write_host_popup_text(find_host(temp_host->name));
+					printf("\",event)' onMouseOut='hidePopup()'");
+				}
+				printf(">\n");
+			}// if ( 2 != statusmap_mod ) 
+		}//else
+	}//for
+	if((2 == statusmap_mod)&&(CREATE_IMAGE == create_type)&&(TRUE == display_popups)){
+		for(temp_host=host_list;temp_host!=NULL;temp_host=temp_host->next){
+			if(temp_host->should_be_drawn==FALSE)
+				continue;
+			/* is this host in the layer inclusion/exclusion list? */
+			in_layer_list=is_host_in_layer_list(temp_host);
+			if((in_layer_list==TRUE && exclude_layers==TRUE) || (in_layer_list==FALSE && exclude_layers==FALSE))
+				continue;
+			/* get coords of host bounding box */
+			x1=temp_host->x_2d-canvas_x;
+			x2=x1+DEFAULT_NODE_WIDTH;
+			y1=temp_host->y_2d-canvas_y;
+			y2=y1+DEFAULT_NODE_HEIGHT;
+			int svg_x=x1+scaled_image_width;
+			int svg_y=y1-scaled_image_height/4+scaled_image_height;
+			if(( svg_x+pop_width > canvas_width))
+				svg_x = x1 - pop_width;
+			if(( svg_y+pop_height > canvas_height))
+				svg_y = y1 - pop_height;
+			svg_x = (svg_x<0)?0:svg_x;
+			svg_y = (svg_y<0)?0:svg_y;
+			draw_host_popup_win(find_host(temp_host->name),svg_x,svg_y);
+		}//for
+	}// if svg display_popups 
+	if((2 == statusmap_mod)&&(CREATE_IMAGE == create_type)){
+		printf("</g>\n");
+	}// if svg file add </g> tag
 	return;
-        }
+}
 
 
 /* draws text */
 void draw_text(char *buffer,int x,int y,int text_color){
-	int string_width=0;
-	int string_height=0;
-
-	/* write the string to the generated image... */
-	string_height=gdFontSmall->h;
-	string_width=gdFontSmall->w*strlen(buffer);
-	if(layout_method!=LAYOUT_CIRCULAR_MARKUP)
-		gdImageFilledRectangle(map_image,x-(string_width/2)-2,y-(2*string_height),x+(string_width/2)+2,y-string_height,color_white);
-	gdImageString(map_image,gdFontSmall,x-(string_width/2),y-(2*string_height),(unsigned char *)buffer,text_color);
-
+	if( 2 == statusmap_mod){
+		int string_width=gdFontSmall->w*(strlen(buffer)*2/3);
+		int string_height=gdFontSmall->h;
+		printf("<text x=\"%d\" y=\"%d\" font-size=\"%d\" stroke=\"#%06x\" fill=\"#%06x\">%s</text>\n",
+		  (x-string_width/2),y-2*(string_height),gdFontSmall->h,text_color, text_color, buffer);
+	}else{
+		int string_width=0;
+		int string_height=0;
+		int brect[8];
+		/* write the string to the generated image... */
+		string_height=gdFontSmall->h;
+		string_width=gdFontSmall->w*strlen(buffer)*2/3;
+		if(layout_method!=LAYOUT_CIRCULAR_MARKUP)
+			gdImageFilledRectangle(map_image,x-(string_width/2)-2,y-(2*string_height),x+(string_width/2)+2,y-string_height,color_white);
+	/*** TrueTypeFont ***/
+	if( (strlen(ttf_file) > 5) && (access(ttf_file, F_OK) == 0) ){
+		gdImageStringTTF(map_image, &brect[0], text_color, ttf_file, SMALL_FONT_SIZE, 0.0, x-(string_width/2), y-(2*string_height), (unsigned char *)buffer);
+	}else{
+		gdImageString(map_image,gdFontSmall,x-(string_width/2),y-(2*string_height),(unsigned char *)buffer,text_color);
+	}
 	return;
         }
-
+}
 
 /* draws host text */
+/* 注释：这段是为了补Nagios调用GD库中的问题而加入的 */
 void draw_host_text(char *name,int x,int y){
 	hoststatus *temp_hoststatus;
 	int status_color=color_black;
@@ -1857,7 +1917,6 @@ void draw_host_text(char *name,int x,int y){
 
 	if(use_text==FALSE)
 		return;
-
 	strncpy(temp_buffer,name,sizeof(temp_buffer)-1);
 	temp_buffer[sizeof(temp_buffer)-1]='\x0';
 
@@ -1872,23 +1931,23 @@ void draw_host_text(char *name,int x,int y){
 
 		/* draw the status string */
 		if(temp_hoststatus->status==HOST_DOWN){
-			strncpy(temp_buffer,"Down",sizeof(temp_buffer));
+			strncpy(temp_buffer,"宕机",sizeof(temp_buffer));
 			status_color=color_red;
                         }
 		else if(temp_hoststatus->status==HOST_UNREACHABLE){
-			strncpy(temp_buffer,"Unreachable",sizeof(temp_buffer));
+			strncpy(temp_buffer,"不可达",sizeof(temp_buffer));
 			status_color=color_red;
                         }
 		else if(temp_hoststatus->status==HOST_UP){
-			strncpy(temp_buffer,"Up",sizeof(temp_buffer));
+			strncpy(temp_buffer,"运行",sizeof(temp_buffer));
 			status_color=color_green;
                         }
 		else if(temp_hoststatus->status==HOST_PENDING){
-			strncpy(temp_buffer,"Pending",sizeof(temp_buffer));
+			strncpy(temp_buffer,"未决",sizeof(temp_buffer));
 			status_color=color_grey;
                         }
 		else{
-			strncpy(temp_buffer,"Unknown",sizeof(temp_buffer));
+			strncpy(temp_buffer,"未知",sizeof(temp_buffer));
 			status_color=color_orange;
 	                }
 
@@ -1918,14 +1977,14 @@ void write_host_popup_text(host *hst){
 	int seconds;
 
 	if(hst==NULL){
-		printf("Host data not found");
+		printf("主机数据不存在。");
 		return;
 	        }
 
 	/* find the status entry for this host */
 	temp_status=find_hoststatus(hst->name);
 	if(temp_status==NULL){
-		printf("Host status information not found");
+		printf("主机的状态信息不存在。");
 		return;
 	        }
 
@@ -1948,34 +2007,34 @@ void write_host_popup_text(host *hst){
 	printf("\\\" border=0 width=40 height=40></td>");
 	printf("<td class=\\\"popupText\\\"><i>%s</i></td></tr>",(hst->icon_image_alt==NULL)?"":html_encode(hst->icon_image_alt,TRUE));
 
-	printf("<tr><td class=\\\"popupText\\\">Name:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",escape_string(hst->name));
-	printf("<tr><td class=\\\"popupText\\\">Alias:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",escape_string(hst->alias));
-	printf("<tr><td class=\\\"popupText\\\">Address:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",html_encode(hst->address,TRUE));
-	printf("<tr><td class=\\\"popupText\\\">State:</td><td class=\\\"popupText\\\"><b>");
+	printf("<tr><td class=\\\"popupText\\\">名称:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",html_encode(hst->name,TRUE));
+	printf("<tr><td class=\\\"popupText\\\">别名:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",html_encode(hst->alias,TRUE));
+	printf("<tr><td class=\\\"popupText\\\">地址:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",html_encode(hst->address,TRUE));
+	printf("<tr><td class=\\\"popupText\\\">状态:</td><td class=\\\"popupText\\\"><b>");
 
 	/* get the status of the host (pending, up, down, or unreachable) */
 	if(temp_status->status==HOST_DOWN){
-		printf("<font color=red>Down");
+		printf("<font color=red>宕机状态");
 		if(temp_status->problem_has_been_acknowledged==TRUE)
-			printf(" (Acknowledged)");
+			printf(" (问题确认)");
 		printf("</font>");
 	        }
 
 	else if(temp_status->status==HOST_UNREACHABLE){
-		printf("<font color=red>Unreachable");
+		printf("<font color=red>不可达态");
 		if(temp_status->problem_has_been_acknowledged==TRUE)
-			printf(" (Acknowledged)");
+			printf(" (问题确认)");
 		printf("</font>");
 	        }
 
 	else if(temp_status->status==HOST_UP)
-		printf("<font color=green>Up</font>");
+		printf("<font color=green>运行状态</font>");
 
 	else if(temp_status->status==HOST_PENDING)
-		printf("Pending");
+		printf("未决状态");
 
 	printf("</b></td></tr>");
-	printf("<tr><td class=\\\"popupText\\\">Status Information:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",(temp_status->plugin_output==NULL)?"":temp_status->plugin_output);
+	printf("<tr><td class=\\\"popupText\\\">状态信息:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",(temp_status->plugin_output==NULL)?"":temp_status->plugin_output);
 
 	current_time=time(NULL);
 	if(temp_status->last_state_change==(time_t)0)
@@ -1983,156 +2042,332 @@ void write_host_popup_text(host *hst){
 	else
 		t=current_time-temp_status->last_state_change;
 	get_time_breakdown((unsigned long)t,&days,&hours,&minutes,&seconds);
-	snprintf(state_duration,sizeof(state_duration)-1,"%2dd %2dh %2dm %2ds%s",days,hours,minutes,seconds,(temp_status->last_state_change==(time_t)0)?"+":"");
+	snprintf(state_duration,sizeof(state_duration)-1,"%2d日%2d时%2d分%2d秒",days,hours,minutes,seconds,(temp_status->last_state_change==(time_t)0)?"+":"");
 	state_duration[sizeof(state_duration)-1]='\x0';
-	printf("<tr><td class=\\\"popupText\\\">State Duration:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",state_duration);
+	printf("<tr><td class=\\\"popupText\\\">持续时间:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",state_duration);
 
 	get_time_string(&temp_status->last_check,date_time,(int)sizeof(date_time),SHORT_DATE_TIME);
-	printf("<tr><td class=\\\"popupText\\\">Last Status Check:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",(temp_status->last_check==(time_t)0)?"N/A":date_time);
+	printf("<tr><td class=\\\"popupText\\\">最近检查时间:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",(temp_status->last_check==(time_t)0)?"未知":date_time);
 	get_time_string(&temp_status->last_state_change,date_time,(int)sizeof(date_time),SHORT_DATE_TIME);
-	printf("<tr><td class=\\\"popupText\\\">Last State Change:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",(temp_status->last_state_change==(time_t)0)?"N/A":date_time);
+	printf("<tr><td class=\\\"popupText\\\">最近状态改变时间:</td><td class=\\\"popupText\\\"><b>%s</b></td></tr>",(temp_status->last_state_change==(time_t)0)?"未知":date_time);
 
-	printf("<tr><td class=\\\"popupText\\\">Parent Host(s):</td><td class=\\\"popupText\\\"><b>");
+	printf("<tr><td class=\\\"popupText\\\">上级节点主机:</td><td class=\\\"popupText\\\"><b>");
 	if(hst->parent_hosts==NULL)
-		printf("None (This is a root host)");
+		printf("无(该主机是根节点)");
 	else{
 		for(temp_hostsmember=hst->parent_hosts;temp_hostsmember!=NULL;temp_hostsmember=temp_hostsmember->next)
 			printf("%s%s",(temp_hostsmember==hst->parent_hosts)?"":", ",html_encode(temp_hostsmember->host_name,TRUE));
 	        }
 	printf("</b></td></tr>");
 
-	printf("<tr><td class=\\\"popupText\\\">Immediate Child Hosts:</td><td class=\\\"popupText\\\"><b>");
+	printf("<tr><td class=\\\"popupText\\\">下级节点主机:</td><td class=\\\"popupText\\\"><b>");
 	printf("%d",number_of_immediate_child_hosts(hst));
 	printf("</b></td></tr>");
 
 	printf("</table>");
 
-	printf("<br><b><u>Services:</u></b><br>");
+	printf("<br><b><u>服务情况:</u></b><br>");
 
 	service_totals=get_servicestatus_count(hst->name,SERVICE_OK);
 	if(service_totals>0)
-		printf("- <font color=green>%d ok</font><br>",service_totals);
+		printf("- <font color=green>正常状态: %d <br>(OK)</font><br>",service_totals);
 	service_totals=get_servicestatus_count(hst->name,SERVICE_CRITICAL);
 	if(service_totals>0)
-		printf("- <font color=red>%d critical</font><br>",service_totals);
+		printf("- <font color=red>紧急状态: %d <br>(CRITICAL)</font><br>",service_totals);
 	service_totals=get_servicestatus_count(hst->name,SERVICE_WARNING);
 	if(service_totals>0)
-		printf("- <font color=orange>%d warning</font><br>",service_totals);
+		printf("- <font color=orange>告警状态: %d <br>(WARNING)</font><br>",service_totals);
 	service_totals=get_servicestatus_count(hst->name,SERVICE_UNKNOWN);
 	if(service_totals>0)
-		printf("- <font color=orange>%d unknown</font><br>",service_totals);
+		printf("- <font color=orange>未知状态: %d <br>(UNKNOWN)</font><br>",service_totals);
 	service_totals=get_servicestatus_count(hst->name,SERVICE_PENDING);
 	if(service_totals>0)
-		printf("- %d pending<br>",service_totals);
+		printf("- %d 待定<br>",service_totals);
 
 	return;
         }
 
+/* draw svg popup for a specific host */
+void draw_host_popup_win(host *hst, int x, int y){
+	if( 2 != statusmap_mod ) return;
+	hoststatus *temp_status=NULL;
+	hostsmember *temp_hostsmember=NULL;
+	char *processed_string=NULL;
+	int service_totals;
+	char date_time[48];
+	time_t current_time;
+	time_t t;
+	char state_duration[48];
+	int days;
+	int hours;
+	int minutes;
+	int seconds;
+	if(hst==NULL){
+		return;
+	        }
+	/* find the status entry for this host */
+	temp_status=find_hoststatus(hst->name);
+	if(temp_status==NULL){
+		return;
+	        }
+	/* grab macros */
+	grab_host_macros(hst);
+	/* strip nasty stuff from plugin output */
+	sanitize_plugin_output(temp_status->plugin_output);
+	fprintf(image_output_file,"<g id=\"POP_\%s\" visibility=\"hidden\" transform=\"translate(%d %d)\" font-size=\"13\" stroke=\"blue\" fill=\"#000000\">\n",
+		hst->name,x,y);
+	fprintf(image_output_file,"<rect x=\"0\" y=\"0\" width=\"%d\" height=\"%d\" fill=\"#FFFFA0\" stroke=\"#0000ff\"/>\n",pop_width,pop_height);
+	fprintf(image_output_file,"<image x=\"10\" y=\"10\" width=\"40\" height=\"40\" xlink:href=\"");
+	fprintf(image_output_file,"%s",url_logo_images_path);
+	if(hst->icon_image==NULL){
+		fprintf(image_output_file,"%s\" />\n",UNKNOWN_ICON_IMAGE);
+	}else{
+		process_macros(hst->icon_image,&processed_string,0);
+		fprintf(image_output_file,"%s\" />\n",processed_string);
+		free(processed_string);
+		}
+	if(hst->icon_image_alt!=NULL)
+		fprintf(image_output_file,"<text x=\"10\" y=\"60\" >注释:%s</text>\n",html_encode(hst->icon_image_alt,TRUE));
+	fprintf(image_output_file,"<text x=\"10\" y=\"80\" >名称:%s</text>\n",html_encode(hst->name,TRUE));
+	fprintf(image_output_file,"<text x=\"10\" y=\"100\">别名:%s</text>\n",html_encode(hst->alias,TRUE));
+	fprintf(image_output_file,"<text x=\"10\" y=\"120\">地址:%s</text>\n",html_encode(hst->address,TRUE));
+	fprintf(image_output_file,"<text x=\"10\" y=\"140\">状态:</text>\n<text x=\"40\" y=\"140\" ");
+	if(temp_status->status==HOST_DOWN){
+		fprintf(image_output_file,"stroke=\"red\">宕机状态");
+		if(temp_status->problem_has_been_acknowledged==TRUE)
+			fprintf(image_output_file," (问题确认)");
+		fprintf(image_output_file,"</text>\n");
+	} else if(temp_status->status==HOST_UNREACHABLE){
+		fprintf(image_output_file,"stroke=\"red\">不可达态");
+		if(temp_status->problem_has_been_acknowledged==TRUE)
+			fprintf(image_output_file," (问题确认)");
+		fprintf(image_output_file,"</text>\n");
+	        }
+	else if(temp_status->status==HOST_UP)
+		fprintf(image_output_file,"stroke=\"green\">运行状态</text>\n");
+	else if(temp_status->status==HOST_PENDING)
+		fprintf(image_output_file,">未决状态</text>\n");
+	fprintf(image_output_file,"<text x=\"10\" y=\"160\">状态信息:%s</text>\n",(temp_status->plugin_output==NULL)?"":temp_status->plugin_output);
+	current_time=time(NULL);
+	if(temp_status->last_state_change==(time_t)0)
+		t=current_time-program_start;
+	else
+		t=current_time-temp_status->last_state_change;
+	get_time_breakdown((unsigned long)t,&days,&hours,&minutes,&seconds);
+	snprintf(state_duration,sizeof(state_duration)-1,"%2d日%2d时%2d分%2d秒",days,hours,minutes,seconds,(temp_status->last_state_change==(time_t)0)?"+":"");
+	state_duration[sizeof(state_duration)-1]='\x0';
+	fprintf(image_output_file,"<text x=\"10\" y=\"180\">持续时间:%s</text>\n",state_duration);
+	get_time_string(&temp_status->last_check,date_time,(int)sizeof(date_time),SHORT_DATE_TIME);
+	fprintf(image_output_file,"<text x=\"10\" y=\"200\">最近检查时间:%s</text>\n",(temp_status->last_check==(time_t)0)?"未知":date_time);
+	get_time_string(&temp_status->last_state_change,date_time,(int)sizeof(date_time),SHORT_DATE_TIME);
+	fprintf(image_output_file,"<text x=\"10\" y=\"220\">最近状态改变时间:%s</text>\n",(temp_status->last_state_change==(time_t)0)?"未知":date_time);
+	fprintf(image_output_file,"<text x=\"10\" y=\"240\">上级节点主机:");
+	if(hst->parent_hosts==NULL)
+		fprintf(image_output_file,"无(该主机是根节点)");
+	else{
+		for(temp_hostsmember=hst->parent_hosts;temp_hostsmember!=NULL;temp_hostsmember=temp_hostsmember->next)
+			fprintf(image_output_file,"%s%s",(temp_hostsmember==hst->parent_hosts)?"":", ",html_encode(temp_hostsmember->host_name,TRUE));
+	        }
+	fprintf(image_output_file,"</text>\n");
+	fprintf(image_output_file,"<text x=\"10\" y=\"260\">下级节点数:");
+	fprintf(image_output_file,"%d",number_of_immediate_child_hosts(hst));
+	fprintf(image_output_file,"</text>\n");
 
+	fprintf(image_output_file,"<text x=\"10\" y=\"280\">服务情况:</text>\n");
+	service_totals=get_servicestatus_count(hst->name,SERVICE_OK);
+	if(service_totals>0)
+		fprintf(image_output_file,"<text x=\"10\" y=\"300\" stroke=\"green\">正常:(%d) </text>",service_totals);
+	service_totals=get_servicestatus_count(hst->name,SERVICE_CRITICAL);
+	if(service_totals>0)
+		fprintf(image_output_file,"<text x=\"60\" y=\"300\" stroke=\"red\">紧急:(%d) </text>",service_totals);
+	service_totals=get_servicestatus_count(hst->name,SERVICE_WARNING);
+	if(service_totals>0)
+		fprintf(image_output_file,"<text x=\"110\" y=\"300\" stroke=\"orange\">告警:(%d) </text>",service_totals);
+	service_totals=get_servicestatus_count(hst->name,SERVICE_UNKNOWN);
+	if(service_totals>0)
+		fprintf(image_output_file,"<text x=\"160\" y=\"300\" stroke=\"orange\">未知:(%d) </text>",service_totals);
+	service_totals=get_servicestatus_count(hst->name,SERVICE_PENDING);
+	if(service_totals>0)
+		fprintf(image_output_file,"<text x=\"210\" y=\"300\">待定:(%d) </text>",service_totals);
+	fprintf(image_output_file,"</g>\n");
+	return ;
+        }
 
 /* draws a solid line */
 void draw_line(int x1,int y1,int x2,int y2,int color){
-
 	if(create_type==CREATE_HTML)
 		return;
-
-	gdImageLine(map_image,x1,y1,x2,y2,color);
-
+	if( 2 == statusmap_mod){
+		fprintf(image_output_file,"<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" stroke=\"#%06x\" />\n", x1,y1,x2,y2,color);
+	}else{
+		gdImageLine(map_image,x1,y1,x2,y2,color);
+	}
 	return;
 	}
 
 
 /* draws a dotted line */
 void draw_dotted_line(int x1,int y1,int x2,int y2,int color){
-	int styleDotted[12];
-
-	styleDotted[0]=color;
-	styleDotted[1]=gdTransparent;
-	styleDotted[2]=gdTransparent;
-	styleDotted[3]=gdTransparent;
-	styleDotted[4]=gdTransparent;
-	styleDotted[5]=gdTransparent;
-	styleDotted[6]=color;
-	styleDotted[7]=gdTransparent;
-	styleDotted[8]=gdTransparent;
-	styleDotted[9]=gdTransparent;
-	styleDotted[10]=gdTransparent;
-	styleDotted[11]=gdTransparent;
-
-	/* sets current style to a dashed line */
-	gdImageSetStyle(map_image,styleDotted,12);
-
-	/* draws a line (dotted) */
-	gdImageLine(map_image,x1,y1,x2,y2,gdStyled);
-
+	if( 2 == statusmap_mod){
+		fprintf(image_output_file,"<line id=\"draw_dotted_line\" x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" stroke=\"#%06x\"/>\n", x1,y1,x2,y2,color);
+	}else{
+		int styleDotted[12];
+		styleDotted[0]=color;
+		styleDotted[1]=gdTransparent;
+		styleDotted[2]=gdTransparent;
+		styleDotted[3]=gdTransparent;
+		styleDotted[4]=gdTransparent;
+		styleDotted[5]=gdTransparent;
+		styleDotted[6]=color;
+		styleDotted[7]=gdTransparent;
+		styleDotted[8]=gdTransparent;
+		styleDotted[9]=gdTransparent;
+		styleDotted[10]=gdTransparent;
+		styleDotted[11]=gdTransparent;
+		/* sets current style to a dashed line */
+		gdImageSetStyle(map_image,styleDotted,12);
+		/* draws a line (dotted) */
+		gdImageLine(map_image,x1,y1,x2,y2,gdStyled);
+	}
 	return;
 	}
 
 /* draws a dashed line */
 void draw_dashed_line(int x1,int y1,int x2,int y2,int color){
-	int styleDashed[12];
+	if( 2 == statusmap_mod){
+		fprintf(image_output_file,"<line id=\"draw_dashed_line\" x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" stroke=\"#%06x\"/>\n", x1,y1,x2,y2,color);
+	}else{
+		int styleDashed[12];
 
-	styleDashed[0]=color;
-	styleDashed[1]=color;
-	styleDashed[2]=color;
-	styleDashed[3]=color;
-	styleDashed[4]=gdTransparent;
-	styleDashed[5]=gdTransparent;
-	styleDashed[6]=color;
-	styleDashed[7]=color;
-	styleDashed[8]=color;
-	styleDashed[9]=color;
-	styleDashed[10]=gdTransparent;
-	styleDashed[11]=gdTransparent;
-
-	/* sets current style to a dashed line */
-	gdImageSetStyle(map_image,styleDashed,12);
-
-	/* draws a line (dashed) */
-	gdImageLine(map_image,x1,y1,x2,y2,gdStyled);
-
+		styleDashed[0]=color;
+		styleDashed[1]=color;
+		styleDashed[2]=color;
+		styleDashed[3]=color;
+		styleDashed[4]=gdTransparent;
+		styleDashed[5]=gdTransparent;
+		styleDashed[6]=color;
+		styleDashed[7]=color;
+		styleDashed[8]=color;
+		styleDashed[9]=color;
+		styleDashed[10]=gdTransparent;
+		styleDashed[11]=gdTransparent;
+		/* sets current style to a dashed line */
+		gdImageSetStyle(map_image,styleDashed,12);
+		/* draws a line (dashed) */
+		gdImageLine(map_image,x1,y1,x2,y2,gdStyled);
+	}
 	return;
 	}
 
+/* draw arc*/
+void draw_arc(int cx, int cy, int w, int h, int s, int e, int color){
+	if( 2 == statusmap_mod){
+		if ( (0 == (e-s) % 360 )&&(w == h) ){//a circle
+			fprintf(image_output_file,"<circle cx=\"%d\" cy=\"%d\" r=\"%d\" fill=\"none\" stroke=\"#%06x\" stroke-width=\"1\"/>\n",cx,cy,w/2,color);
+		}
+		else if (w == h){//an arc
+			int i=0;
+			int G=5;
+			int x = cx + (int)(w*cos(s/180.0*M_PI)/2);
+			int y = cy + (int)(w*sin(s/180.0*M_PI)/2);
+			fprintf(image_output_file,"<path d=\"M %d %d ", x, y);
+ 			for(i=0; i<abs(e-s); i = i + G ){
+				x = cx + (int)(w*cos((s+i)/180.0*M_PI)/2);
+				y = cy + (int)(w*sin((s+i)/180.0*M_PI)/2);
+				fprintf(image_output_file,"L %d %d ", x, y);
+			}
+			fprintf(image_output_file,"\" fill=\"none\" stroke=\"#%06x\" stroke-width=\"1\"/>\n", color);
+		}
+		else{//an eclipse arc
+			int sx=w*h/sqrt(h*h+w*w*cos(s/180.0*M_PI)*cos(s/180.0*M_PI));
+			int ex=w*h/sqrt(h*h+w*w*cos(e/180.0*M_PI)*cos(e/180.0*M_PI));
+			int sy=sx*cos(s/180.0*M_PI);
+			int ey=ex*cos(e/180.0*M_PI);
+			fprintf(image_output_file,"<path d=\"M%d,%d a%d,%d %d %d,%d %d,%d z\" fill=\"#%06x\" stroke-width=\"1\"/> <!--%d %d %d %d %d %d -->\n",cx+sx,cy+sy,w,h,0,0,0,cx+ex,cy+ey,color, cx,cy,w,h,s,e);
+		}
+	}else{
+		gdImageArc(map_image,cx,cy,w,h,s,e,color);
+	}
+	return;
+	}
 
-
+//以(cx,cy)为中心，r1,r2为半径，以四个点为扇形四个角，起始角s，终止角e，用color绘制，用fdcolor填充
+void draw_floodfan(int cx,int cy,int r1, int r2, int x1,int y1,int x2,int y2,int x3,int y3,int x4,int y4,int s,int e, int color,int fdcolor){
+	if( 2 != statusmap_mod )return;
+	fprintf(image_output_file,"<path d=\"M %d %d ", x1, y1);
+	fprintf(image_output_file,"L %d %d ", x2, y2);
+	int x=0;
+	int y=0;
+	int i=0;
+	int G=5;
+	int w=r2*2;
+ 	for(i=0; i<abs(e-s); i = i + G ){
+		x = cx + (int)(w*cos((s+i)/180.0*M_PI)/2);
+		y = cy + (int)(w*sin((s+i)/180.0*M_PI)/2);
+		fprintf(image_output_file,"L %d %d ", x, y);
+	}
+	fprintf(image_output_file,"L %d %d ", x3, y3);
+	fprintf(image_output_file,"L %d %d ", x4, y4);
+	w=r1*2;
+ 	for(i=abs(e-s); i>0; i = i - G ){
+		x = cx + (int)(w*cos((s+i)/180.0*M_PI)/2);
+		y = cy + (int)(w*sin((s+i)/180.0*M_PI)/2);
+		fprintf(image_output_file,"L %d %d ", x, y);
+	}
+	fprintf(image_output_file,"z \" fill=\"#%06x\" stroke=\"#%06x\" stroke-width=\"1\"/>\n", fdcolor, color);
+	return;
+}
+void draw_filltoborder(int x, int y, int border, int color){
+	if( 2 == statusmap_mod){
+		//fprintf(image_output_file,"<line id=\"draw_dashed_line\" x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" stroke=\"#%06x\"/>\n",x1,y1,x2,y2,color);
+	}else{
+		gdImageFillToBorder(map_image,x,y,border,color);
+	}
+	return;
+	}
 /******************************************************************/
 /*********************** GRAPHICS FUNCTIONS ***********************/
 /******************************************************************/
 
 /* initialize graphics */
 int initialize_graphics(void){
+
+	/* use STDOUT for writing the image data... */
+	image_output_file=stdout;
+	scaled_image_width=(int)(DEFAULT_NODE_WIDTH*(double)((double)max_image_width/(double)canvas_width));
+	scaled_image_height=(int)(DEFAULT_NODE_HEIGHT*(double)((double)max_image_height/(double)canvas_height));
+	scaled_image_width=(scaled_image_width>0)?scaled_image_width:DEFAULT_NODE_WIDTH;
+	scaled_image_height=(scaled_image_height>0)?scaled_image_height:DEFAULT_NODE_HEIGHT;
 	char image_input_file[MAX_INPUT_BUFFER];
 
 	if(create_type==CREATE_HTML)
 		return ERROR;
-
-	/* allocate buffer for storing image */
+	if( 2 != statusmap_mod ){ /*is PNG or JPEG mod */
+		/* allocate buffer for storing image */
 #ifndef HAVE_GDIMAGECREATETRUECOLOR
-	map_image=gdImageCreate(canvas_width,canvas_height);
+		map_image=gdImageCreate(canvas_width,canvas_height);
 #else
 	map_image=gdImageCreateTrueColor(canvas_width,canvas_height);
 #endif
-	if(map_image==NULL)
-		return ERROR;
-
-	/* allocate colors used for drawing */
-	color_white=gdImageColorAllocate(map_image,255,255,255);
-	color_black=gdImageColorAllocate(map_image,0,0,0);
-	color_grey=gdImageColorAllocate(map_image,128,128,128);
-	color_lightgrey=gdImageColorAllocate(map_image,210,210,210);
-	color_red=gdImageColorAllocate(map_image,255,0,0);
-	color_lightred=gdImageColorAllocate(map_image,215,175,175);
-	color_green=gdImageColorAllocate(map_image,0,175,0);
-	color_lightgreen=gdImageColorAllocate(map_image,210,255,215);
-	color_blue=gdImageColorAllocate(map_image,0,0,255);
-	color_yellow=gdImageColorAllocate(map_image,255,255,0);
-	color_orange=gdImageColorAllocate(map_image,255,100,25);
+		if(map_image==NULL)
+			return ERROR;
+		/* allocate colors used for drawing */
+		color_white=gdImageColorAllocate(map_image,255,255,255);
+		color_black=gdImageColorAllocate(map_image,0,0,0);
+		color_grey=gdImageColorAllocate(map_image,128,128,128);
+		color_lightgrey=gdImageColorAllocate(map_image,210,210,210);
+		color_red=gdImageColorAllocate(map_image,255,0,0);
+		color_lightred=gdImageColorAllocate(map_image,215,175,175);
+		color_green=gdImageColorAllocate(map_image,0,175,0);
+		color_lightgreen=gdImageColorAllocate(map_image,210,255,215);
+		color_blue=gdImageColorAllocate(map_image,0,0,255);
+		color_yellow=gdImageColorAllocate(map_image,255,255,0);
+		color_orange=gdImageColorAllocate(map_image,255,100,25);
 	color_transparency_index=gdImageColorAllocate(map_image,color_transparency_index_r,color_transparency_index_g,color_transparency_index_b);		
 
-	/* set transparency index */
+		/* set transparency index */
 #ifndef HAVE_GDIMAGECREATETRUECOLOR
-	gdImageColorTransparent(map_image,color_white);
+		gdImageColorTransparent(map_image,color_white);
 #else
 	gdImageColorTransparent(map_image,color_transparency_index);
 	
@@ -2140,18 +2375,41 @@ int initialize_graphics(void){
 	gdImageFill(map_image, 0, 0, color_transparency_index);
 #endif
 
-	/* make sure the graphic is interlaced */
-	gdImageInterlace(map_image,1);
+		/* make sure the graphic is interlaced */
+		gdImageInterlace(map_image,1);
 
-	/* get the path where we will be reading logo images from (GD2 format)... */
-	snprintf(physical_logo_images_path,sizeof(physical_logo_images_path)-1,"%slogos/",physical_images_path);
-	physical_logo_images_path[sizeof(physical_logo_images_path)-1]='\x0';
+		/* get the path where we will be reading logo images from (GD2 format)... */
+		snprintf(physical_logo_images_path,sizeof(physical_logo_images_path)-1,"%slogos/",physical_images_path);
+		physical_logo_images_path[sizeof(physical_logo_images_path)-1]='\x0';
 
-	/* load the unknown icon to use for hosts that don't have pretty images associated with them... */
-	snprintf(image_input_file,sizeof(image_input_file)-1,"%s%s",physical_logo_images_path,UNKNOWN_GD2_ICON);
-	image_input_file[sizeof(image_input_file)-1]='\x0';
-	unknown_logo_image=load_image_from_file(image_input_file);
-
+		/* load the unknown icon to use for hosts that don't have pretty images associated with them... */
+		snprintf(image_input_file,sizeof(image_input_file)-1,"%s%s",physical_logo_images_path,UNKNOWN_GD2_ICON);
+		image_input_file[sizeof(image_input_file)-1]='\x0';
+		unknown_logo_image=load_image_from_file(image_input_file);
+		}
+	else{
+		snprintf(physical_logo_images_path,sizeof(physical_logo_images_path)-1,"%slogos/",physical_images_path);
+		physical_logo_images_path[sizeof(physical_logo_images_path)-1]='\x0';
+		/* SVG Header & svg-root node. */
+	 	fprintf(image_output_file,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+		fprintf(image_output_file,"<svg \n  version=\"1.1\" baseProfile=\"tiny\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" \n");
+		fprintf(image_output_file,"  id=\"svg-root\" x=\"%d\" y=\"%d\" width=\"100%\" heigth=\"100%\" viewBox=\"0 0 %d %d\">\n",	canvas_x,canvas_y,canvas_width,canvas_height);
+		fprintf(image_output_file,"<script type=\"text/ecmascript\"><![CDATA[ \n");
+		if( TRUE == display_popups ){
+			fprintf(image_output_file,"	function fmover(evt){ \n");
+			fprintf(image_output_file,"		var dname=\"POP_\"+evt.target.getAttribute(\"id\"); \n");
+			fprintf(image_output_file,"		var str=\"visible\"; \n");
+			fprintf(image_output_file,"		document.getElementById(dname).setAttribute(\"visibility\",str); \n");
+			fprintf(image_output_file,"		return; \n");
+			fprintf(image_output_file,"	} \n");
+			fprintf(image_output_file,"	function fmout(evt){ \n");
+			fprintf(image_output_file,"		var dname=\"POP_\"+evt.target.getAttribute(\"id\"); \n");
+			fprintf(image_output_file,"		var str=\"hidden\"; \n");
+			fprintf(image_output_file,"		document.getElementById(dname).setAttribute(\"visibility\",str); \n");
+			fprintf(image_output_file,"	} \n");
+		}
+		fprintf(image_output_file,"]]></script> \n");
+	}
 	return OK;
         }
 
@@ -2166,7 +2424,7 @@ gdImagePtr load_image_from_file(char *filename){
 	/* make sure we were passed a file name */
 	if(filename==NULL)
 		return NULL;
-
+	if( 2 == statusmap_mod)return NULL;
 	/* find the file extension */
 	if((ext=rindex(filename,'.'))==NULL)
 		return NULL;
@@ -2199,25 +2457,24 @@ gdImagePtr load_image_from_file(char *filename){
         }
 
 
-
 /* draw graphics */
 void write_graphics(void){
-	FILE *image_output_file=NULL;
-
 	if(create_type==CREATE_HTML)
 		return;
-
-	/* use STDOUT for writing the image data... */
-	image_output_file=stdout;
-
 	/* write the image out in PNG format */
-	gdImagePng(map_image,image_output_file);
-
+	if( 0 == statusmap_mod)
+		gdImagePngEx(map_image,image_output_file,-1);
 	/* or we could write the image out in JPG format... */
-	/*gdImageJpeg(map_image,image_output_file,99);*/
-
+	if( 1 == statusmap_mod)
+		gdImageJpeg(map_image,image_output_file,-1);
+	if( 2 == statusmap_mod){
+		fprintf(image_output_file,"<rect id=\"test-frame\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\" fill=\"none\" stroke=\"#0000ff\"/>\n",canvas_width,canvas_height);
+		/*fprintf(image_output_file,"<rect id=\"test-frame\" x=\"0\" y=\"0\" width=\"%d\" height=\"%d\" fill=\"none\" stroke=\"#0000ff\"/>\n",canvas_width,canvas_height);*/
+		fprintf(image_output_file,"</svg>\n");
+		fflush(image_output_file);
+	}
 	return;
-        }
+}
 
 
 /* cleanup graphics resources */
@@ -2227,7 +2484,7 @@ void cleanup_graphics(void){
 		return;
 
 	/* free memory allocated to image */
-	gdImageDestroy(map_image);
+	if( 2 != statusmap_mod) gdImageDestroy(map_image);
 
 	return;
         }
@@ -2248,7 +2505,7 @@ void write_popup_code(void){
 	int padding=3;
 	int x_offset=3;
 	int y_offset=3;
-
+	
 	printf("<SCRIPT LANGUAGE='JavaScript'>\n");
 	printf("<!--\n");
 	printf("// JavaScript popup based on code originally found at http://www.helpmaster.com/htmlhelp/javascript/popjbpopup.htm\n");
@@ -2285,7 +2542,7 @@ void write_popup_code(void){
 
 	printf("document.popup.style.visibility = \"visible\";\n");
 	printf("} \n");
- 
+
 
 	printf("else{\n");
 	printf("table += \"<table cellpadding=%d border=%d cellspacing=0 bordercolor='%s'>\";\n",padding,border,border_color);
@@ -2296,16 +2553,16 @@ void write_popup_code(void){
 
 	/* set x coordinate */
 	printf("document.popup.left = eventObj.layerX + %d;\n",x_offset);
-	
+
 	/* make sure we don't overlap the right side of the screen */
 	printf("if(document.popup.left + document.popup.document.width + %d > window.innerWidth) document.popup.left = window.innerWidth - document.popup.document.width - %d - 16;\n",x_offset,x_offset);
-		
+
 	/* set y coordinate */
 	printf("document.popup.top  = eventObj.layerY + %d;\n",y_offset);
-	
+
 	/* make sure we don't overlap the bottom edge of the screen */
 	printf("if(document.popup.top + document.popup.document.height + %d > window.innerHeight) document.popup.top = window.innerHeight - document.popup.document.height - %d - 16;\n",y_offset,y_offset);
-		
+
 	/* make the popup visible */
 	printf("document.popup.visibility = \"visible\";\n");
 	printf("}\n");
@@ -2388,7 +2645,7 @@ int is_host_in_layer_list(host *hst){
 		temp_hostgroup=find_hostgroup(temp_layer->layer_name);
 		if(temp_hostgroup==NULL)
 			continue;
-		
+
 		/* is the requested host a member of the hostgroup/layer? */
 		if(is_host_member_of_hostgroup(temp_hostgroup,hst)==TRUE)
 			return TRUE;
@@ -2416,7 +2673,7 @@ void print_layer_url(int get_method){
 
 	return;
         }
-	
+
 
 
 
@@ -2509,7 +2766,7 @@ int max_child_host_drawing_width(host *parent){
 
 
 	for(temp_host=host_list;temp_host!=NULL;temp_host=temp_host->next){
-		
+
 		if(is_host_immediate_child_of_host(parent,temp_host)==TRUE)
 			child_width+=max_child_host_drawing_width(temp_host);
 	        }
@@ -2540,7 +2797,7 @@ int number_of_host_services(host *hst){
 
 	return total_services;
         }
-	
+
 
 
 /******************************************************************/
@@ -2575,7 +2832,7 @@ void calculate_balanced_tree_coords(host *parent, int x, int y){
 			temp_host->y_2d=y+DEFAULT_NODE_HEIGHT+DEFAULT_NODE_VSPACING;
 			temp_host->have_2d_coords=TRUE;
 			temp_host->should_be_drawn=TRUE;
-			
+
 			current_drawing_x+=(this_drawing_width*DEFAULT_NODE_WIDTH)+((this_drawing_width-1)*DEFAULT_NODE_HSPACING)+DEFAULT_NODE_HSPACING;
 
 			/* recurse into child host ... */
@@ -2612,7 +2869,7 @@ void calculate_circular_coords(void){
 			min_y=temp_host->y_2d;
 		        }
 	        }
-	
+
 	/* offset all drawing coords by the min x,y coords we found */
 	for(temp_host=host_list;temp_host!=NULL;temp_host=temp_host->next){
 		if(min_x<0)
@@ -2635,7 +2892,7 @@ void calculate_circular_coords(void){
 
 	return;
         }
-	
+
 
 /* calculates coords of all hosts in a particular "layer" in circular layout method */
 void calculate_circular_layer_coords(host *parent, double start_angle, double useable_angle, int layer, int radius){
@@ -2803,10 +3060,10 @@ void draw_circular_layer_markup(host *parent, double start_angle, double useable
 			if(immediate_children>1 || layer>1){
 
 				/* draw "leftmost" divider */
-				gdImageLine(map_image,(int)x_coord[0]+x_offset,(int)y_coord[0]+y_offset,(int)x_coord[1]+x_offset,(int)y_coord[1]+y_offset,color_lightgrey);
+				draw_line((int)x_coord[0]+x_offset,(int)y_coord[0]+y_offset,(int)x_coord[1]+x_offset,(int)y_coord[1]+y_offset,color_lightgrey);
 
 				/* draw "rightmost" divider */
-				gdImageLine(map_image,(int)x_coord[2]+x_offset,(int)y_coord[2]+y_offset,(int)x_coord[3]+x_offset,(int)y_coord[3]+y_offset,color_lightgrey);
+				draw_line((int)x_coord[2]+x_offset,(int)y_coord[2]+y_offset,(int)x_coord[3]+x_offset,(int)y_coord[3]+y_offset,color_lightgrey);
 			        }
 
 			/* determine arc drawing angles */
@@ -2816,10 +3073,10 @@ void draw_circular_layer_markup(host *parent, double start_angle, double useable
 			arc_end_angle=arc_start_angle+available_angle;
 
 			/* draw inner arc */
-			gdImageArc(map_image,x_offset,y_offset,(radius-(CIRCULAR_DRAWING_RADIUS/2))*2,(radius-(CIRCULAR_DRAWING_RADIUS/2))*2,floor(arc_start_angle),ceil(arc_end_angle),color_lightgrey);
+			draw_arc(x_offset,y_offset,(radius-(CIRCULAR_DRAWING_RADIUS/2))*2,(radius-(CIRCULAR_DRAWING_RADIUS/2))*2,floor(arc_start_angle),ceil(arc_end_angle),color_lightgrey);
 
 			/* draw outer arc */
-			gdImageArc(map_image,x_offset,y_offset,(radius+(CIRCULAR_DRAWING_RADIUS/2))*2,(radius+(CIRCULAR_DRAWING_RADIUS/2))*2,floor(arc_start_angle),ceil(arc_end_angle),color_lightgrey);
+			draw_arc(x_offset,y_offset,(radius+(CIRCULAR_DRAWING_RADIUS/2))*2,(radius+(CIRCULAR_DRAWING_RADIUS/2))*2,floor(arc_start_angle),ceil(arc_end_angle),color_lightgrey);
 
 
 			/* determine center of "slice" and fill with appropriate color */
@@ -2840,7 +3097,20 @@ void draw_circular_layer_markup(host *parent, double start_angle, double useable
 			/* fill slice with background color */
 			/* the fill function only works with coordinates that are in bounds of the actual image */
 			if(translated_x>0 && translated_y>0 && translated_x<canvas_width && translated_y<canvas_height)
-				gdImageFillToBorder(map_image,translated_x,translated_y,color_lightgrey,bgcolor);
+				if( 2 == statusmap_mod){
+					//draw svg flood fan
+					if(immediate_children>1 || layer>1){ 
+						//draw floodfan with two lines
+						draw_floodfan(x_offset,y_offset,(radius-(CIRCULAR_DRAWING_RADIUS/2)),(radius+(CIRCULAR_DRAWING_RADIUS/2)),(int)x_coord[0]+x_offset,(int)y_coord[0]+y_offset,(int)x_coord[1]+x_offset,(int)y_coord[1]+y_offset,(int)x_coord[3]+x_offset,(int)y_coord[3]+y_offset,(int)x_coord[2]+x_offset,(int)y_coord[2]+y_offset,floor(arc_start_angle),ceil(arc_end_angle),color_lightgrey,bgcolor);
+					} 
+					else{  
+						//draw filled circle
+					}
+					
+				}
+				else 
+					//draw a gdImage flood fan
+					draw_filltoborder(translated_x,translated_y,color_lightgrey,bgcolor);
 
 			/* recurse into child host ... */
 			draw_circular_layer_markup(temp_host,current_drawing_angle+((available_angle-clipped_available_angle)/2),clipped_available_angle,layer+1,radius+CIRCULAR_DRAWING_RADIUS);
