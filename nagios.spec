@@ -1,5 +1,5 @@
 %define name nagios
-%define version 3.2.3
+%define version 3.5.1
 %define release 1
 %define nsusr nagios
 %define nsgrp nagios
@@ -198,7 +198,7 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" \
 	--bindir=%{_prefix}/sbin \
 	--sbindir=%{_prefix}/lib/nagios/cgi \
 	--libexecdir=%{_prefix}/lib/nagios/plugins \
-	--datadir=%{_prefix}/share/nagios \
+	--datarootdir=%{_prefix}/share/nagios \
 	--sysconfdir=/etc/nagios \
 	--localstatedir=/var/log/nagios \
 %if ! %{PERF_EXTERNAL}

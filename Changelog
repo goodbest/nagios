@@ -2,6 +2,108 @@
 Nagios 3.x Change Log
 #####################
 
+3.5.1 - 08/30/2013
+------------------
+* Added handler for SIGXFSZ signal (Eric Stanley)
+* Fixed bug #444: Nagios 3.5.0 problem with macro $ADMINEMAIL$ : @ is converted to %40 after 2 nagios reload (Duplicate of bug #407)
+* Fixed bug #407: Reloading nagios config causes spaces in notifications to become plus signs (Alexey Dvoryanchikov)
+* Fixed bug #445: Adding triggered downtime for child hosts causes a SIGSEGV on restart/reload (Eric Stanley)
+* Fixed bug #375: Freshness expiration never reached and bug #427: freshness threshold doesn't work if it is set long (Scott Wilkerson, Eric Stanley)
+* Fixed bug #432: Downtime scheduled as "Nagios Process" and not the Users name (Sam Lansing, Eric Stanley)
+
+3.5.0 - 03/15/2013
+------------------
+* Fixed bug #403: The "configuration" page of the webui doesn't use entity encoding when displaying the "command expansion" item (Eric Stanley, Phil Randal)
+* Fixed bug #424: Nagios Core 3.4.4 seg fault (core dump) on restart after removing config for running service (Eric Stanley)
+* Updated CGI utility functions to support UTF-8 characters (Eric Stanley)
+* Fixed bug where selecting Command Expansion from Configuration CGI page would display commands instead (Eric Stanley)
+* Fixed bug #369: status.cgi crashes with segfault when there are german ulauts (äöüß) in the hostname or the servicename (Eric Stanley)
+* Fixed bug #418: Scheduled Downtime Notifications Resent On Nagios Restart/reload (Eric Stanley)
+
+3.4.4 - 01/12/2013
+------------------
+* Reenabled check for newer versions of Nagios Core (Mike Guthrie)
+* Fixed bug #408: service checks get duplicated on reload (Eric Stanley)
+* Fixed bug #401: segmentation fault on Solaris when parsing unknown timeperiod directives. (Eric Stanley)
+* Added NULL pointer checks to CGI code. (Eric Stanley)
+* Fixed buffer overflow vulnerability in CGI code. Thanks to Neohapsis (http://archives.neohapsis.com/archives/fulldisclosure/2012-12/0108.html) for finding this. (Eric Stanley)
+
+3.4.3 - 11/30/2012
+------------------
+* Reverted squeue changes intended for Nagios 4
+* Reapplied all patches from 3.4.2 release
+* Applied fix for pagination and sorting on status.cgi #381 (Phil Randal)
+
+3.4.2 - 11/09/2012
+------------------
+FIXES
+* Fixed issue where deleting a downtime could cause Nagios to crash (Eric Stanley)
+* Corrected logic so that end times for flexible downtimes are calculated from the downtime start rather than the current time in the case where Nagios is restarted (Eric Stanley)
+* Fixed issue introduced by fix for bug #124 where flexible downtimes are not taken into account on Nagios restart. (Scott Wilkerson, Eric Stanley)
+* Fixed bug #247: If a service reports no performance data, the perfdata log file has no line indicating the test. (omnikron@free.fr)
+* Fixed link for unhandled unreachable host problems on tactical overview page (Rudolf Cejka)
+* Fixed bug #345 with wild card searches not paging properly on status.cgi (Phil Randal)
+* Fixed bug #343 on status.cgi where Service Group Summary can potentially show wrong totals (Mark Ziesemer)
+* Fixed memory leaks on SIGHUP (Carlos Velasco)
+
+3.4.1 - 05/11/2012
+------------------
+FIXES
+* Double quotes in check_command definition break functionality (#332, reverts #86)
+
+
+3.4.0 - 05/04/2012
+------------------
+ENHANCEMENTS
+* Added service_check_timeout_state configuration variable (Bill McGonigle)
+* Permanently remove sleep on run_event == FALSE in main loop (Max <perldork@webwizarddesign.com>)
+* Reduce notification load by moving notification viability check into notification list creation (Opsview Team)
+* Added code to apply allow_empty_hostgroup_assignment flag to host and service dependencies (Daniel Wittenberg)
+* Users can now see hostgroups and servicegroups that contain at least one host or service they are authorized for, instead of having to be authorized for them all (Ethan Galstad)
+* RSS feed boxes fallback if an error occurs (Ethan Galstad)
+* RSS feeds no longer block main page load (Mike Guthrie)
+
+FIXES
+* Fix $NOTIFICATIONRECIPIENTS$ macro to contain all contacts assigned to host|service, not only notified contacts (Bug #98 Matt Harrington)
+* Scheduled Downtime Notifications Resent On Nagios Restart/reload (Bug #124 - ricardo)
+* NOTIFICATIONTYPE MACRO never became CUSTOM (Bug #168 - Alexey Dvoryanchikov)
+* Plugged minor memory leaks in notification logic
+
+
+3.3.1 - 07/25/2011
+------------------
+ENHANCEMENTS
+* Added support for same host service dependencies with servicegroups (Mathieu Gagné)
+* Empty hostgroups referenced from services now optionally generate a warning instead of an error.
+* Documentation links now point to online resources
+* Matt Wall's Exfoliation theme is now installed by default.  You can reinstall the classic theme with "make install-classicui"
+* Downtime delete commands made "distributable" by deleting by host group name, host name or start time/comment (Opsview team)
+* Allow status.cgi to order by "host urgency" (Jochen Bern)
+* Added news items and quick links to main splash page
+* Added ability to authenticate to CGIs using contactgroup name (Stephen Gran)
+
+FIXES
+* Fixes status.cgi when called with no parameters, where host should be set to all if none specified (Michael Friedrich)
+* Fixes possible validation error with empty hostgroups/servicegroups (Sven-Göran Bergh)
+* Performance-data handling and checking is now thread-safe so long as embedded perl is not used.
+* Children should no longer hang on mutex locks held in parent for localtime() (and similar) calls.
+* Debug logging is now properly serialized, using soft-locking with a timeout of 150 milliseconds to avoid multiple threads competing for the privilege to write debug info.
+* Fixed extraneous alerts for services when host is down
+* Fixed incorrect parsing of multi-line host check results (Jochen Bern)
+* Fixed bug with passive host checks being incorrectly sent to event brokers as active checks
+* Fixed bug where passive host check status updates were not being propagated to event brokers
+* Reverted 'Fix for retaining host display name and alias, as well as service display name' as configuration information stored incorrectly over a reload
+* Fixed compile warnings for size_t (Michael Friedrich)
+* Fixed problem where acknowledgements were getting reset when a hard state change occurred
+* Removed duplicated unlinks for check result files with multiple results
+* Fixed race condition on flexible downtime commands when duration not set or zero (Michael Friedrich)
+* Fixed flexible downtime on service hard state change doesn't get triggered/activated (Michael Friedrich)
+* Fixed XSS vulnerability in config.cgi and statusmap.cgi (Stefan Schurtz)
+* Fixed segfault when sending host notifications (Michael Friedrich)
+* Fixed bug where unauthorized contacts could issue hostgroup and servicegroup commands (Sven Nierlein)
+
+WARNINGS
+
 
 3.2.3 - 10/03/2010
 ------------------
@@ -172,7 +274,7 @@ WARNINGS
 
 3.0.5 - 11/04/2008
 ------------------
-* Security fix for Cross Site Request Forgery (CSRF) bug reported by Tim Starling. 
+* Security fix for Cross Site Request Forgery (CSRF) bug reported by Tim Starling.
 * Sample audio files for CGIs removed from distribution
 * Fix for mutliline config file continuation bug
 * Minor fix to RPM spec file
@@ -301,7 +403,7 @@ WARNINGS
 * Fix for compilation bug on systems that don't support setenv() (e.g. Solaris)
 * Support for line continuation/breaks in config files - end lines with one backslash (\) to continue on next line
 * Fixed bug with not deleting old check result files that contained results for invalid host/service
-* Fixed bug with init script option to check Nagios config 
+* Fixed bug with init script option to check Nagios config
 * Auto-filled comment/author fields for acknowledging problems through WAP interface
 * Fixed bug with processing of CONTACTGROUPNAMES, NOTES, NOTESURL, and ACTIONURL macros
 * Doc fix regarding soft state dependencies
@@ -383,7 +485,7 @@ WARNINGS
 * New macros: $HOSTGROUPMEMBERS$, $HOSTGROUPNOTES$, $HOSTGROUPNOTESURL$, $HOSTGROUPACTIONURL$, $SERVICEGROUPMEMBERS$, $SERVICEGROUPNOTES$, $SERVICEGROUPNOTESURL$, $SERVICEGROUPACTIONURL$, $CONTACTGROUPALIAS$, $CONTACTGROUPMEMBERS$, $NOTIFICATIONRECIPIENTS$, $NOTIFICATIONAUTHOR$, $NOTIFICATIONAUTHORNAME$, $NOTIFICATIONAUTHORALIAS$, $NOTIFICATIONCOMMENT$
 * Removed host/service downtime author/comment macros introduced in 3.0b2 in favor of more generic $NOTIFICATION...$ macros
 * Fix for segfault when cancelling active scheduled host downtime
-* Macro code cleanup 
+* Macro code cleanup
 * Added on-demand contact and contactgroup macro support
 * More complete (but still partial) support for macros in CGIs ($xNOTES$, $xNOTESURL$, and $xACTIONURL$ macros)
 * Fixed bug in config CGI with displaying incorrect notification interval for escalations
@@ -402,7 +504,7 @@ WARNINGS
 ------------------
 * Minor bug fix for debug logging of macros
 * Version number is now printed in CGI pages
-* HTML documentation cleanup (HTML Tidy, link checking, etc.) 
+* HTML documentation cleanup (HTML Tidy, link checking, etc.)
 * Fixed bug where notifications would not be sent out host/service contact group members
 
 
@@ -521,7 +623,7 @@ Here are all the changes since Nagios 2.x:
        respectively.  In order to receive downtime notifications, specify 's' or 'downtime' in contact, host,
        and/or service notification options.
 
-* Object changes: 
+* Object changes:
      - Added ability to use multiple template names (separated by commas) in object definitions
      - Added ability to null out optional character directives in object definitions (using 'null' without quotes)
      - Added hostg/service/contactgroup_members directives to host/service/contactgroup definitions,
@@ -642,5 +744,5 @@ Here are all the changes since Nagios 2.x:
        and $SERVICEACKAUTHORALIAS$ macros
 
 
- 
+
 

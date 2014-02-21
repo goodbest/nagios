@@ -28,7 +28,7 @@ CFGDIR=@sysconfdir@
 BINDIR=@bindir@
 CGIDIR=@sbindir@
 LIBEXECDIR=@libexecdir@
-HTMLDIR=@datarootdir@
+HTMLDIR=@datadir@
 INSTALL=@INSTALL@
 INSTALL_OPTS=@INSTALL_OPTS@
 COMMAND_OPTS=@COMMAND_OPTS@
@@ -55,10 +55,18 @@ none:
 		@echo "Please supply a command line argument (i.e. 'make all').  Other targets are:"
 		@echo "   nagios cgis contrib modules"
 		@echo "   clean"
-		@echo "   install install-base install-cgis install-html install-config install-init install-commandmode fullinstall"
+		@echo "   install install-base install-cgis install-html install-exfoliation install-config install-init install-commandmode fullinstall"
 #		@echo "   uninstall"
 
 # FreeBSD make does not support -C option, so we'll use the Apache style... (patch by Stanley Hopcroft 12/27/1999)
+
+pretty: indent
+
+indent:
+	@sh indent-all.sh
+
+ctags:
+	ctags -R
 
 all:
 	cd $(SRC_BASE) && $(MAKE)
@@ -97,6 +105,14 @@ all:
 	@echo "     - This installs the Apache config file for the Nagios"
 	@echo "       web interface"
 	@echo ""
+	@echo "  make install-exfoliation"
+	@echo "     - This installs the Exfoliation theme for the Nagios"
+	@echo "       web interface"
+	@echo ""
+	@echo "  make install-classicui"
+	@echo "     - This installs the classic theme for the Nagios"
+	@echo "       web interface"
+	@echo ""
 	@echo ""
 	@echo "*** Support Notes *******************************************"
 	@echo ""
@@ -104,8 +120,8 @@ all:
 	@echo "please make sure that you:"
 	@echo ""
 	@echo "     - Look at the sample config files"
-	@echo "     - Read the HTML documentation"
-	@echo "     - Read the FAQs online at http://www.nagios.org/faqs"
+	@echo "     - Read the documentation on the Nagios Library at:"
+	@echo "           http://library.nagios.com"
 	@echo ""
 	@echo "before you post a question to one of the mailing lists."
 	@echo "Also make sure to include pertinent information that could"
@@ -118,7 +134,7 @@ all:
 	@echo ""
 	@echo "For more information on obtaining support for Nagios, visit:"
 	@echo ""
-	@echo "       http://www.nagios.org/support/"
+	@echo "       http://support.nagios.com"
 	@echo ""
 	@echo "*************************************************************"
 	@echo ""
@@ -172,6 +188,7 @@ distclean: clean
 	rm -f daemon-init pkginfo
 	rm -f Makefile subst
 	rm -f config.log config.status config.cache
+	rm -f tags
 
 devclean: distclean
 
@@ -179,7 +196,7 @@ test:
 	$(MAKE) test-perl
 	$(MAKE) test-tap
 
-test-tap: tap/src/tap.o
+test-tap: tap/src/tap.o nagios cgis
 	@if [ x$(USE_LIBTAP) = xyes ]; then \
 		cd $(SRC_TTAP) && $(MAKE) test; \
 	else \
@@ -189,11 +206,12 @@ test-tap: tap/src/tap.o
 tap/src/tap.o:
 	cd tap && $(MAKE)
 
-test-perl:
+test-perl: cgis
 	cd t && $(MAKE) test
 
 install-html:
 	cd $(SRC_HTM) && $(MAKE) install
+	make install-exfoliation
 
 install-base:
 	cd $(SRC_BASE) && $(MAKE) install
@@ -205,12 +223,14 @@ install:
 	cd $(SRC_BASE) && $(MAKE) $@
 	cd $(SRC_CGI) && $(MAKE) $@
 	cd $(SRC_HTM) && $(MAKE) $@
+	$(MAKE) install-exfoliation	
 	$(MAKE) install-basic
 
 install-unstripped:
 	cd $(SRC_BASE) && $(MAKE) $@
 	cd $(SRC_CGI) && $(MAKE) $@
 	cd $(SRC_HTM) && $(MAKE) $@
+	$(MAKE) install-exfoliation	
 	$(MAKE) install-basic
 
 install-basic:
@@ -268,6 +288,24 @@ install-webconf:
 
 	@echo ""
 	@echo "*** Nagios/Apache conf file installed ***"
+	@echo ""
+	
+install-exfoliation:
+	cp -rf contrib/exfoliation/stylesheets/* $(DESTDIR)$(HTMLDIR)/stylesheets
+	cp -rf contrib/exfoliation/images/* $(DESTDIR)$(HTMLDIR)/images
+
+	@echo ""
+	@echo "*** Exfoliation theme installed ***"
+	@echo "NOTE: Use 'make install-classicui' to revert to classic Nagios theme";
+	@echo ""
+	
+install-classicui:
+	cp -rf html/stylesheets/* $(DESTDIR)$(HTMLDIR)/stylesheets
+	cp -rf html/images/* $(DESTDIR)$(HTMLDIR)/images
+
+	@echo ""
+	@echo "*** Classic theme installed ***"
+	@echo "NOTE: Use 'make install-exfoliation' to use new Nagios theme";
 	@echo ""
 
 install-init: install-daemoninit
@@ -336,3 +374,6 @@ pkgset: nagios.SPARC.pkg.tar.gz
 
 pkgclean:
 	rm -rf pkg Prototype nagios.SPARC.pkg.tar.gz
+
+# Targets that always get built
+.PHONY:	indent clean clean distclean

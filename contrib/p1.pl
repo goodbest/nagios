@@ -1,11 +1,8 @@
  package Embed::Persistent;
 
-# $Id: p1.pl,v 1.1 2005/01/20 02:12:13 egalstad Exp $
+# $Id$
 
-# $Log: p1.pl,v $
-# Revision 1.1  2005/01/20 02:12:13  egalstad
-# Core dump fixes, embedded Perl changes, new mini_epn
-#
+# $Log$
 # Revision 1.5  2005-01-18 13:52:15+11  anwsmh
 # 1 Set log level back to RETICENT and log file name to a placeholder for dist.
 #

@@ -31,6 +31,8 @@
 #define DEFAULT_HOST_PERFDATA_FILE_TEMPLATE "[HOSTPERFDATA]\t$TIMET$\t$HOSTNAME$\t$HOSTEXECUTIONTIME$\t$HOSTOUTPUT$\t$HOSTPERFDATA$"
 #define DEFAULT_SERVICE_PERFDATA_FILE_TEMPLATE "[SERVICEPERFDATA]\t$TIMET$\t$HOSTNAME$\t$SERVICEDESC$\t$SERVICEEXECUTIONTIME$\t$SERVICELATENCY$\t$SERVICEOUTPUT$\t$SERVICEPERFDATA$"
 
+#define DEFAULT_HOST_PERFDATA_PROCESS_EMPTY_RESULTS 1
+#define DEFAULT_SERVICE_PERFDATA_PROCESS_EMPTY_RESULTS 1
 
 
 int xpddefault_initialize_performance_data(char *);
@@ -41,11 +43,11 @@ int xpddefault_grab_config_directives(char *);
 int xpddefault_update_service_performance_data(service *);
 int xpddefault_update_host_performance_data(host *);
 
-int xpddefault_run_service_performance_data_command(service *);
-int xpddefault_run_host_performance_data_command(host *);
+int xpddefault_run_service_performance_data_command(nagios_macros *mac, service *);
+int xpddefault_run_host_performance_data_command(nagios_macros *mac, host *);
 
-int xpddefault_update_service_performance_data_file(service *);
-int xpddefault_update_host_performance_data_file(host *);
+int xpddefault_update_service_performance_data_file(nagios_macros *mac, service *);
+int xpddefault_update_host_performance_data_file(nagios_macros *mac, host *);
 
 int xpddefault_preprocess_file_templates(char *);
 
